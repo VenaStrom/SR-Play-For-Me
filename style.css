@@ -1,3 +1,21 @@
 body {
     background-color: #1e1e1e;
+    color: white;
+    font-family: sans-serif;
+}
+
+#programs li {
+    list-style-type: none;
+
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    width: 80vw;
+}
+
+#programs li input[type="checkbox"] {
+    margin-right: 2ch;
+    height: 2rem;
+    width: 2rem;
 }

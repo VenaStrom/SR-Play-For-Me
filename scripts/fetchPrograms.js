@@ -14,8 +14,11 @@ const fetchPrograms = () => {
         timeCheck = false
 
         console.warn("Fetching programs...", "if you see this message repeatedly, something is wrong with the fetchPrograms.js script and it means that Sveriges Radio API is being spammed.")
-        const fullJSON = fetch("https://api.sr.se/api/v2/programs/index?format=json&pagination=false")
-        localStorage.setItem("programs", JSON.stringify(fullJSON))
+        fetch("https://api.sr.se/api/v2/programs/index?format=json&pagination=false")
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem("programs", JSON.stringify(data))
+            })
     }
 }
 
