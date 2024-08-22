@@ -3,7 +3,7 @@ const ul = document.getElementById('programs');
 
 window.onload = () => {
     const programs = JSON.parse(localStorage.getItem('programs')).programs;
-    console.log(programs.programs);
+    console.log(programs);
 
     programs.forEach(program => {
         const checkbox = document.createElement('input');

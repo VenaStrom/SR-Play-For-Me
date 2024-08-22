@@ -43,6 +43,7 @@ body {
         }
     }
 
+    &>#fetch-button-wrapper
     &>#fetch-button {
         color: var(--black);
     }
