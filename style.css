@@ -26,14 +26,20 @@ body {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        /* justify-content: space-around; */
+        justify-content: space-around;
 
         &>#logo {
-            height: 80%;
+            height: calc(0.8 * 3rem);
             filter: invert(100%) sepia(77%) saturate(27%) hue-rotate(262deg) brightness(113%) contrast(90%);
+
+            position: absolute;
+            left: 2ch;
         }
 
-        &>input[type="text"] {
+        &>.search-box {
+            font-family: inherit;
+            font-size: 1.2rem;
+
             display: inline-block;
             text-align: left;
             text-decoration: none;
@@ -41,7 +47,8 @@ body {
             border: none;
             border-radius: 0.6rem;
 
-            padding: 0.5rem;
+            padding: 0.3rem;
+            width: 50vw;
 
             background: var(--gray);
             color: var(--white);
@@ -50,78 +57,93 @@ body {
 
             -webkit-appearance: none;
             -moz-appearance: none;
-        }
+            appearance: none;
 
-        &>a {
-            height: 60%;
-
-            &>#search-icon {
-                height: 100%;
-                filter: invert(100%) sepia(77%) saturate(27%) hue-rotate(262deg) brightness(113%) contrast(90%);
-            }
+            background-image: url(assets/icons/icons8-search-120.png);
+            background-size: 1.5rem;
+            background-repeat: no-repeat;
+            background-position: calc(100% - 1ch);
         }
     }
 
-    &>.centered-button-wrapper {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: center;
-        align-items: center;
-
+    &>main {
         width: 100vw;
         max-width: 100%;
 
-        height: 1.5rem;
+        overflow-y: scroll;
 
-        &>button {
-            display: inline-block;
-            border: none;
-            padding: 0.5rem;
-            margin: 0;
-            text-decoration: none;
-            background: var(--black);
-            color: var(--white);
-            cursor: pointer;
-            text-align: center;
-            border-radius: 0.6rem;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        }
-    }
+        height: 80vh;
 
-    &>#programs {
-        width: 100vw;
-        max-width: 100%;
-
-        box-sizing: border-box;
-        padding-left: 3ch;
-        padding-right: 1ch;
-
-
-        &>li {
-            list-style-type: none;
-            text-wrap: nowrap;
-
+        &>.centered-button-wrapper {
             display: flex;
             flex-flow: row nowrap;
+            justify-content: center;
             align-items: center;
 
-            width: 100%;
+            width: 100vw;
+            max-width: 100%;
+            height: 1.5rem;
 
-            margin-top: .4rem;
-            margin-bottom: .4rem;
+            margin-bottom: .5rem;
+            margin-top: .5rem;
+            
+            &>button {
+                text-decoration: none;
+                text-align: center;
 
-            &>input[type="checkbox"] {
-                margin-right: 2ch;
-                height: 1.8rem;
-                width: 1.8rem;
+                display: inline-block;
 
-                flex: 1;
+                border: none;
+                border-radius: 0.6rem;
+
+                padding: 0.5rem;
+                margin: 0;
+
+                background: var(--black);
+                color: var(--white);
+
+                cursor: pointer;
+            
+                -webkit-appearance: none;
+                -moz-appearance: none;
+
             }
+        }
 
-            &>p {
-                overflow: scroll;
-                flex: 9;
+        &>#programs {
+            width: 100vw;
+            max-width: 100%;
+
+            box-sizing: border-box;
+            padding-left: 2ch;
+            padding-right: 1ch;
+
+
+            &>li {
+                list-style-type: none;
+                text-wrap: nowrap;
+
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+
+                width: 100%;
+
+                margin-top: .4rem;
+                margin-bottom: .4rem;
+
+                &>input[type="checkbox"] {
+                    margin-right: 2ch;
+                    height: 1.8rem;
+                    width: 1.8rem;
+
+                    flex: 1;
+                }
+
+                &>p {
+                    overflow: scroll;
+                    flex: 9;
+                }
             }
         }
     }

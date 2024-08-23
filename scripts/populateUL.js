@@ -1,5 +1,6 @@
 
 const ul = document.getElementById('programs');
+const main = document.querySelector("main");
 
 window.onload = () => {
     const programs = JSON.parse(localStorage.getItem('programs')).programs;
@@ -20,4 +21,11 @@ window.onload = () => {
         li.appendChild(p);
         ul.appendChild(li);
     });
+
+
+    main.scrollTop = 36;
 }
+
+main.addEventListener("scroll", (event) => {
+    console.log(event);
+})
