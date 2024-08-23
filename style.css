@@ -43,9 +43,18 @@ body {
         }
     }
 
-    &>#fetch-button-wrapper
-    &>#fetch-button {
-        color: var(--black);
+    &>.centered-button-wrapper {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+
+        width: 100vw;
+        max-width: 100%;
+
+        height: 1.5rem;
+
+        &>button {}
     }
 
     &>#programs {
