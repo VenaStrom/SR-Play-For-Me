@@ -81,9 +81,56 @@ const populateUL = (episode) => {
 //     // fetchEpisodes(id, fromDate, toDate);
 // });
 
-// window.onload = () => {
-//     const episodes = JSON.parse(localStorage.getItem("episodes")) || [];
-//     episodes.forEach(episode => {
-//         populateUL(episode);
-//     });
-// }
+window.onload = () => {
+    //     const episodes = JSON.parse(localStorage.getItem("episodes")) || [];
+    //     episodes.forEach(episode => {
+    //         populateUL(episode);
+    //     });
+
+
+    // navigator.storage.estimate().then(estimate => {
+    //     console.log((estimate.quota / 1024 / 1024 / 1024).toFixed(0), "GB");
+    // });
+
+    // navigator.storage.persist().then(persistent => {
+    //     if (persistent) {
+    //         fetch("https://sverigesradio.se/topsy/ljudfil/srapi/9445218.mp3")
+    //             .then(response => response.blob())
+    //             .then(blob => {
+    //                 const url = URL.createObjectURL(blob);
+    //                 const anchor = document.createElement("a");
+    //                 anchor.href = url;
+    //                 anchor.download = "audio.mp3";
+    //                 anchor.click();
+    //                 URL.revokeObjectURL(url);
+    //             })
+    //             .catch(error => {
+    //                 console.error("Failed to fetch audio file:", error);
+    //             });
+    //     } else {
+    //         console.warn("Persistent storage is not granted. Please check your browser settings to enable persistent storage.");
+    //     }
+    // });
+
+
+    const fetchAndCacheAudio = (url) => {
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const audioUrl = URL.createObjectURL(blob);
+                const audio = new Audio(audioUrl);
+                audio.addEventListener('canplaythrough', () => {
+                    caches.open('audio-cache')
+                        .then(cache => cache.add(url))
+                        .catch(error => {
+                            console.error('Failed to cache audio file:', error);
+                        });
+                });
+            })
+            .catch(error => {
+                console.error('Failed to fetch audio file:', error);
+            });
+    };
+
+    fetchAndCacheAudio("https://sverigesradio.se/topsy/ljudfil/srapi/9445218.mp3");
+}
