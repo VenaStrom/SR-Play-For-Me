@@ -82,7 +82,7 @@ body {
 
         overflow-y: scroll;
 
-        height: 86svh;
+        height: calc(90svh - 3rem);
 
         &>.centered-button-wrapper {
             display: flex;
