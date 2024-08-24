@@ -18,24 +18,8 @@ const fetchPrograms = () => {
             .then(response => response.json())
             .then(data => {
                 localStorage.setItem("programs", JSON.stringify(data))
+
+                populateUL()
             })
-    }
-}
-
-if (localStorage.getItem("programs") === null) {
-    fetchPrograms()
-}
-
-if (localStorage.getItem("lastFetch") === null) {
-    localStorage.setItem("lastFetch", Date.now())
-}
-
-if (localStorage.getItem("lastFetch")) {
-    const lastFetch = parseInt(localStorage.getItem("lastFetch"))
-    const currentTime = parseInt(Date.now())
-
-    if (currentTime - lastFetch > 1000 * 60 * 60 * 12) { // 12 hours in milliseconds
-        fetchPrograms()
-        localStorage.setItem("lastFetch", Date.now())
     }
 }

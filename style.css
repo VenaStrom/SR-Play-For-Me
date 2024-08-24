@@ -86,7 +86,7 @@ body {
 
             margin-bottom: .5rem;
             margin-top: .5rem;
-            
+
             &>button {
                 text-decoration: none;
                 text-align: center;
@@ -103,7 +103,7 @@ body {
                 color: var(--white);
 
                 cursor: pointer;
-            
+
                 -webkit-appearance: none;
                 -moz-appearance: none;
 
@@ -132,19 +132,29 @@ body {
                 margin-top: .4rem;
                 margin-bottom: .4rem;
 
-                &>input[type="checkbox"] {
-                    margin-right: 2ch;
-                    height: 1.8rem;
-                    width: 1.8rem;
-
+                &>.heart {
+                    margin-right: 1ch;
                     flex: 1;
+
+                    height: 2rem;
+                    width: 2rem;
+
+                    cursor: pointer;
                 }
 
+                &>.liked {
+                    filter: invert(24%) sepia(49%) saturate(4444%) hue-rotate(343deg) brightness(82%) contrast(103%);
+                }
+                
                 &>p {
                     overflow: scroll;
                     flex: 9;
                 }
             }
         }
+    }
+
+    &>nav {
+        background-color: var(--black);
     }
 }

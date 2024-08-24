@@ -2,16 +2,18 @@
 const ul = document.getElementById('programs');
 const main = document.querySelector("main");
 
-window.onload = () => {
+const populateUL = () => {
     const programs = JSON.parse(localStorage.getItem('programs')).programs;
-    console.log(programs);
 
     programs.forEach(program => {
-        const checkbox = document.createElement('input');
+        // const checkbox = document.createElement('input');
+        const checkbox = document.createElement("img");
         const p = document.createElement('p');
         const li = document.createElement('li');
 
-        checkbox.type = 'checkbox';
+        checkbox.src = "assets/icons/icons8-heart-48.png";
+        checkbox.classList.add("heart");
+        checkbox.setAttribute("onclick", "like(event)");
 
         li.setAttribute("data", JSON.stringify(program));
         li.id = program.id;
@@ -22,14 +24,8 @@ window.onload = () => {
         ul.appendChild(li);
     });
 
-
     main.scrollTop = 36;
+
+    updateLiked();
 }
 
-main.addEventListener("scroll", () => {
-    if (main.scrollTop < 36) {
-        setTimeout(() => {
-           main.scrollTop = 36;
-        }, 1000);
-    }
-})
