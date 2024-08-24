@@ -22,10 +22,5 @@ window.onload = () => {
         ul.appendChild(li);
     });
 
-
     main.scrollTop = 36;
 }
-
-main.addEventListener("scroll", (event) => {
-    console.log(event);
-})
