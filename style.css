@@ -125,7 +125,7 @@ body {
             max-width: 100%;
 
             box-sizing: border-box;
-            padding-left: 2ch;
+            padding-left: 4ch;
             padding-right: 1ch;
 
 
@@ -143,7 +143,7 @@ body {
                 margin-bottom: .4rem;
 
                 &>.heart {
-                    margin-right: 1ch;
+                    margin-right: 2ch;
                     /* flex: 1; */
 
                     height: 2rem;

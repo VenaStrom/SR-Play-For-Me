@@ -2,6 +2,12 @@
 const fetchCooldown = 1 // seconds
 let timeCheck = true
 
+const fetchButton = () => {
+    ul.innerHTML = "";
+
+    fetchPrograms();
+}
+
 const fetchPrograms = () => {
 
     const cooldownTimeout = setTimeout(() => {
