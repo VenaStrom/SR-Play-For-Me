@@ -1,7 +1,7 @@
 :root {
     --white: #f2f2f2;
     --black: #18181a;
-    --gray: #1e1e1e;
+    --gray: #2a2a2a;
 }
 
 * {
@@ -151,6 +151,8 @@ body {
                     width: 2rem;
 
                     cursor: pointer;
+
+                    filter: invert(78%) sepia(85%) saturate(7%) hue-rotate(129deg) brightness(119%) contrast(90%);
                 }
 
                 &>.liked {
