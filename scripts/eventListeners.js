@@ -18,7 +18,7 @@ window.onload = () => {
         localStorage.setItem("lastFetch", Date.now())
     }
 
-    // Fetch programs if there are no programs in localStorage
+    // Fetch programs if undefined
     if (localStorage.getItem("programs") === null) {
         fetchPrograms()
     } else {
@@ -33,8 +33,11 @@ window.onload = () => {
         if (currentTime - lastFetch > 1000 * 60 * 60 * 12) { // 12 hours in milliseconds
             fetchPrograms()
             localStorage.setItem("lastFetch", Date.now())
-        } else {
-            populateUL()
         }
     }
 }
+
+const searchBox = document.querySelector('.search-box');
+searchBox.addEventListener("input", () => {
+    sort();
+})

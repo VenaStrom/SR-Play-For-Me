@@ -5,9 +5,19 @@ const main = document.querySelector("main");
 const populateUL = () => {
     const programs = JSON.parse(localStorage.getItem('programs')).programs;
 
+    ul.innerHTML = "";
+
     programs.forEach(program => {
-        // const checkbox = document.createElement('input');
+
+        const data = {
+            id: program.id,
+            name: program.name,
+            description: program.description,
+            image: program.programimage
+        }
+
         const checkbox = document.createElement("img");
+        // const img = document.createElement('img');
         const p = document.createElement('p');
         const li = document.createElement('li');
 
@@ -15,17 +25,21 @@ const populateUL = () => {
         checkbox.classList.add("heart");
         checkbox.setAttribute("onclick", "like(event)");
 
-        li.setAttribute("data", JSON.stringify(program));
-        li.id = program.id;
-        p.innerHTML = program.name;
+        // img.src = program.programimage;
+
+        li.setAttribute("data", JSON.stringify(data));
+        li.id = data.id;
+        li.setAttribute("data-id", data.id);
+        p.innerHTML = data.name;
 
         li.appendChild(checkbox);
+        // li.appendChild(img);
         li.appendChild(p);
         ul.appendChild(li);
     });
-
-    main.scrollTop = 36;
-
+    
+    sort();
+    
     updateLiked();
 }
 

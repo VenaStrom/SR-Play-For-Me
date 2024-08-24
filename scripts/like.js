@@ -4,7 +4,7 @@ updateLiked = () => {
 
     liked.forEach(id => {
         const li = document.getElementById(id);
-        const heart = li.querySelector("img");
+        const heart = li.querySelector("&>img");
 
         heart.classList.add("liked");
         heart.src = "assets/icons/icons8-heart-48-filled.png";
@@ -29,5 +29,4 @@ const like = (event) => {
         liked.splice(liked.indexOf(target.parentElement.id), 1);
         localStorage.setItem("liked", JSON.stringify(liked));
     }
-
 } 
