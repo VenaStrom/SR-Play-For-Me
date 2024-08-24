@@ -7,6 +7,14 @@
 * {
     padding: 0;
     margin: 0;
+
+    font-family: sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    font-family: inherit;
 }
 
 body {
@@ -15,6 +23,8 @@ body {
 
     width: 100vw;
     max-width: 100%;
+
+    overflow: hidden;
 
     &>header {
         width: 100vw;
@@ -72,7 +82,7 @@ body {
 
         overflow-y: scroll;
 
-        height: 80vh;
+        height: 86vh;
 
         &>.centered-button-wrapper {
             display: flex;
@@ -134,7 +144,7 @@ body {
 
                 &>.heart {
                     margin-right: 1ch;
-                    flex: 1;
+                    /* flex: 1; */
 
                     height: 2rem;
                     width: 2rem;
@@ -145,7 +155,7 @@ body {
                 &>.liked {
                     filter: invert(24%) sepia(49%) saturate(4444%) hue-rotate(343deg) brightness(82%) contrast(103%);
                 }
-                
+
                 &>p {
                     overflow: scroll;
                     flex: 9;
@@ -155,6 +165,12 @@ body {
     }
 
     &>nav {
+        width: 100vw;
+        max-width: 100%;
+
+        height: 10vh;
+
         background-color: var(--black);
+
     }
 }

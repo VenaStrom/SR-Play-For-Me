@@ -16,6 +16,13 @@ window.onload = () => {
         localStorage.setItem("lastFetch", Date.now())
     }
 
+    // Fetch programs if there are no programs in localStorage
+    if (localStorage.getItem("programs") === null) {
+        fetchPrograms()
+    } else {   
+        populateUL()
+    }
+
     // Fetch programs if last fetch was more than 12 hours ago
     if (localStorage.getItem("lastFetch")) {
         const lastFetch = parseInt(localStorage.getItem("lastFetch"))
@@ -27,12 +34,5 @@ window.onload = () => {
         } else {
             populateUL()
         }
-    }
-
-    // Fetch programs if there are no programs in localStorage
-    if (localStorage.getItem("programs") === null) {
-        fetchPrograms()
-    } else {   
-        populateUL()
     }
 }
