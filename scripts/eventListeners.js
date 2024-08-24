@@ -3,7 +3,9 @@
 main.addEventListener("scroll", () => {
     if (main.scrollTop < 36) {
         setTimeout(() => {
-            main.scrollTop = 36;
+            if (main.scrollTop < 36) {
+                main.scrollTop = 36;
+            }
         }, 1000);
     }
 })
@@ -19,7 +21,7 @@ window.onload = () => {
     // Fetch programs if there are no programs in localStorage
     if (localStorage.getItem("programs") === null) {
         fetchPrograms()
-    } else {   
+    } else {
         populateUL()
     }
 
