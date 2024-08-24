@@ -127,10 +127,45 @@ body {
             }
         }
 
-        &>#programs {
+        &>#no-fav-notification {
+            font-size: 1.3rem;
+            text-align: center;
+
+            width: 100%;
+
+            margin-top: 2rem;
+
+            filter: brightness(0.5);
+        }
+
+
+        &>ul {
             width: 100vw;
             max-width: 100%;
+        }
 
+        &>#new-episodes {
+            display: flex;
+            flex-flow: column nowrap;
+
+            &>li {
+
+
+                &>img {
+                    /* filter: invert(75%) sepia(0%) saturate(1%) hue-rotate(143deg) brightness(88%) contrast(86%); */
+                }
+
+                &>.title {
+                    font-weight: bold;
+                }
+
+                &>.description {}
+
+                &>.show-name {}
+            }
+        }
+
+        &>#programs {
             box-sizing: border-box;
             padding-left: 4ch;
             padding-right: 1ch;
@@ -192,7 +227,5 @@ body {
 
             filter: invert(78%) sepia(85%) saturate(7%) hue-rotate(129deg) brightness(119%) contrast(90%);
         }
-
-        &>a>.heart {}
     }
 }

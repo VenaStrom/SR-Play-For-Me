@@ -9,12 +9,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SRplay</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="assets/icons/SRlogo256.png" type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="shortcut icon" href="../assets/icons/SRlogo256.png" type="image/x-icon">
 </head>
 
 <body>
+    <header>
+        <img id="logo" src="../assets/icons/SRlogo256.png" alt="SR">
 
+        <h3>Nya avsnitt</h3>
+    </header>
+
+    <main>
+        <p id="no-fav-notification">Du har inga favoritprogram. <br> Följ program i andra fliken.</p>
+        <ul id="new-episodes">
+            <li>
+                <img src="../assets/icons/missing-image48.png" alt="Bild">
+                <p class="title">Avsnittstitel</p>
+                <p class="description">Avsnittsbeskrivning</p>
+                <p class="show-name">Programnamn</p>
+            </li>
+        </ul>
+
+        <script src="../scripts/fetchEpisodes.js"></script>
+    </main>
+
+    <nav>
+        <a href="../index.html"><img src="../assets/icons/icons8-feed-48.png" alt="Programs"></a>
+        <a href="#"><img src="../assets/icons/icons8-heart-48-filled.png" alt="Liked"></a>
+    </nav>
 </body>
 
 </html>
