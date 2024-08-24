@@ -22,5 +22,14 @@ window.onload = () => {
         ul.appendChild(li);
     });
 
+
     main.scrollTop = 36;
 }
+
+main.addEventListener("scroll", () => {
+    if (main.scrollTop < 36) {
+        setTimeout(() => {
+           main.scrollTop = 36;
+        }, 1000);
+    }
+})
