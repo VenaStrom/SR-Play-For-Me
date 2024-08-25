@@ -169,18 +169,18 @@
 // }
 
 
-// Check if the browser supports the Cache API
-if ('caches' in window) {
-    // Open a cache storage
-    caches.open('audio-cache').then(function (cache) {
-        // Create a new request for the audio file
-        var request = new Request('https://sverigesradio.se/topsy/ljudfil/srapi/9451370.mp3');
 
-        // Fetch the audio file and add it to the cache
-        fetch(request).then(function (response) {
-            cache.put(request, response);
-
-            document.querySelector('audio').src = 'https://sverigesradio.se/topsy/ljudfil/srapi/9451370.mp3';
-        });
-    });
-}
+// fetch("https://sverigesradio.se/topsy/ljudfil/srapi/9451370.mp3", { mode: "no-cors" })
+//     .then(response => response.blob())
+//     .then(blob => {
+//         const reader = new FileReader();
+//         reader.onloadend = () => {
+//             const audioData = reader.result;
+//             localStorage.setItem("audioBlob", audioData);
+//             console.log("MP3 file saved as a Blob in localStorage");
+//         };
+//         reader.readAsDataURL(blob);
+//     })
+//     .catch(error => {
+//         console.error("Error fetching and saving the MP3 file:", error);
+//     });
