@@ -113,24 +113,24 @@ window.onload = () => {
     // });
 
 
-    const fetchAndCacheAudio = (url) => {
-        fetch(url)
-            .then(response => response.blob())
-            .then(blob => {
-                const audioUrl = URL.createObjectURL(blob);
-                const audio = new Audio(audioUrl);
-                audio.addEventListener('canplaythrough', () => {
-                    caches.open('audio-cache')
-                        .then(cache => cache.add(url))
-                        .catch(error => {
-                            console.error('Failed to cache audio file:', error);
-                        });
-                });
-            })
-            .catch(error => {
-                console.error('Failed to fetch audio file:', error);
-            });
-    };
+//     const fetchAndCacheAudio = (url) => {
+//         fetch(url)
+//             .then(response => response.blob())
+//             .then(blob => {
+//                 const audioUrl = URL.createObjectURL(blob);
+//                 const audio = new Audio(audioUrl);
+//                 audio.addEventListener('canplaythrough', () => {
+//                     caches.open('audio-cache')
+//                         .then(cache => cache.add(url))
+//                         .catch(error => {
+//                             console.error('Failed to cache audio file:', error);
+//                         });
+//                 });
+//             })
+//             .catch(error => {
+//                 console.error('Failed to fetch audio file:', error);
+//             });
+//     };
 
-    fetchAndCacheAudio("https://sverigesradio.se/topsy/ljudfil/srapi/9445218.mp3");
+//     fetchAndCacheAudio("https://sverigesradio.se/topsy/ljudfil/srapi/9445218.mp3");
 }
