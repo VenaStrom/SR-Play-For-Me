@@ -1,186 +1,177 @@
 
-// // const getAllPrograms = (force = false) => {
+const fetchAndSaveAllPrograms = () => {
+    const localPrograms = JSON.parse(localStorage.getItem("programs")) || { fetchedAt: 0 };
 
-// //     const localPrograms = JSON.parse(localStorage.getItem("programs")) || { fetchedAt: 0 };
+    // If programs are already saved and no older than 24 hours, return
+    if (localPrograms.fetchedAt > new Date().getTime() - 86400000) { // 24 hours = 1000 * 60 * 60 * 24 ms
+        console.log("Using cached programs. Cached at:", new Date(localPrograms.fetchedAt));
+        return Promise.resolve();
+    }
 
-// //     // If programs are already saved and no older than 12 hours, return
-// //     if (!force) {
-// //         if (localPrograms.fetchedAt > new Date().getTime() - 43200000) { // 12 hours = 1000 * 60 * 60 * 12 ms
-// //             console.log("Using cached programs. Cached at:", new Date(localPrograms.fetchedAt));
-// //             return localPrograms;
-// //         }
-// //     }
+    return fetch("https://api.sr.se/api/v2/programs/index?format=json&pagination=false")
+        .then(response => response.json())
+        .then(data => {
+            const programs = data.programs;
+            const leanPrograms = programs.map(program => {
+                return {
+                    id: program.id,
+                    name: program.name,
+                    description: program.description,
+                    image: program.programimage
+                }
+            })
 
-// //     console.log("Cache miss. Fetching programs...");
-// //     return fetch("https://api.sr.se/api/v2/programs/index?format=json&pagination=false")
-// //         .then(response => response.json())
-// //         .then(data => {
+            const programsAndDate = {
+                programs: leanPrograms,
+                fetchedAt: new Date().getTime()
+            }
 
-// //             const programs = data.programs;
-// //             const leanPrograms = programs.map(program => {
-// //                 return {
-// //                     id: program.id,
-// //                     name: program.name,
-// //                     description: program.description,
-// //                     image: program.programimage
-// //                 }
-// //             })
+            localStorage.setItem("programs", JSON.stringify(programsAndDate));
+            console.log("Programs fetched and saved to localStorage");
+        })
+        .catch(error => {
+            console.error("Error fetching programs:", error);
+        });
+}
 
-// //             const programsAndDate = {
-// //                 programs: leanPrograms,
-// //                 fetchedAt: new Date().getTime()
-// //             }
+const getEpisodesOfProgram = (programID, force = false) => {
+    if (!localStorage.getItem("programs")) {
+        console.warn("No programs found in localStorage. Please fetch programs first.");
+        return Promise.resolve();
+    }
 
-// //             localStorage.setItem("programs", JSON.stringify(programsAndDate));
-// //             console.log("Programs fetched", programsAndDate);
-// //             return programsAndDate
-// //         })
-// // }
+    // Getting dates for the api call
+    const oneDayInFuture = new Date()
+    oneDayInFuture.setDate(oneDayInFuture.getDate() + 1);
+    const oneMonthBack = new Date();
+    oneMonthBack.setMonth(oneMonthBack.getMonth() - 1);
 
-// // const getEpisodesOfProgram = (programID, force = false) => {
+    const toDate = oneDayInFuture.toISOString().slice(0, 10);
+    const fromDate = (
+        toDate.slice(0, 5)
+        + ((oneMonthBack.getMonth() + 1)).toString().padStart(2, "0")
+        + toDate.slice(7, 10)
+    );
 
-// //     if (!localStorage.getItem("programs")) {
-// //         console.warn("No programs found in localStorage. Please fetch programs first.");
-// //         // await getAllPrograms();
-// //     }
+    console.log("Fetching episodes...");
+    return fetch(`https://api.sr.se/api/v2/episodes/index?programid=${programID}&fromdate=${fromDate}&todate=${toDate}&audioquality=hi&format=json&pagination=false`)
+        .then(response => response.json())
+        .then(data => {
+            const episodes = data.episodes;
+            const leanEpisodes = episodes.map(episode => {
+                return {
+                    title: episode.title || "Avsnittstitel saknas",
+                    description: episode.description || "Beskrivning saknas",
+                    programName: episode.program.name || "Programnamn saknas",
+                    audioURL: episode.downloadpodfile.url,
+                    duration: episode.downloadpodfile.duration || "-",
+                    publishDate: parseInt(episode.downloadpodfile.publishdateutc.replace(/[^0-9]/g, '')),
+                    image: episode.imageurltemplate || episode.imageurl
+                }
+            })
 
-// //     const localEpisodes = JSON.parse(localStorage.getItem("episodes")) || { fetchedAt: 0 };
+            localStorage.setItem("episodes", JSON.stringify(leanEpisodes));
+            return leanEpisodes;
+        })
+        .catch(error => {
+            console.error("Error fetching episodes:", error);
+            return Promise.reject(error);
+        });
+}
 
-// //     // If episodes are already saved and no older than 10 minutes, return
-// //     if (!force) {
-// //         if (localEpisodes.fetchedAt > new Date().getTime() - 600000) { // 10 minutes = 1000 * 60 * 10 ms
-// //             console.log("Using cached episodes. Cached at:", new Date(localEpisodes.fetchedAt));
-// //             return { episodes: localEpisodes.episodes, fetchedAt: localEpisodes.fetchedAt };
-// //         }
-// //     }
+const getAllLikedPrograms = () => {
+    if (!localStorage.getItem("liked")) {
+        console.log("No liked programs found in localStorage.");
+        return;
+    }
+    if (!localStorage.getItem("programs")) {
+        console.warn("No programs found in localStorage. Please fetch programs first.");
+        return;
+    }
 
-// //     // Getting dates for the api call
-// //     const oneDayInFuture = new Date()
-// //     oneDayInFuture.setDate(oneDayInFuture.getDate() + 1);
-// //     const oneMonthBack = new Date();
-// //     oneMonthBack.setMonth(oneMonthBack.getMonth() - 1);
+    const likedProgramIDs = JSON.parse(localStorage.getItem("liked")) || [];
+    const episodes = [];
 
-// //     const toDate = oneDayInFuture.toISOString().slice(0, 10);
-// //     const fromDate = (
-// //         toDate.slice(0, 5)
-// //         + ((oneMonthBack.getMonth() + 1)).toString().padStart(2, "0")
-// //         + toDate.slice(7, 10)
-// //     );
+    likedProgramIDs.forEach(programID => {
+        episodes.push(getEpisodesOfProgram(programID));
+    });
 
-// //     console.log("Cache miss. Fetching episodes...");
-// //     fetch(`https://api.sr.se/api/v2/episodes/index?programid=${programID}&fromdate=${fromDate}&todate=${toDate}&audioquality=hi&format=json&pagination=false`)
-// //         .then(response => response.json())
-// //         .then(data => {
-// //             const episodes = data.episodes;
-// //             const leanEpisodes = episodes.map(episode => {
-// //                 return {
-// //                     title: episode.title,
-// //                     description: episode.description,
-// //                     programName: episode.program.name,
-// //                     audioURL: episode.downloadpodfile.url,
-// //                     duration: episode.downloadpodfile.duration
-// //                 }
-// //             })
+    return Promise.all(episodes)
+        .then(allEpisodes => {
+            localStorage.setItem("episodes", JSON.stringify(allEpisodes.flat()))
+        })
+        .catch(error => {
+            console.error("Error fetching episodes:", error);
+        });
+}
 
-// //             const episodesAndDate = {
-// //                 episodes: leanEpisodes,
-// //                 fetchedAt: new Date().getTime(),
-// //                 likedProgramIDs: JSON.parse(localStorage.getItem("likedPrograms")) || []
-// //             }
+const populateULwithAudio = () => {
+    if (!localStorage.getItem("episodes")) {
+        console.warn("No episodes found in localStorage. Please like episodes first.");
+        return;
+    } else {
+        document.getElementById("no-fav-notification").style.display = "none";
+    }
 
-// //             localStorage.setItem("episodes", JSON.stringify(episodesAndDate));
-// //             console.log(episodesAndDate);
+    const episodes = JSON.parse(localStorage.getItem("episodes"));
 
-// //             return episodesAndDate
-// //         })
-// // }
+    const ul = document.getElementById("new-episodes");
 
-// // const getAllLikedPrograms = () => {
+    episodes.forEach((episode) => {
+        const li = document.createElement("li");
 
-// //     if (!localStorage.getItem("likedPrograms")) {
-// //         console.log("No liked programs found in localStorage.");
-// //         return;
-// //     }
-// //     if (!localStorage.getItem("programs")) {
-// //         console.warn("No programs found in localStorage. Please fetch programs first.");
-// //         // await getAllPrograms();
-// //     }
+        const img = document.createElement("img");
+        img.src = "../assets/icons/missing-image48.png";
+        img.alt = "Bild";
+        li.appendChild(img);
 
-// //     const likedProgramIDs = JSON.parse(localStorage.getItem("likedPrograms")) || [];
+        const programName = document.createElement("p");
+        programName.classList.add("show-name");
+        programName.innerText = episode.programName;
+        li.appendChild(programName);
 
-// //     const episodes = [];
+        const title = document.createElement("p");
+        title.classList.add("title");
+        title.innerText = episode.title;
+        li.appendChild(title);
 
-// //     likedProgramIDs.forEach(programID => {
-// //         episodes.push(getEpisodesOfProgram(programID));
-// //     });
+        const description = document.createElement("p");
+        description.classList.add("description");
+        description.innerText = episode.description;
+        li.appendChild(description);
 
-// //     console.log(episodes);
-// // }
+        const customAudio = document.createElement("div");
+        customAudio.classList.add("custom-audio");
+        const audio = document.createElement("audio");
+        customAudio.appendChild(audio);
+        li.appendChild(customAudio);
 
-// // localStorage.setItem("likedPrograms", JSON.stringify([4923, 2778]))
-// // getAllPrograms();
-// // getAllLikedPrograms();
+        const seconds = (episode.duration % 60).toString().padStart(2, "0");
+        const minutes = Math.floor(episode.duration / 60);
+        const meta = document.createElement("p");
+        meta.classList.add("meta");
+        meta.innerText = minutes + ":" + seconds;
+        li.appendChild(meta);
 
-// // getAllPrograms();
-// // getEpisodesFromProgram(4923);
+        ul.appendChild(li)
+    })
+}
 
-// // localStorage.setItem("likedPrograms", JSON.stringify([4923]))
-// // const likedProgramsIds = JSON.parse(localStorage.getItem("likedPrograms")) || [];
-// // likedProgramsIds.forEach(programID => {
-// //     getEpisodesFromProgram(programID);
-// // });
+window.onload = () => {
+    // DEBUG
+    localStorage.setItem("liked", '["4923","178","3626","5524","2778"]')
 
+    fetchAndSaveAllPrograms().then(() => {
+        console.log(JSON.parse(localStorage.getItem("programs")));
 
-// const fetchAndSaveAllPrograms = () => {
-//     return new Promise((resolve, reject) => {
-//         fetch("https://api.sr.se/api/v2/programs/index?format=json&pagination=false")
-//             .then(response => response.json())
-//             .then(data => {
-//                 const programs = data.programs;
-//                 const leanPrograms = programs.map(program => {
-//                     return {
-//                         id: program.id,
-//                         name: program.name,
-//                         description: program.description,
-//                         image: program.programimage
-//                     }
-//                 })
+        getAllLikedPrograms().then(() => {
+            const episodes = JSON.parse(localStorage.getItem("episodes"));
 
-//                 const programsAndDate = {
-//                     programs: leanPrograms,
-//                     fetchedAt: new Date().getTime()
-//                 }
+            episodes.sort((a, b) => b.publishDate - a.publishDate);
 
-//                 localStorage.setItem("programs", JSON.stringify(programsAndDate));
-//                 console.log("Programs fetched and saved to localStorage");
-//                 resolve();
-//             })
-//             .catch(error => {
-//                 console.error("Error fetching programs:", error);
-//                 reject(error);
-//             });
-//     });
-// }
+            localStorage.setItem("episodes", JSON.stringify(episodes));
 
-// window.onload = () => {
-//     fetchAndSaveAllPrograms().then(() => {
-//         console.log(JSON.parse(localStorage.getItem("programs")));
-//     })
-// }
-
-
-
-// fetch("https://sverigesradio.se/topsy/ljudfil/srapi/9451370.mp3", { mode: "no-cors" })
-//     .then(response => response.blob())
-//     .then(blob => {
-//         const reader = new FileReader();
-//         reader.onloadend = () => {
-//             const audioData = reader.result;
-//             localStorage.setItem("audioBlob", audioData);
-//             console.log("MP3 file saved as a Blob in localStorage");
-//         };
-//         reader.readAsDataURL(blob);
-//     })
-//     .catch(error => {
-//         console.error("Error fetching and saving the MP3 file:", error);
-//     });
+            populateULwithAudio();
+        });
+    })
+}
