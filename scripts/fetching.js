@@ -118,60 +118,41 @@ const populateULwithAudio = () => {
     const ul = document.getElementById("new-episodes");
 
     episodes.forEach((episode) => {
+
         const li = document.createElement("li");
 
-        const img = document.createElement("img");
-        img.src = "../assets/icons/missing-image48.png";
-        img.alt = "Bild";
-        li.appendChild(img);
+        const episodeImage = document.createElement("img");
 
         const programName = document.createElement("p");
-        programName.classList.add("show-name");
-        programName.innerText = episode.programName;
-        li.appendChild(programName);
 
         const title = document.createElement("p");
-        title.classList.add("title");
-        title.innerText = episode.title;
-        li.appendChild(title);
 
         const description = document.createElement("p");
-        description.classList.add("description");
-        description.innerText = episode.description;
-        li.appendChild(description);
 
-        const customAudio = document.createElement("div");
-        customAudio.classList.add("custom-audio");
-        const audio = document.createElement("audio");
-        customAudio.appendChild(audio);
-        li.appendChild(customAudio);
+        const metaData = document.createElement("p");
 
-        const seconds = (episode.duration % 60).toString().padStart(2, "0");
-        const minutes = Math.floor(episode.duration / 60);
-        const meta = document.createElement("p");
-        meta.classList.add("meta");
-        meta.innerText = minutes + ":" + seconds;
-        li.appendChild(meta);
+        const playButton = document.createElement("div");
 
-        ul.appendChild(li)
+        const playIcon = document.createElement("p");
     })
+
 }
 
 window.onload = () => {
     // DEBUG
     localStorage.setItem("liked", '["4923","178","3626","5524","2778"]')
 
-    fetchAndSaveAllPrograms().then(() => {
-        console.log(JSON.parse(localStorage.getItem("programs")));
+    // fetchAndSaveAllPrograms().then(() => {
+    //     console.log(JSON.parse(localStorage.getItem("programs")));
 
-        getAllLikedPrograms().then(() => {
-            const episodes = JSON.parse(localStorage.getItem("episodes"));
+    //     getAllLikedPrograms().then(() => {
+    //         const episodes = JSON.parse(localStorage.getItem("episodes"));
 
-            episodes.sort((a, b) => b.publishDate - a.publishDate);
+    //         episodes.sort((a, b) => b.publishDate - a.publishDate);
 
-            localStorage.setItem("episodes", JSON.stringify(episodes));
+    //         localStorage.setItem("episodes", JSON.stringify(episodes));
 
-            populateULwithAudio();
-        });
-    })
+    //         populateULwithAudio();
+    //     });
+    // })
 }
