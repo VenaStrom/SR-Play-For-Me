@@ -118,22 +118,59 @@ const populateULwithAudio = () => {
     const ul = document.getElementById("new-episodes");
 
     episodes.forEach((episode) => {
-
         const li = document.createElement("li");
-
         const episodeImage = document.createElement("img");
-
         const programName = document.createElement("p");
-
         const title = document.createElement("p");
-
         const description = document.createElement("p");
-
         const metaData = document.createElement("p");
-
         const playButton = document.createElement("div");
-
         const playIcon = document.createElement("p");
+
+        episodeImage.classList.add("episode-image");
+        programName.classList.add("program-name");
+        title.classList.add("title");
+        description.classList.add("description");
+        metaData.classList.add("meta-data");
+        playButton.classList.add("play-button");
+
+        episodeImage.src = episode.image;
+        programName.innerText = episode.programName;
+        title.innerText = episode.title;
+        description.innerText = episode.description;
+
+        playIcon.innerText = "▶";
+        playButton.appendChild(playIcon);
+
+        // Meta data
+        const verticalDivider = " &nbsp; | &nbsp; ";
+        const dotDivider = " &nbsp; • &nbsp; ";
+
+        let date, time;
+        const duration = Math.round(episode.duration / 60);
+        const publishDate = new Date(episode.publishDate);
+        const currentDate = new Date();
+        if (publishDate.toDateString() === currentDate.toDateString()) {
+            date = "Idag";
+        } else if (publishDate.toDateString() === new Date(currentDate.setDate(currentDate.getDate() - 1)).toDateString()) {
+            date = "Igår";
+        } else {
+            const month = publishDate.toLocaleString('sv-SE', { month: 'long' });
+            date = `${publishDate.getDate()} ${month}`;
+        }
+        time = `${publishDate.getHours().toString()}:${publishDate.getMinutes().toString().padStart(2, "0")}`;
+        
+        metaData.innerHTML = `${date}${verticalDivider}${time}${dotDivider}${duration} MIN`;
+        metaData.setAttribute("data-audio-src", episode.audioURL);
+
+        li.appendChild(episodeImage);
+        li.appendChild(programName);
+        li.appendChild(title);
+        li.appendChild(description);
+        li.appendChild(metaData);
+        li.appendChild(playButton);
+
+        ul.appendChild(li);
     })
 
 }
@@ -142,17 +179,17 @@ window.onload = () => {
     // DEBUG
     localStorage.setItem("liked", '["4923","178","3626","5524","2778"]')
 
-    // fetchAndSaveAllPrograms().then(() => {
-    //     console.log(JSON.parse(localStorage.getItem("programs")));
+    fetchAndSaveAllPrograms().then(() => {
+        console.log(JSON.parse(localStorage.getItem("programs")));
 
-    //     getAllLikedPrograms().then(() => {
-    //         const episodes = JSON.parse(localStorage.getItem("episodes"));
+        getAllLikedPrograms().then(() => {
+            const episodes = JSON.parse(localStorage.getItem("episodes"));
 
-    //         episodes.sort((a, b) => b.publishDate - a.publishDate);
+            episodes.sort((a, b) => b.publishDate - a.publishDate);
 
-    //         localStorage.setItem("episodes", JSON.stringify(episodes));
+            localStorage.setItem("episodes", JSON.stringify(episodes));
 
-    //         populateULwithAudio();
-    //     });
-    // })
+            populateULwithAudio();
+        });
+    })
 }
