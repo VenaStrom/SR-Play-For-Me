@@ -30,7 +30,7 @@ const fetchAndSaveAllPrograms = () => {
             console.log("Programs fetched and saved to localStorage");
         })
         .catch(error => {
-            console.error("Error fetching programs:", error);
+            console.warn("Error fetching programs:", error);
         });
 }
 
@@ -74,7 +74,7 @@ const getEpisodesOfProgram = (programID, force = false) => {
             return leanEpisodes;
         })
         .catch(error => {
-            console.error("Error fetching episodes:", error);
+            console.warn("Error fetching episodes:", error);
             return Promise.reject(error);
         });
 }
@@ -101,7 +101,7 @@ const getAllLikedPrograms = () => {
             localStorage.setItem("episodes", JSON.stringify(allEpisodes.flat()))
         })
         .catch(error => {
-            console.error("Error fetching episodes:", error);
+            console.warn("Error fetching episodes:", error);
         });
 }
 
