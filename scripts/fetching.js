@@ -119,7 +119,9 @@ const populateULwithAudio = () => {
 
     episodes.forEach((episode) => {
         const li = document.createElement("li");
+        const imgWrapper = document.createElement("div");
         const episodeImage = document.createElement("img");
+        const progressBar = document.createElement("div");
         const programName = document.createElement("p");
         const title = document.createElement("p");
         const description = document.createElement("p");
@@ -127,7 +129,9 @@ const populateULwithAudio = () => {
         const playButton = document.createElement("div");
         const playIcon = document.createElement("p");
 
+        imgWrapper.classList.add("img-wrapper")
         episodeImage.classList.add("episode-image");
+        progressBar.classList.add("progress-bar");
         programName.classList.add("program-name");
         title.classList.add("title");
         description.classList.add("description");
@@ -138,6 +142,9 @@ const populateULwithAudio = () => {
         programName.innerText = episode.programName;
         title.innerText = episode.title;
         description.innerText = episode.description;
+
+        imgWrapper.appendChild(episodeImage);
+        imgWrapper.appendChild(progressBar)
 
         playIcon.innerText = "▶";
         playButton.appendChild(playIcon);
@@ -162,8 +169,9 @@ const populateULwithAudio = () => {
         
         metaData.innerHTML = `${date}${verticalDivider}${time}${dotDivider}${duration} MIN`;
         metaData.setAttribute("data-audio-src", episode.audioURL);
+        metaData.setAttribute("data-progress", 0);
 
-        li.appendChild(episodeImage);
+        li.appendChild(imgWrapper);
         li.appendChild(programName);
         li.appendChild(title);
         li.appendChild(description);
