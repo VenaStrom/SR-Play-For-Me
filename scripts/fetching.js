@@ -144,17 +144,19 @@ const populateULwithAudio = () => {
 
         const setProgress = (episode) => {
             const duration = (episode.duration);
-            const progress = localStorage.getItem(`progress${episode.id}`) || 0;
+            const progress = localStorage.getItem(`progressepisode${episode.id}`) || 0;
+            console.log(localStorage.getItem(`progressepisode${episode.id}`));
 
             return `background-size: ${(progress / duration) * 100}%`;
         }
+
 
         const li =
             `<li id='episode${episode.id}' data-audio-src='${episode.audioURL}' data-date='${episode.publishDate}' data-duration='${episode.duration}'>
                 <div class="img-wrapper">
                     <img class='episode-image' src='${episode.image || '../assets/icons/missing-image48.png'}' alt='Bild'>
 
-                    <div class='progress-bar' data-progress='' style='${setProgress(episode)}'></div>
+                    <div class='progress-bar' style='${setProgress(episode)}'></div>
                 </div>
 
                 <p class='program-name'>${episode.programName}</p>
@@ -178,7 +180,12 @@ const populateULwithAudio = () => {
 
 const playThis = (src) => {
     const li = src.parentElement;
-    console.log(li);
+
+    let startTime = 0;
+    if (localStorage.getItem(`progress${li.id}`)) {
+        startTime = localStorage.getItem(`progress${li.id}`);
+    }
+
     mainAudioTag.src = li.dataset.audioSrc;
     mainAudioTag.setAttribute("data-playing-id", li.id);
     mainAudioTag.oncanplay = () => { mainAudioTag.play() }

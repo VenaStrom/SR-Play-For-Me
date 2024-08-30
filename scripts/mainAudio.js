@@ -9,7 +9,7 @@ const updateProgressBars = setInterval(() => {
         const duration = mainAudioTag.duration;
 
         const progressBar = document.querySelector(`#${playingID} .progress-bar`);
-        progressBar.style = `background-size: ${(progress / duration) * 100}%`;
+        progressBar.style = `background-size: ${(progress / duration) * 100 + 5}%`;
 
         localStorage.setItem(`progress${playingID}`, progress);
     }
