@@ -15,42 +15,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
         rel="stylesheet">
 
-
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="assets/icons/SRlogo256.png" type="image/x-icon">
+
+    <script defer src="scripts/programs.js"></script>
 </head>
 
 <body>
     <header>
         <img id="logo" src="assets/icons/SRlogo256.png" alt="SR">
 
+        <!-- <h3>Program</h3> -->
+
         <input placeholder="  Sök" type="text" class="search-box">
     </header>
 
     <main>
-        <div class="centered-button-wrapper">
-            <button onclick="fetchButton()">Refresh</button>
-        </div>
-
         <ul id="programs"></ul>
     </main>
 
+
     <section id="main-audio-player">
-        <audio></audio>
-        <button>=</button>
-        <button>▶</button>
+        <audio controls></audio>
     </section>
-    
+
     <nav>
         <a href="#"><img src="assets/icons/icons8-feed-48.png" alt="Programs"></a>
         <a href="pages/liked.html"><img src="assets/icons/icons8-heart-48-filled.png" alt="Liked"></a>
     </nav>
-
-    <script src="scripts/fetchPrograms.js"></script>
-    <script src="scripts/like.js"></script>
-    <script src="scripts/populateUL.js"></script>
-    <script src="scripts/sort.js"></script>
-    <script src="scripts/eventListeners.js"></script>
 </body>
 
 </html>
