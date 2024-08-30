@@ -67,7 +67,7 @@ const getEpisodesOfProgram = (programID, force = false) => {
                     duration: episode.downloadpodfile.duration,
                     publishDate: parseInt(episode.downloadpodfile.publishdateutc.replace(/[^0-9]/g, '')),
                     image: episode.imageurltemplate || episode.imageurl,
-                    id: episode.id
+                    id: "episode" + episode.id
                 }
             })
 
@@ -144,15 +144,14 @@ const populateULwithAudio = () => {
 
         const setProgress = (episode) => {
             const duration = (episode.duration);
-            const progress = localStorage.getItem(`progressepisode${episode.id}`) || 0;
-            console.log(localStorage.getItem(`progressepisode${episode.id}`));
+            const progress = localStorage.getItem(`${episode.id}`) || 0;
 
             return `background-size: ${(progress / duration) * 100}%`;
         }
 
 
         const li =
-            `<li id='episode${episode.id}' data-audio-src='${episode.audioURL}' data-date='${episode.publishDate}' data-duration='${episode.duration}'>
+            `<li id='${episode.id}' data-audio-src='${episode.audioURL}' data-date='${episode.publishDate}' data-duration='${episode.duration}'>
                 <div class="img-wrapper">
                     <img class='episode-image' src='${episode.image || '../assets/icons/missing-image48.png'}' alt='Bild'>
 
