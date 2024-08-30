@@ -1,9 +1,10 @@
 :root {
-    --white: #f2f2f2;
-    --dark-white: #a8a8a8;
-    --black: #18181a;
-    --darker-black: #0d0d0e;
-    --gray: #2a2a2a;
+    --background: #121212;
+    --dark-low-contrast: #1a1a1a;
+    --dark-low-contrast-2: #303030;
+    --light: #f7f7f7;
+    --light-low-contrast: #797979;
+    --accent: #ffd900;
 
     --header-height: 4rem;
     --nav-height: 4.5rem;
@@ -17,6 +18,12 @@
     font-family: sans-serif;
 }
 
+@-moz-document url-prefix() {
+    * {
+        font-family: -moz-use-system-font;
+    }
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -28,8 +35,8 @@ img {
 }
 
 body {
-    background-color: var(--black);
-    color: var(--white);
+    background-color: var(--background);
+    color: var(--light);
 
     width: 100vw;
     max-width: 100%;
@@ -41,7 +48,7 @@ body {
         max-width: 100%;
         height: var(--header-height);
 
-        background-color: var(--darker-black);
+        background-color: var(--background);
 
         display: flex;
         flex-flow: row nowrap;
@@ -50,7 +57,7 @@ body {
 
         &>#logo {
             height: calc(0.8 * 3rem);
-            filter: invert(100%) sepia(77%) saturate(27%) hue-rotate(262deg) brightness(113%) contrast(90%);
+            filter: invert(100%) sepia(4%) saturate(2609%) hue-rotate(293deg) brightness(117%) contrast(94%);
 
             position: absolute;
             left: 2ch;
@@ -70,8 +77,8 @@ body {
             padding: 0.6rem;
             width: 50vw;
 
-            background: var(--gray);
-            color: var(--white);
+            background: var(--dark-low-contrast);
+            color: var(--light);
 
             cursor: pointer;
 
@@ -119,8 +126,8 @@ body {
                 padding: 0.5rem;
                 margin: 0;
 
-                background: var(--black);
-                color: var(--white);
+                background: var(--background);
+                color: var(--light);
 
                 cursor: pointer;
 
@@ -138,7 +145,7 @@ body {
 
             margin-top: 2rem;
 
-            filter: brightness(0.7);
+            color: var(--light-low-contrast)
         }
 
 
@@ -160,7 +167,7 @@ body {
                 padding: 1rem;
                 padding-bottom: 0rem;
 
-                border-bottom: 2px solid var(--darker-black);
+                border-bottom: 1px solid var(--dark-low-contrast-2);
 
                 display: grid;
                 grid-template-columns: 5fr 10fr;
@@ -199,9 +206,8 @@ body {
 
                         border-radius: 0.5rem;
 
-                        background-image: linear-gradient(var(--white), var(--white));
+                        background-image: linear-gradient(var(--light), var(--light));
                         background-repeat: no-repeat;
-                        background-size: 5%;
                     }
                 }
 
@@ -244,7 +250,7 @@ body {
                     grid-row: 4;
 
                     font-size: 0.7rem;
-                    color: var(--dark-white);
+                    color: var(--light-low-contrast);
 
                     width: max-content;
                     height: max-content;
@@ -270,13 +276,13 @@ body {
                     aspect-ratio: 1/1;
 
                     border-radius: 100vw;
-                    background-color: var(--white);
+                    background-color: var(--light);
 
                     user-select: none;
                     cursor: pointer;
 
                     &>p {
-                        color: var(--black);
+                        color: var(--background);
 
                         text-align: center;
 
@@ -338,7 +344,7 @@ body {
     &>#main-audio-player {
         height: var(--audio-player-height);
 
-        background-color: var(--black);
+        background-color: var(--dark-low-contrast);
     }
 
     &>nav {
@@ -352,7 +358,7 @@ body {
 
         height: var(--nav-height);
 
-        background-color: var(--darker-black);
+        background-color: var(--background);
 
         &>a>img {
             height: 3rem;

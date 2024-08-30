@@ -64,9 +64,10 @@ const getEpisodesOfProgram = (programID, force = false) => {
                     description: episode.description || "Beskrivning saknas",
                     programName: episode.program.name || "Programnamn saknas",
                     audioURL: episode.downloadpodfile.url,
-                    duration: episode.downloadpodfile.duration || "-",
+                    duration: episode.downloadpodfile.duration,
                     publishDate: parseInt(episode.downloadpodfile.publishdateutc.replace(/[^0-9]/g, '')),
-                    image: episode.imageurltemplate || episode.imageurl
+                    image: episode.imageurltemplate || episode.imageurl,
+                    id: episode.id
                 }
             })
 
@@ -118,74 +119,74 @@ const populateULwithAudio = () => {
     const ul = document.getElementById("new-episodes");
 
     episodes.forEach((episode) => {
-        const li = document.createElement("li");
-        const imgWrapper = document.createElement("div");
-        const episodeImage = document.createElement("img");
-        const progressBar = document.createElement("div");
-        const programName = document.createElement("p");
-        const title = document.createElement("p");
-        const description = document.createElement("p");
-        const metaData = document.createElement("p");
-        const playButton = document.createElement("div");
-        const playIcon = document.createElement("p");
 
-        imgWrapper.classList.add("img-wrapper")
-        episodeImage.classList.add("episode-image");
-        progressBar.classList.add("progress-bar");
-        programName.classList.add("program-name");
-        title.classList.add("title");
-        description.classList.add("description");
-        metaData.classList.add("meta-data");
-        playButton.classList.add("play-button");
-
-        episodeImage.src = episode.image;
-        programName.innerText = episode.programName;
-        title.innerText = episode.title;
-        description.innerText = episode.description;
-
-        imgWrapper.appendChild(episodeImage);
-        imgWrapper.appendChild(progressBar)
-
-        playIcon.innerText = "▶";
-        playButton.appendChild(playIcon);
-
-        // Meta data
-        const verticalDivider = " &nbsp; | &nbsp; ";
-        const dotDivider = " &nbsp; • &nbsp; ";
-
-        let date, time;
-        const duration = Math.round(episode.duration / 60);
-        const publishDate = new Date(episode.publishDate);
-        const currentDate = new Date();
-        if (publishDate.toDateString() === currentDate.toDateString()) {
-            date = "Idag";
-        } else if (publishDate.toDateString() === new Date(currentDate.setDate(currentDate.getDate() - 1)).toDateString()) {
-            date = "Igår";
-        } else {
-            const month = publishDate.toLocaleString('sv-SE', { month: 'long' });
-            date = `${publishDate.getDate()} ${month}`;
+        const getDisplayDate = (date) => {
+            if (new Date(date).toDateString() === new Date().toDateString()) {
+                return 'Idag'
+            } else if (new Date(date).toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
+                return 'Igår'
+            } else {
+                return new Date().toLocaleString('sv-SE', { day: '2-digit', month: 'short' }).replace('.', "");
+            }
         }
-        time = `${publishDate.getHours().toString()}:${publishDate.getMinutes().toString().padStart(2, "0")}`;
-        
-        metaData.innerHTML = `${date}${verticalDivider}${time}${dotDivider}${duration} MIN`;
-        metaData.setAttribute("data-audio-src", episode.audioURL);
-        metaData.setAttribute("data-progress", 0);
 
-        li.appendChild(imgWrapper);
-        li.appendChild(programName);
-        li.appendChild(title);
-        li.appendChild(description);
-        li.appendChild(metaData);
-        li.appendChild(playButton);
+        const getTime = (date) => {
+            return new Date(date).toLocaleString('sv-SE', { hour: '2-digit', minute: '2-digit' });
+        }
 
-        ul.appendChild(li);
-    })
+        const getDuration = (duration) => {
+            return Math.round(duration / 60) + " MIN";
+        }
 
+        const setMetaData = (episode) => {
+            return `${getDisplayDate(episode.publishDate)} &nbsp; | &nbsp; ${getTime(episode.publishDate)} &nbsp; • &nbsp; ${getDuration(episode.duration)}`;
+        }
+
+        const setProgress = (episode) => {
+            const duration = (episode.duration);
+            const progress = localStorage.getItem(`progress${episode.id}`) || 0;
+
+            return `background-size: ${(progress / duration) * 100}%`;
+        }
+
+        const li =
+            `<li id='episode${episode.id}' data-audio-src='${episode.audioURL}' data-date='${episode.publishDate}' data-duration='${episode.duration}'>
+                <div class="img-wrapper">
+                    <img class='episode-image' src='${episode.image || '../assets/icons/missing-image48.png'}' alt='Bild'>
+
+                    <div class='progress-bar' data-progress='' style='${setProgress(episode)}'></div>
+                </div>
+
+                <p class='program-name'>${episode.programName}</p>
+
+                <p class='title'>${episode.title}</p>
+
+                <p class='description'>${episode.description}</p>
+
+                <p class='meta-data' >
+                ${setMetaData(episode)}
+                </p>
+
+                <div class='play-button' onclick='playThis(this)'>
+                    <p>▶</p>
+                </div>
+            </li>`
+
+        ul.innerHTML += li;
+    });
+}
+
+const playThis = (src) => {
+    const li = src.parentElement;
+    console.log(li);
+    mainAudioTag.src = li.dataset.audioSrc;
+    mainAudioTag.setAttribute("data-playing-id", li.id);
+    mainAudioTag.oncanplay = () => { mainAudioTag.play() }
 }
 
 window.onload = () => {
-    // DEBUG
-    localStorage.setItem("liked", '["4923","178","3626","5524","2778"]')
+    // vv DEBUG vv
+    localStorage.setItem("liked", '["4923"]') // ,"178","3626","5524","2778"
 
     fetchAndSaveAllPrograms().then(() => {
         console.log(JSON.parse(localStorage.getItem("programs")));

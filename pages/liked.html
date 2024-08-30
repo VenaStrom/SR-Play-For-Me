@@ -8,32 +8,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SRplay</title>
-    
+
     <link rel="preload" href="https://static-cdn.sr.se/images/3626/531fdca7-cb65-4460-ad4f-60a25bd6a174.jpg" as="image">
     <link rel="preload" href="https://static-cdn.sr.se/images/5524/1d98e634-898f-4770-9e2f-b9d1441601d9.jpg" as="image">
     <link rel="preload" href="https://static-cdn.sr.se/images/178/afba7a70-51c3-49d4-adb7-99cc1ff0f68a.jpg" as="image">
+    <link rel="preload" href="https://static-cdn.sr.se/images/4923/b10d9051-52ec-4d92-a6f7-29332e5c2e3f.jpg" as="image">
 
-    
+
     <link rel="stylesheet" href="../style.css">
     <link rel="shortcut icon" href="../assets/icons/SRlogo256.png" type="image/x-icon">
-    
+
 </head>
 
 <body>
     <header>
         <img id="logo" src="../assets/icons/SRlogo256.png" alt="SR">
 
-        <h3>Nya avsnitt</h3>
+        <h3>Dina nya avsnitt</h3>
     </header>
 
     <main>
         <p id="no-fav-notification">Du har inga favoritprogram. <br> Följ program i andra fliken.</p>
         <ul id="new-episodes">
-            <li>
+            <!-- <li id="episode423423">
                 <div class="img-wrapper">
                     <img class="episode-image" src="../assets/icons/missing-image48.png" alt="Bild">
 
                     <div class="progress-bar"></div>
+
                 </div>
 
                 <p class="program-name">Ekonomiekot</p>
@@ -44,22 +46,24 @@
                     assumenda, mollitia corrupti error quisquam voluptates eligendi placeat in aliquid dolores corporis
                     modi ipsam consequuntur reiciendis quod rem praesentium nam.</p>
 
-                <p class="meta-data" data-audio-src="" data-progress="">Idag &nbsp; | &nbsp; 13:37 &nbsp; • &nbsp; 4 MIN
+                <p class="meta-data" data-audio-src="" data-progress="" data-date="" data-duration="">Idag
+                    &nbsp; | &nbsp; 13:37 &nbsp; • &nbsp; 4 MIN
                 </p>
 
                 <div class="play-button">
                     <p>▶</p>
                 </div>
-            </li>
+            </li> -->
         </ul>
 
         <script src="../scripts/fetching.js"></script>
     </main>
 
     <section id="main-audio-player">
-        <audio></audio>
-        <button>=</button>
-        <button>▶</button>
+        <audio controls src=""></audio>
+        <!-- <button>=</button> -->
+        <!-- <button>▶</button> -->
+        <script src="../scripts/mainAudio.js"></script>
     </section>
 
     <nav>
