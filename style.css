@@ -101,42 +101,6 @@ body {
 
         height: calc(100svh - var(--header-height) - var(--nav-height) - var(--audio-player-height));
 
-        &>.centered-button-wrapper {
-            display: flex;
-            flex-flow: row nowrap;
-            justify-content: center;
-            align-items: center;
-
-            width: 100vw;
-            max-width: 100%;
-            height: 1.5rem;
-
-            margin-bottom: .5rem;
-            margin-top: .5rem;
-
-            &>button {
-                text-decoration: none;
-                text-align: center;
-
-                display: inline-block;
-
-                border: none;
-                border-radius: 0.6rem;
-
-                padding: 0.5rem;
-                margin: 0;
-
-                background: var(--background);
-                color: var(--light);
-
-                cursor: pointer;
-
-                -webkit-appearance: none;
-                -moz-appearance: none;
-
-            }
-        }
-
         &>#no-fav-notification {
             font-size: 1.3rem;
             text-align: center;
@@ -148,10 +112,51 @@ body {
             color: var(--light-low-contrast)
         }
 
-
         &>ul {
             width: 100vw;
             max-width: 100%;
+        }
+
+        &>#programs {
+            box-sizing: border-box;
+            padding-left: 4ch;
+            padding-right: 1ch;
+
+            display: flex;
+            flex-flow: column nowrap;
+
+            &>li {
+                list-style-type: none;
+                text-wrap: nowrap;
+
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+
+                width: 100%;
+
+                margin-top: .4rem;
+                margin-bottom: .4rem;
+
+                &>.heart {
+                    margin-right: 2ch;
+
+                    height: 2rem;
+                    width: 2rem;
+
+                    cursor: pointer;
+
+                    filter: invert(78%) sepia(85%) saturate(7%) hue-rotate(129deg) brightness(119%) contrast(90%);
+                }
+
+                &>.liked {
+                    filter: invert(24%) sepia(49%) saturate(4444%) hue-rotate(343deg) brightness(82%) contrast(103%);
+                }
+
+                &>p {
+                    overflow: scroll;
+                }
+            }
         }
 
         &>#new-episodes {
@@ -297,54 +302,16 @@ body {
                 }
             }
         }
-
-        &>#programs {
-            box-sizing: border-box;
-            padding-left: 4ch;
-            padding-right: 1ch;
-
-            display: flex;
-            flex-flow: column nowrap;
-
-            &>li {
-                list-style-type: none;
-                text-wrap: nowrap;
-
-                display: flex;
-                flex-flow: row nowrap;
-                align-items: center;
-
-                width: 100%;
-
-                margin-top: .4rem;
-                margin-bottom: .4rem;
-
-                &>.heart {
-                    margin-right: 2ch;
-
-                    height: 2rem;
-                    width: 2rem;
-
-                    cursor: pointer;
-
-                    filter: invert(78%) sepia(85%) saturate(7%) hue-rotate(129deg) brightness(119%) contrast(90%);
-                }
-
-                &>.liked {
-                    filter: invert(24%) sepia(49%) saturate(4444%) hue-rotate(343deg) brightness(82%) contrast(103%);
-                }
-
-                &>p {
-                    overflow: scroll;
-                }
-            }
-        }
     }
 
     &>#main-audio-player {
         height: var(--audio-player-height);
 
         background-color: var(--dark-low-contrast);
+
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
     }
 
     &>nav {

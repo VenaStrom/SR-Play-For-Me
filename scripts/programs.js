@@ -29,35 +29,28 @@ const fetchPrograms = () => {
 }
 
 const makeProgramDOMS = (programs) => {
+    ul.innerHTML = "";
+
     programs.forEach(program => {
+        const heart = document.createElement("img");
+        heart.classList.add("heart");
+        heart.src = "assets/icons/icons8-heart-48.png";
+        heart.alt = "Följ";
+        heart.onclick = () => toggleHeart(heart);
 
-        const li = `
-        <li id='program${program.id}'>
-            <img class="heart" onclick='toggleHeart(this)' src="assets/icons/icons8-heart-48.png" alt="Följ">
-            <p class="name">${program.name}</p>
-        </li>`
+        const name = document.createElement("p");
+        name.classList.add("name");
+        name.textContent = program.name;
 
-        const liDOM = new DOMParser().parseFromString(li, "text/html").getElementById(`program${program.id}`);
+        const li = document.createElement("li");
+        li.id = `program${program.id}`;
+        li.appendChild(heart);
+        li.appendChild(name);
 
-        ul.appendChild(liDOM);
+        ul.appendChild(li);
     });
-}
 
-const toggleHeart = (source) => {
-    const li = source.parentElement;
-    const id = li.id;
-
-    const liked = JSON.parse(localStorage.getItem("liked")) || [];
-    liked.push(id);
-    localStorage.setItem("liked", JSON.stringify(liked));
-
-    source.classList.toggle("liked");
-
-    if (source.classList.contains("liked")) {
-        source.src = "assets/icons/icons8-heart-48-filled.png";
-    } else {
-        source.src = "assets/icons/icons8-heart-48.png";
-    }
+    relikePrograms();
 }
 
 const relikePrograms = () => {
@@ -66,22 +59,36 @@ const relikePrograms = () => {
     liked.forEach(id => {
         const li = document.getElementById(id);
 
-        if (li.id === id) {
-            const heart = li.querySelector(".heart");
-            toggleHeart(heart);
-        }
+        const heart = li.querySelector(".heart");
+
+        heart.classList.add("liked");
+        heart.src = "assets/icons/icons8-heart-48-filled.png";
     });
 }
 
-window.onload = () => {
+const toggleHeart = (source) => {
+    const liked = JSON.parse(localStorage.getItem("liked")) || [];
+    const id = source.parentElement.id;
 
+    source.classList.toggle("liked");
+
+    if (source.classList.contains("liked")) {
+        liked.push(id);
+        source.src = "assets/icons/icons8-heart-48-filled.png";
+    } else {
+        liked.splice(liked.indexOf(id), 1);
+        source.src = "assets/icons/icons8-heart-48.png";
+    }
+
+    localStorage.setItem("liked", JSON.stringify(liked));
+}
+
+window.onload = () => {
     const programs = JSON.parse(localStorage.getItem("programs"));
-    
-    if (!programs || programs.timeFetched + 86400000 < new Date().getTime()) { // 24 hours = 1000*60*60*24 ms
+
+    if (!programs || new Date().getDate() !== new Date(programs.timeFetched).getDate()) {
         fetchPrograms();
     } else {
         makeProgramDOMS(programs.programs);
     }
-
-    relikePrograms();
 }
