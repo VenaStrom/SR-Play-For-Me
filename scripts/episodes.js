@@ -26,7 +26,7 @@ const fetchEpisodes = (programIDs) => {
                     })
                 })
             }).then(() => {
-                localStorage.setItem("episodes", JSON.stringify(episodes.sort((a, b) => a.publishDate - b.publishDate)));
+                localStorage.setItem("episodes", JSON.stringify(episodes.sort((a, b) => b.publishDate - a.publishDate)));
                 makeEpisodeDOMS(episodes)
             });
     });
@@ -37,8 +37,8 @@ const reProgressEpisodes = (episodes) => {
         const progressBar = document.getElementById(episode.id).querySelector(".progress-bar");
 
         const duration = progressBar.getAttribute("data-duration");
-        const progress = localStorage.getItem("episode" + episode.id) || 0;
-
+        const progress = localStorage.getItem(episode.id);
+        
         if (progress > 0) {
             progressBar.style.backgroundSize = `${progress / duration * 100 + 3}%`;
         }
