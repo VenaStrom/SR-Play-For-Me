@@ -26,7 +26,7 @@ const fetchEpisodes = (programIDs) => {
                     })
                 })
             }).then(() => {
-                localStorage.setItem("episodes", JSON.stringify(episodes.sort((a, b) => b.publishDate - a.publishDate)));
+                localStorage.setItem("episodes", JSON.stringify(episodes.sort((a, b) => a.publishDate - b.publishDate)));
                 makeEpisodeDOMS(episodes)
             });
     });
