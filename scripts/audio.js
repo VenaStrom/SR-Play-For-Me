@@ -87,7 +87,7 @@ if (localStorage.getItem("currentlyPlaying")) {
 const updateProgress = setInterval(() => {
     const currentlyPlaying = localStorage.getItem("currentlyPlaying");
 
-    if (currentlyPlaying) {
+    if (currentlyPlaying && mainAudioPlayer.currentTime) {
         localStorage.setItem(currentlyPlaying, mainAudioPlayer.currentTime);
 
         const episodes = JSON.parse(localStorage.getItem("episodes"));

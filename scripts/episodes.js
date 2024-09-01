@@ -1,13 +1,14 @@
 
-const episodesUL = document.getElementById("new-episodes")
+const episodesUL = document.getElementById("new-episodes");
 
 const fetchEpisodes = (programIDs) => {
     const episodes = [];
 
     programIDs.forEach((id) => {
 
-        const fromDate = new Date(new Date().getTime() - 604800000).toISOString().slice(0, 10)
-        const toDate = new Date(new Date().getTime() + 86400000).toISOString().slice(0, 10)
+        const fromDate = new Date(new Date().getTime() - 604800000).toISOString().slice(0, 10);
+        // const toDate = new Date(new Date().getTime() + 86400000).toISOString().slice(0, 10)
+        const toDate = new Date().toISOString().slice(0, 10);
 
         fetch(`https://api.sr.se/api/v2/episodes/index?programid=${id.replace(/[^0-9]/g, '')}&fromdate=${fromDate}&todate=${toDate}&audioquality=hi&format=json&pagination=false`)
             .then(response => response.json())
@@ -24,7 +25,7 @@ const fetchEpisodes = (programIDs) => {
                         audioURL: episode.downloadpodfile.url || episode.listenpodfile.url,
                         publishDate: parseInt(episode.downloadpodfile.publishdateutc.replace(/[^0-9]/g, '')),
                     })
-                })
+                });
             }).then(() => {
                 localStorage.setItem("episodes", JSON.stringify(episodes.sort((a, b) => b.publishDate - a.publishDate)));
                 makeEpisodeDOMS(episodes)
@@ -37,8 +38,8 @@ const reProgressEpisodes = (episodes) => {
         const progressBar = document.getElementById(episode.id).querySelector(".progress-bar");
 
         const duration = progressBar.getAttribute("data-duration");
-        const progress = localStorage.getItem(episode.id);
-        
+        const progress = localStorage.getItem(episode.id) || 0;
+
         if (progress > 0) {
             progressBar.style.backgroundSize = `${progress / duration * 100 + 3}%`;
         }
@@ -108,12 +109,18 @@ const makeEpisodeDOMS = (episodes) => {
         playIcon.textContent = "▶";
         playButton.appendChild(playIcon);
 
+        const contextMenu = document.createElement("p");
+        contextMenu.classList.add("context-menu");
+        contextMenu.textContent = "•••";
+        contextMenu.setAttribute("onclick", "toggleContextMenu(this)");
+
         li.appendChild(imgDiv);
         li.appendChild(program);
         li.appendChild(title);
         li.appendChild(description);
         li.appendChild(metaData);
         li.appendChild(playButton);
+        li.appendChild(contextMenu);
 
         episodesUL.appendChild(li);
     });
@@ -121,7 +128,47 @@ const makeEpisodeDOMS = (episodes) => {
     reProgressEpisodes(episodes)
 }
 
+const toggleContextMenu = (source) => {
+    const contextMenu = document.getElementById("context-menu");
+    contextMenu.style.display = "flex";
+    contextMenu.style.position = "absolute";
+    contextMenu.setAttribute("data-episode-id", source.parentElement.id);
+
+    const rect = source.getBoundingClientRect();
+    contextMenu.style.right = `calc(107% - ${rect.right}px)`;
+    contextMenu.style.top = `calc(${rect.top}px - 1%)`;
+
+
+    const hideOnClick = (event) => {
+        if (event.target !== source && event.target !== contextMenu) {
+            contextMenu.style.display = "none";
+            document.removeEventListener("click", hideOnClick);
+        }
+    }
+
+    document.addEventListener("click", hideOnClick);
+}
+
+const markAsListenedTo = (source) => {
+    const contextMenu = source.parentElement;
+    const episode = document.getElementById(contextMenu.getAttribute("data-episode-id"));
+
+    localStorage.setItem(contextMenu.getAttribute("data-episode-id"), episode.querySelector(".progress-bar").getAttribute("data-duration"));
+
+    const episodes = JSON.parse(localStorage.getItem("episodes"));
+    reProgressEpisodes(episodes);
+}
+
+const resetProgressAt = (source) => {
+    const contextMenu = source.parentElement
+    localStorage.removeItem(contextMenu.getAttribute("data-episode-id"));
+
+    const episodes = JSON.parse(localStorage.getItem("episodes"));
+    reProgressEpisodes(episodes);
+}
+
 const episodesOnload = () => {
+
     if (localStorage.getItem("liked")) { document.getElementById("no-fav-notification").style.display = "none" }
 
     const liked = JSON.parse(localStorage.getItem("liked")) || [];

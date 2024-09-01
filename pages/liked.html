@@ -15,12 +15,17 @@
     <script defer src="../scripts/audio.js"></script>
     <script defer src="../scripts/programs.js"></script>
     <script defer src="../scripts/episodes.js"></script>
+
+    <div id="context-menu" style="display: none;">
+        <button onclick="markAsListenedTo(this)">Markera som klar</button>
+        <button onclick="resetProgressAt(this)">Nollställ</button>
+    </div>
 </head>
 
 <body>
     <header>
         <img id="logo" src="../assets/icons/SRlogo256.png" alt="SR">
-
+        
         <h3>Dina nya avsnitt</h3>
     </header>
 

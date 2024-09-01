@@ -302,6 +302,20 @@ body {
                         font-size: 100%;
                     }
                 }
+
+                &>.context-menu {
+                    grid-row: 1;
+                    grid-column: 2;
+
+                    justify-self: end;
+                    align-self: center;
+
+                    height: 2ch;
+                    width: 2ch;
+
+                    transform: rotate(90deg);
+                    color: var(--light-low-contrast);
+                }
             }
         }
     }
@@ -335,5 +349,34 @@ body {
 
             filter: invert(78%) sepia(85%) saturate(7%) hue-rotate(129deg) brightness(119%) contrast(90%);
         }
+    }
+}
+
+#context-menu {
+    display: flex;
+    flex-flow: column nowrap;
+
+    gap: 0.2rem;
+
+    padding: 0.5rem;
+    width: max-content;
+    max-width: 50%;
+
+    background-color: var(--dark-low-contrast);
+
+    border-radius: 0.5rem;
+    object-fit: contain;
+
+    
+    &>button {        
+        text-align: left;
+
+        padding: 0.3rem;
+
+        color: var(--light);
+
+        background-color: var(--dark-low-contrast);
+
+        border: none;
     }
 }
