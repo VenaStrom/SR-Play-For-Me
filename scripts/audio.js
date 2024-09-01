@@ -30,8 +30,21 @@ const playThis = (episodeID) => {
             const episodes = JSON.parse(localStorage.getItem("episodes"));
             const nextEpisode = episodes[episodes.indexOf(episode) + 1];
             if (nextEpisode) {
-                playThis(nextEpisode.id);
+                playThis("episode" + nextEpisode.id);
             }
+        });
+        navigator.mediaSession.setActionHandler("previoustrack", () => {
+            const episodes = JSON.parse(localStorage.getItem("episodes"));
+            const previousEpisode = episodes[episodes.indexOf(episode) - 1];
+            if (previousEpisode) {
+                playThis("episode" + previousEpisode.id);
+            }
+        });
+        navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+            mainAudioPlayer.currentTime -= details.seekOffset;
+        });
+        navigator.mediaSession.setActionHandler("seekforward", (details) => {
+            mainAudioPlayer.currentTime += details.seekOffset;
         });
     }
 }
