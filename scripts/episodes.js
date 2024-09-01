@@ -42,6 +42,8 @@ const reProgressEpisodes = (episodes) => {
 
         if (progress > 0) {
             progressBar.style.backgroundSize = `${progress / duration * 100 + 3}%`;
+        } else if (progress === 0) {
+            progressBar.style.backgroundSize = "0%";
         }
     });
 }
@@ -152,6 +154,12 @@ const toggleContextMenu = (source) => {
 const markAsListenedTo = (source) => {
     const contextMenu = source.parentElement;
     const episode = document.getElementById(contextMenu.getAttribute("data-episode-id"));
+    if (episode.id === localStorage.getItem("currentlyPlaying")) {
+        mainAudioPlayer.src = "";
+        mainAudioPlayer.currentTime = 0;
+        localStorage.removeItem("currentlyPlaying");
+    };
+
 
     localStorage.setItem(contextMenu.getAttribute("data-episode-id"), episode.querySelector(".progress-bar").getAttribute("data-duration"));
 
@@ -160,7 +168,14 @@ const markAsListenedTo = (source) => {
 }
 
 const resetProgressAt = (source) => {
-    const contextMenu = source.parentElement
+    const contextMenu = source.parentElement;
+    const episode = document.getElementById(contextMenu.getAttribute("data-episode-id"));
+    if (episode.id === localStorage.getItem("currentlyPlaying")) {
+        mainAudioPlayer.src = "";
+        mainAudioPlayer.currentTime = 0;
+        localStorage.removeItem("currentlyPlaying");
+    };
+
     localStorage.removeItem(contextMenu.getAttribute("data-episode-id"));
 
     const episodes = JSON.parse(localStorage.getItem("episodes"));
