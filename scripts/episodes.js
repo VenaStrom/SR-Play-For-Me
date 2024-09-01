@@ -54,7 +54,7 @@ const makeEpisodeDOMS = (episodes) => {
         } else if (new Date(date).toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
             return 'Igår'
         } else {
-            return new Date().toLocaleString('sv-SE', { day: '2-digit', month: 'short' }).replace("0", "").replace('.', "");
+            return new Date(date).toLocaleString('sv-SE', { day: '2-digit', month: 'short' }).replace("0", "").replace('.', "");
         }
     }
     const getTime = (date) => {

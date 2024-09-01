@@ -20,15 +20,20 @@ const playThis = (episodeID) => {
         });
 
         // You can also handle media actions (like play, pause, next, etc.)
-        navigator.mediaSession.setActionHandler('play', function () {
+        navigator.mediaSession.setActionHandler('play', () => {
             mainAudioPlayer.play();
         });
-
-        navigator.mediaSession.setActionHandler('pause', function () {
+        navigator.mediaSession.setActionHandler('pause', () => {
             mainAudioPlayer.pause();
         });
+        navigator.mediaSession.setActionHandler("nexttrack", () => {
+            const episodes = JSON.parse(localStorage.getItem("episodes"));
+            const nextEpisode = episodes[episodes.indexOf(episode) + 1];
+            if (nextEpisode) {
+                playThis(nextEpisode.id);
+            }
+        });
     }
-
 }
 
 if (localStorage.getItem("currentlyPlaying")) {
