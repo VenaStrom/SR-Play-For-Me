@@ -1,10 +1,10 @@
 
-const ul = document.getElementById("programs");
+const programsUL = document.getElementById("programs");
 
 const fetchPrograms = () => {
 
     console.log("Fetching list of all programs...", "if you see this message repeatedly, something is wrong with the fetchPrograms.js script and it means that Sveriges Radio API is being spammed.")
-    fetch("https://api.sr.se/api/v2/programs/index?format=json&pagination=false")
+    return fetch("https://api.sr.se/api/v2/programs/index?format=json&pagination=false")
         .then(response => response.json())
         .then(data => {
 
@@ -21,15 +21,13 @@ const fetchPrograms = () => {
             };
 
             localStorage.setItem("programs", JSON.stringify(returnData));
-
-        }).then(() => {
-            const programs = JSON.parse(localStorage.getItem("programs"));
-            makeProgramDOMS(programs.programs);
-        });
+        })
 }
 
 const makeProgramDOMS = (programs) => {
-    ul.innerHTML = "";
+    if (!document.getElementById("programs")) { return }
+
+    programsUL.innerHTML = "";
 
     programs.forEach(program => {
         const heart = document.createElement("img");
@@ -47,22 +45,23 @@ const makeProgramDOMS = (programs) => {
         li.appendChild(heart);
         li.appendChild(name);
 
-        ul.appendChild(li);
+        programsUL.appendChild(li);
     });
 
-    relikePrograms();
+    reLikePrograms();
 }
 
-const relikePrograms = () => {
+const reLikePrograms = () => {
     const liked = JSON.parse(localStorage.getItem("liked")) || [];
 
     liked.forEach(id => {
-        const li = document.getElementById(id);
+        if (document.getElementById(id)) {
+            const li = document.getElementById(id);
+            const heart = li.querySelector(".heart");
 
-        const heart = li.querySelector(".heart");
-
-        heart.classList.add("liked");
-        heart.src = "assets/icons/icons8-heart-48-filled.png";
+            heart.classList.add("liked");
+            heart.src = "assets/icons/icons8-heart-48-filled.png";
+        }
     });
 }
 
@@ -87,7 +86,9 @@ window.onload = () => {
     const programs = JSON.parse(localStorage.getItem("programs"));
 
     if (!programs || new Date().getDate() !== new Date(programs.timeFetched).getDate()) {
-        fetchPrograms();
+        fetchPrograms().then(() => {
+            makeProgramDOMS(programs.programs);
+        });
     } else {
         makeProgramDOMS(programs.programs);
     }

@@ -24,7 +24,7 @@ searchBox.addEventListener("input", () => {
 
         return program;
 
-    }).filter(program => program.percentMatch > 0.1);
+    }).filter(program => program.percentMatch > 0.1)
 
     const returnList = [
         ...exactMatches,
