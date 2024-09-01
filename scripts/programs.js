@@ -82,9 +82,9 @@ const toggleHeart = (source) => {
     localStorage.setItem("liked", JSON.stringify(liked));
 }
 
-window.onload = () => {
+const programsOnload = () => {
     const programs = JSON.parse(localStorage.getItem("programs"));
-
+    
     if (!programs || new Date().getDate() !== new Date(programs.timeFetched).getDate()) {
         fetchPrograms().then(() => {
             makeProgramDOMS(programs.programs);
@@ -93,3 +93,5 @@ window.onload = () => {
         makeProgramDOMS(programs.programs);
     }
 }
+
+programsOnload();

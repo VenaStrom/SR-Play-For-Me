@@ -37,10 +37,10 @@ const reProgressEpisodes = (episodes) => {
         const progressBar = document.getElementById(episode.id).querySelector(".progress-bar");
 
         const duration = progressBar.getAttribute("data-duration");
-        const progress = localStorage.getItem(episode.id) || 0;
+        const progress = localStorage.getItem("episode" + episode.id) || 0;
 
         if (progress > 0) {
-            progressBar.style.backgroundSize = `${progress / duration * 100}%`;
+            progressBar.style.backgroundSize = `${progress / duration * 100 + 3}%`;
         }
     });
 }
@@ -103,7 +103,7 @@ const makeEpisodeDOMS = (episodes) => {
         const playButton = document.createElement("div");
         playButton.classList.add("play-button");
         playButton.setAttribute("data-audio-src", episode.audioURL);
-        playButton.setAttribute("onclick", "playThis(this)");
+        playButton.setAttribute("onclick", "playThis(this.parentElement.id)");
         const playIcon = document.createElement("p");
         playIcon.textContent = "▶";
         playButton.appendChild(playIcon);
@@ -123,6 +123,7 @@ const makeEpisodeDOMS = (episodes) => {
 
 const episodesOnload = () => {
     if (localStorage.getItem("liked")) { document.getElementById("no-fav-notification").style.display = "none" }
+
     const liked = JSON.parse(localStorage.getItem("liked")) || [];
 
     const programs = localStorage.getItem("programs");
@@ -135,4 +136,4 @@ const episodesOnload = () => {
     }
 }
 
-window.onload = episodesOnload
+episodesOnload();
