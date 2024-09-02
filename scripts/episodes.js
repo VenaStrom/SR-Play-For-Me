@@ -7,8 +7,8 @@ const fetchEpisodes = (programIDs) => {
     programIDs.forEach((id) => {
 
         const fromDate = new Date(new Date().getTime() - 604800000).toISOString().slice(0, 10);
-        // const toDate = new Date(new Date().getTime() + 86400000).toISOString().slice(0, 10)
-        const toDate = new Date().toISOString().slice(0, 10);
+        const toDate = new Date(new Date().getTime() + 86400000).toISOString().slice(0, 10)
+        // const toDate = new Date().toISOString().slice(0, 10);
 
         fetch(`https://api.sr.se/api/v2/episodes/index?programid=${id.replace(/[^0-9]/g, '')}&fromdate=${fromDate}&todate=${toDate}&audioquality=hi&format=json&pagination=false`)
             .then(response => response.json())
