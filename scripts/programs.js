@@ -21,7 +21,9 @@ const fetchPrograms = () => {
             };
 
             localStorage.setItem("programs", JSON.stringify(returnData));
-        })
+        }).catch(error => {
+            console.error("Error fetching programs:", error);
+        });
 }
 
 const makeProgramDOMS = (programs) => {
