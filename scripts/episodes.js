@@ -28,6 +28,8 @@ const fetchEpisodes = (programIDs) => {
             }).then(() => {
                 localStorage.setItem("episodes", JSON.stringify(episodes.sort((a, b) => b.publishDate - a.publishDate)));
                 makeEpisodeDOMS(episodes)
+            }).catch(error => {
+                console.error("Error fetching episodes:", error);
             });
     });
 }
