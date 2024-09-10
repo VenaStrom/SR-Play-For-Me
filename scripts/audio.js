@@ -80,7 +80,7 @@ const playThis = (episodeID) => {
 if (localStorage.getItem("currentlyPlaying")) {
     playThis(localStorage.getItem("currentlyPlaying"));
     mainAudioPlayer.oncanplay = () => {
-        mainAudioPlayer.pause();
+        mainAudioPlayer.play();
     };
 }
 
@@ -112,8 +112,8 @@ const updateProgress = setInterval(() => {
 
         if (mainAudioPlayer.currentTime >= episode.duration - 1) {
             localStorage.removeItem("currentlyPlaying");
-            mainAudioPlayer.src = "";
             mainAudioPlayer.pause();
+            mainAudioPlayer.src = "";
 
             // Try next episode
             const nextEpisode = episodes[episodes.indexOf(episode) + 1];
@@ -123,3 +123,4 @@ const updateProgress = setInterval(() => {
         }
     }
 }, 1000);
+
