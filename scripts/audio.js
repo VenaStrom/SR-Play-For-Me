@@ -7,9 +7,6 @@ const playThis = (episodeID) => {
     mainAudioPlayer.currentTime = localStorage.getItem(episodeID);
     mainAudioPlayer.oncanplay = () => {
         mainAudioPlayer.play();
-        if ("mediaSession" in navigator) {
-            navigator.mediaSession.playbackState = "playing"
-        };
     };
 
     if ("mediaSession" in navigator) {
@@ -31,7 +28,7 @@ const playThis = (episodeID) => {
             mainAudioPlayer.currentTime = details.seekTime;
 
             if ("mediaSession" in navigator) {
-                // navigator.mediaSession.playbackState = "paused";
+                navigator.mediaSession.playbackState = "paused";
 
                 navigator.mediaSession.setPositionState({
                     duration: parseInt(episode.duration),
@@ -97,7 +94,7 @@ const updateProgress = setInterval(() => {
         const episode = episodes.filter(episode => episode.id === currentlyPlaying)[0];
 
         if ("mediaSession" in navigator) {
-            // navigator.mediaSession.playbackState = "paused";
+            navigator.mediaSession.playbackState = "paused";
 
             navigator.mediaSession.setPositionState({
                 duration: parseInt(episode.duration),
@@ -126,9 +123,3 @@ const updateProgress = setInterval(() => {
         }
     }
 }, 1000);
-
-mainAudioPlayer.addEventListener("pause", ()=>{
-    if ("mediaSession" in navigator) {
-        navigator.mediaSession.playbackState = "paused"
-    };
-});
