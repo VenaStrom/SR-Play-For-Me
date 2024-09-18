@@ -1,14 +1,6 @@
 
 const mainAudioPlayer = document.querySelector("#main-audio-player audio");
 
-// Start the playing episode on page load
-if (localStorage.getItem("currentlyPlaying")) {
-    playThis(localStorage.getItem("currentlyPlaying"));
-    mainAudioPlayer.oncanplay = () => {
-        mainAudioPlayer.play();
-    };
-}
-
 // Play the episode specified via its ID
 const playThis = (episodeID) => {
     const episode = JSON.parse(localStorage.getItem("episodes")).filter(episode => episode.id === episodeID)[0];
@@ -84,8 +76,9 @@ const playThis = (episodeID) => {
             }
         });
     }
-}
+};
 
+// Runs every second to update the progress of the episode
 const updateProgress = setInterval(() => {
     // LocalStorage:
     //  currentlyPlaying: The ID of the episode that is currently playing
@@ -145,4 +138,14 @@ mainAudioPlayer.addEventListener("pause", () => {
     if ("mediaSession" in navigator) {
         navigator.mediaSession.playbackState = "paused";
     }
-}); 
+});
+
+// Start the playing episode on page load
+if (localStorage.getItem("currentlyPlaying")) {
+    playThis(localStorage.getItem("currentlyPlaying"));
+    
+    mainAudioPlayer.play();
+    mainAudioPlayer.oncanplay = () => {
+        mainAudioPlayer.play();
+    };
+};
