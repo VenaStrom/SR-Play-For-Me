@@ -111,6 +111,19 @@ const updateProgress = setInterval(() => {
         progressBar.style.backgroundSize = `${progress}%`;
     }
 
+    // Cache next episode
+    const nextEpisode = episodes[episodes.indexOf(episode) + 1];
+    if (
+        nextEpisode
+        &&
+        !document.querySelector(`link[href="${nextEpisode.audioURL}"]`)
+    ) {
+        const linkTag = document.createElement("link");
+        linkTag.rel = "prefetch";
+        linkTag.href = nextEpisode.audioURL;
+        document.head.appendChild(linkTag);
+    };
+
     // If the episode is over, try to play the next episode
     if (mainAudioPlayer.currentTime >= episode.duration - 1) {
         localStorage.removeItem("currentlyPlaying");
@@ -143,7 +156,7 @@ mainAudioPlayer.addEventListener("pause", () => {
 // Start the playing episode on page load
 if (localStorage.getItem("currentlyPlaying")) {
     playThis(localStorage.getItem("currentlyPlaying"));
-    
+
     mainAudioPlayer.play();
     mainAudioPlayer.oncanplay = () => {
         mainAudioPlayer.play();
