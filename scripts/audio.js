@@ -102,7 +102,7 @@ const updateProgress = setInterval(() => {
         });
     };
 
-    // Sets the progressbar of the episode DOM if you're in liked.html
+    // Sets the progress bar of the episode DOM if you're in liked.html
     if (document.getElementById("new-episodes")) {
         const episodeDOM = document.getElementById(currentlyPlaying);
         const progressBar = episodeDOM.querySelector(".progress-bar");
@@ -111,7 +111,15 @@ const updateProgress = setInterval(() => {
         progressBar.style.backgroundSize = `${progress}%`;
     }
 
-    // Cache next episode
+    // Cache the current episode in case of quick switching in between episodes
+    if (!document.querySelector(`link[href="${episode.audioURL}"]`)) {
+        const linkTag = document.createElement("link");
+        linkTag.rel = "prefetch";
+        linkTag.href = episode.audioURL;
+        document.head.appendChild(linkTag);
+    };
+
+    // Cache the next episode so that the transition to the next episode is smoother
     const nextEpisode = episodes[episodes.indexOf(episode) + 1];
     if (
         nextEpisode
