@@ -79,6 +79,7 @@ const makeEpisodeDOMS = (episodes) => {
         imgDiv.classList.add("img-wrapper");
         const img = document.createElement("img");
         img.classList.add("episode-image");
+        img.loading = "lazy";
         img.src = episode.image;
         img.alt = "Bild";
         const progressBar = document.createElement("div");
@@ -128,8 +129,8 @@ const makeEpisodeDOMS = (episodes) => {
         episodesUL.appendChild(li);
     });
 
-    reProgressEpisodes(episodes)
-}
+    reProgressEpisodes(episodes);
+};
 
 const toggleContextMenu = (source) => {
     const contextMenu = document.getElementById("context-menu");
@@ -146,11 +147,11 @@ const toggleContextMenu = (source) => {
         if (event.target !== source && event.target !== contextMenu) {
             contextMenu.style.display = "none";
             document.removeEventListener("click", hideOnClick);
-        }
-    }
+        };
+    };
 
     document.addEventListener("click", hideOnClick);
-}
+};
 
 const markAsListenedTo = (source) => {
     const contextMenu = source.parentElement;
