@@ -157,7 +157,7 @@ mainAudioPlayer.addEventListener("play", () => {
 });
 mainAudioPlayer.addEventListener("pause", () => {
     if ("mediaSession" in navigator) {
-        navigator.mediaSession.playbackState = "paused";
+        navigator.mediaSession.playbackState = "playing"; // modified as a test to keep the media session active
     }
 });
 
