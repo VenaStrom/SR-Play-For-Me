@@ -21,31 +21,45 @@ const playThis = (episodeID) => {
                 { src: episode.image },
             ]
         });
-        navigator.mediaSession.setActionHandler("seekbackward", () => {
-            mainAudioPlayer.currentTime -= 15;
+        navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+            mainAudioPlayer.currentTime -= details.seekOffset || 15; // 15 seconds is the default if the seekOffset is not provided
         });
-        navigator.mediaSession.setActionHandler("seekforward", () => {
-            mainAudioPlayer.currentTime += 15;
+        navigator.mediaSession.setActionHandler("seekforward", (details) => {
+            mainAudioPlayer.currentTime += details.seekOffset || 15; // 15 seconds is the default if the seekOffset is not provided
         });
         navigator.mediaSession.setActionHandler("seekto", (details) => {
             mainAudioPlayer.currentTime = details.seekTime;
 
-            if ("mediaSession" in navigator) {
-                navigator.mediaSession.setPositionState({
-                    duration: parseInt(episode.duration),
-                    position: parseInt(mainAudioPlayer.currentTime),
-                });
+            navigator.mediaSession.setPositionState({
+                duration: parseInt(episode.duration),
+                position: parseInt(mainAudioPlayer.currentTime),
+            });
 
-                mainAudioPlayer.oncanplay = () => {
-                    mainAudioPlayer.play();
-                };
+            mainAudioPlayer.oncanplay = () => {
+                mainAudioPlayer.play();
             };
         });
         navigator.mediaSession.setActionHandler('play', () => {
-            mainAudioPlayer.play();
+            // Since the MediaSession API in chrome has been weird with showing the current status i can't play the currently playing episode unless i make the play and pause buttons toggles
+            // mainAudioPlayer.play();
+
+            // Toggle play/pause on click
+            if (mainAudioPlayer.paused) {
+                mainAudioPlayer.play();
+            } else {
+                mainAudioPlayer.pause();
+            };
         });
         navigator.mediaSession.setActionHandler('pause', () => {
-            mainAudioPlayer.pause();
+            // Since the MediaSession API in chrome has been weird with showing the current status i can't play the currently playing episode unless i make the play and pause buttons toggles
+            // mainAudioPlayer.pause();
+
+            // Toggle play/pause on click
+            if (mainAudioPlayer.paused) {
+                mainAudioPlayer.play();
+            } else {
+                mainAudioPlayer.pause();
+            };
         });
         navigator.mediaSession.setActionHandler("nexttrack", () => {
             let episodeIndex;
@@ -62,18 +76,24 @@ const playThis = (episodeID) => {
             }
         });
         navigator.mediaSession.setActionHandler("previoustrack", () => {
-            let episodeIndex;
-            JSON.parse(localStorage.getItem("episodes")).filter((episode, index) => {
-                if (episode.id === episodeID) {
-                    episodeIndex = index;
-                    return episode;
-                }
-            })[0];
-            const previousEpisode = JSON.parse(localStorage.getItem("episodes"))[episodeIndex - 1];
+            // For my use case i'd rather have the previous button go to the latest episode so i can avoid opening the app
+            const episode = JSON.parse(localStorage.getItem("episodes"))[0];
+            playThis(episode.id);
 
-            if (previousEpisode) {
-                playThis(previousEpisode.id);
-            }
+
+            // // This is the default behavior which is sensible and standard but not what I want
+            // let episodeIndex;
+            // JSON.parse(localStorage.getItem("episodes")).filter((episode, index) => {
+            //     if (episode.id === episodeID) {
+            //         episodeIndex = index;
+            //         return episode;
+            //     }
+            // })[0];
+            // const previousEpisode = JSON.parse(localStorage.getItem("episodes"))[episodeIndex - 1];
+
+            // if (previousEpisode) {
+            //     playThis(previousEpisode.id);
+            // }
         });
     }
 };
@@ -81,8 +101,8 @@ const playThis = (episodeID) => {
 // Runs every second to update the progress of the episode
 const updateProgress = setInterval(() => {
     // LocalStorage:
-    //  currentlyPlaying: The ID of the episode that is currently playing
-    //  [episodeID]: The time where the episode is currently at
+    //    currentlyPlaying: The ID of the episode that is currently playing
+    //    [episodeID]: The time where the episode is currently at
 
     const currentlyPlaying = localStorage.getItem("currentlyPlaying");
 
@@ -102,14 +122,14 @@ const updateProgress = setInterval(() => {
         });
     };
 
-    // Sets the progress bar of the episode DOM if you're in liked.html
+    // Sets the progress bar of the episode DOM if you are looking at the new episodes page (liked.html)
     if (document.getElementById("new-episodes")) {
         const episodeDOM = document.getElementById(currentlyPlaying);
         const progressBar = episodeDOM.querySelector(".progress-bar");
         const duration = progressBar.getAttribute("data-duration");
-        const progress = (mainAudioPlayer.currentTime / duration) * 100 + 3;
+        const progress = (mainAudioPlayer.currentTime / duration) * 100 + 3; // Min value of 3 for esthetic reasons
         progressBar.style.backgroundSize = `${progress}%`;
-    }
+    };
 
     // Cache the current episode in case of quick switching in between episodes
     if (!document.querySelector(`link[href="${episode.audioURL}"]`)) {
@@ -146,7 +166,7 @@ const updateProgress = setInterval(() => {
             // This is mostly a debugging measure
             alert("You've reached the end of the episode list. If you haven't actually, this is an error.");
         };
-    }
+    };
 }, 1000);
 
 // Set playback state when main audio player is changed
