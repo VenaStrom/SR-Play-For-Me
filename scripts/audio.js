@@ -39,7 +39,7 @@ const playThis = (episodeID) => {
                 mainAudioPlayer.play();
             };
         });
-        navigator.mediaSession.setActionHandler('play', () => {
+        navigator.mediaSession.setActionHandler("play", () => {
             // Since the MediaSession API in chrome has been weird with showing the current status i can't play the currently playing episode unless i make the play and pause buttons toggles
             // mainAudioPlayer.play();
 
@@ -50,7 +50,7 @@ const playThis = (episodeID) => {
                 mainAudioPlayer.pause();
             };
         });
-        navigator.mediaSession.setActionHandler('pause', () => {
+        navigator.mediaSession.setActionHandler("pause", () => {
             // Since the MediaSession API in chrome has been weird with showing the current status i can't play the currently playing episode unless i make the play and pause buttons toggles
             // mainAudioPlayer.pause();
 
