@@ -38,6 +38,15 @@
 
     <section id="main-audio-player">
         <audio controls></audio>
+
+        <script>
+            if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+                console.log("Chrome detected, audio player modified");
+                const mainAudioPlayer = document.querySelector("#main-audio-player audio");
+
+                mainAudioPlayer.style.filter = "invert(100%) sepia(20%) saturate(33%) hue-rotate(1165deg) brightness(73%) contrast(84%)";
+            }
+        </script>
     </section>
 
     <nav>
