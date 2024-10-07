@@ -77,6 +77,7 @@ const playThis = (episodeID) => {
         });
         navigator.mediaSession.setActionHandler("previoustrack", () => {
             // For my use case i'd rather have the previous button go to the latest episode so i can avoid opening the app
+            fetchEpisodes(JSON.parse(localStorage.getItem("liked")));
             const episode = JSON.parse(localStorage.getItem("episodes"))[0];
             playThis(episode.id);
 
@@ -120,6 +121,12 @@ const updateProgress = setInterval(() => {
             duration: parseInt(episode.duration),
             position: parseInt(mainAudioPlayer.currentTime),
         });
+
+        if (mainAudioPlayer.playing) {
+            navigator.mediaSession.playbackState = "playing";
+        } else {
+            navigator.mediaSession.playbackState = "paused";
+        };
     };
 
     // Sets the progress bar of the episode DOM if you are looking at the new episodes page (liked.html)
@@ -177,7 +184,7 @@ mainAudioPlayer.addEventListener("play", () => {
 });
 mainAudioPlayer.addEventListener("pause", () => {
     if ("mediaSession" in navigator) {
-        navigator.mediaSession.playbackState = "playing"; // modified as a test to keep the media session active
+        navigator.mediaSession.playbackState = "paused";
     }
 });
 
