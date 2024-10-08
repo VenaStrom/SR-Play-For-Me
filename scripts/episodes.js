@@ -1,18 +1,19 @@
 
 const episodesUL = document.getElementById("new-episodes");
 
+// Gets all the episodes from the API origin
 const fetchEpisodes = (programIDs) => {
     const episodes = [];
 
     programIDs.forEach((id) => {
 
+        // The API requires a date range so I set it to a week back and a day forward
         const fromDate = new Date(new Date().getTime() - 604800000).toISOString().slice(0, 10);
         const toDate = new Date(new Date().getTime() + 86400000).toISOString().slice(0, 10)
 
         fetch(`https://api.sr.se/api/v2/episodes/index?programid=${id.replace(/[^0-9]/g, '')}&fromdate=${fromDate}&todate=${toDate}&audioquality=hi&format=json&pagination=false`)
             .then(response => response.json())
             .then(data => {
-
                 data.episodes.forEach(episode => {
                     episodes.push({
                         id: "episode" + episode.id,
@@ -26,14 +27,17 @@ const fetchEpisodes = (programIDs) => {
                     })
                 });
             }).then(() => {
+                // Set the episodes in local storage and sort them by publish date
                 localStorage.setItem("episodes", JSON.stringify(episodes.sort((a, b) => b.publishDate - a.publishDate)));
                 makeEpisodeDOMS(episodes)
+
             }).catch(error => {
-                console.error("Error fetching episodes:", error);
+                console.warn("Error fetching episodes:", error);
             });
     });
 }
 
+// Goes through the episodes and set their progress bars according to their progress in local storage
 const reProgressEpisodes = (episodes) => {
     episodes.forEach(episode => {
         const progressBar = document.getElementById(episode.id).querySelector(".progress-bar");
@@ -54,15 +58,15 @@ const makeEpisodeDOMS = (episodes) => {
 
     const getDisplayDate = (date) => {
         if (new Date(date).toDateString() === new Date().toDateString()) {
-            return 'Idag'
+            return "Idag"
         } else if (new Date(date).toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
-            return 'Igår'
+            return "Igår"
         } else {
-            return new Date(date).toLocaleString('sv-SE', { day: '2-digit', month: 'short' }).replace("0", "").replace('.', "");
+            return new Date(date).toLocaleString("sv-SE", { day: "2-digit", month: "short" }).replace("0", "").replace(".", "");
         }
     }
     const getTime = (date) => {
-        return new Date(date).toLocaleString('sv-SE', { hour: '2-digit', minute: '2-digit' });
+        return new Date(date).toLocaleString("sv-SE", { hour: "2-digit", minute: "2-digit" });
     }
     const getDuration = (duration) => {
         return Math.round(duration / 60) + " MIN";
@@ -71,6 +75,7 @@ const makeEpisodeDOMS = (episodes) => {
         return `${getDisplayDate(episode.publishDate)} &nbsp; | &nbsp; ${getTime(episode.publishDate)} &nbsp; • &nbsp; ${getDuration(episode.duration)}`;
     }
 
+    // Makes the html elements for each episode
     episodes.forEach(episode => {
         const li = document.createElement("li");
         li.id = episode.id;
@@ -132,6 +137,7 @@ const makeEpisodeDOMS = (episodes) => {
     reProgressEpisodes(episodes);
 };
 
+// Context menu refers to the menu that appears when you click on the three dots on an episode
 const toggleContextMenu = (source) => {
     const contextMenu = document.getElementById("context-menu");
     contextMenu.style.display = "flex";
@@ -153,6 +159,7 @@ const toggleContextMenu = (source) => {
     document.addEventListener("click", hideOnClick);
 };
 
+// A button in the context menu uses this function to mark an episode as listened to
 const markAsListenedTo = (source) => {
     const contextMenu = source.parentElement;
     const episode = document.getElementById(contextMenu.getAttribute("data-episode-id"));
@@ -162,13 +169,13 @@ const markAsListenedTo = (source) => {
         localStorage.removeItem("currentlyPlaying");
     };
 
-
     localStorage.setItem(contextMenu.getAttribute("data-episode-id"), episode.querySelector(".progress-bar").getAttribute("data-duration"));
 
     const episodes = JSON.parse(localStorage.getItem("episodes"));
     reProgressEpisodes(episodes);
 }
 
+// A button in the context menu uses this function to reset the progress of an episode
 const resetProgressAt = (source) => {
     const contextMenu = source.parentElement;
     const episode = document.getElementById(contextMenu.getAttribute("data-episode-id"));
@@ -186,14 +193,19 @@ const resetProgressAt = (source) => {
 
 const episodesOnload = () => {
 
+    // If you haven't liked any programs, a notification will appear
     if (localStorage.getItem("liked")) { document.getElementById("no-fav-notification").style.display = "none" }
 
+    // Liked program ids
     const liked = JSON.parse(localStorage.getItem("liked")) || [];
 
+    // Liked program objects
     const programs = localStorage.getItem("programs");
+
     if (programs) {
         fetchEpisodes(liked);
     } else {
+        // if there are no programs in local storage, fetch them first
         fetchPrograms().then(() => {
             fetchEpisodes(liked);
         });

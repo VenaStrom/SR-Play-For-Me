@@ -1,6 +1,42 @@
 
 const mainAudioPlayer = document.querySelector("#main-audio-player audio");
 
+const playNewest = () => {
+    // Get the latest episodes
+    fetchEpisodes(localStorage.getItem("liked"));
+
+    const episodes = JSON.parse(localStorage.getItem("episodes"));
+    const latestEpisode = episodes[0];
+
+    playThis(latestEpisode.id);
+};
+
+const playNext = () => {
+    const currentlyPlaying = localStorage.getItem("currentlyPlaying");
+    const episodes = JSON.parse(localStorage.getItem("episodes"));
+    const episodeIndex = episodes.map((episode, index) => { episode.index = index; return episode; }).filter(episode => episode.id === currentlyPlaying)[0].index;
+    const nextEpisode = episodes[episodeIndex + 1];
+
+    console.log("Playing next episode", nextEpisode);
+
+    if (nextEpisode) {
+        playThis(nextEpisode.id);
+    };
+};
+
+const playPrevious = () => {
+    const currentlyPlaying = localStorage.getItem("currentlyPlaying");
+    const episodes = JSON.parse(localStorage.getItem("episodes"));
+    const episodeIndex = episodes.map((episode, index) => { episode.index = index; return episode; }).filter(episode => episode.id === currentlyPlaying)[0].index;
+    const previousEpisode = episodes[episodeIndex - 1];
+
+    console.log("Playing previous episode", previousEpisode);
+
+    if (previousEpisode) {
+        playThis(previousEpisode.id);
+    };
+};
+
 // Play the episode specified via its ID
 const playThis = (episodeID) => {
     const episode = JSON.parse(localStorage.getItem("episodes")).filter(episode => episode.id === episodeID)[0];
@@ -40,141 +76,105 @@ const playThis = (episodeID) => {
             };
         });
         navigator.mediaSession.setActionHandler("play", () => {
-            // Since the MediaSession API in chrome has been weird with showing the current status i can't play the currently playing episode unless i make the play and pause buttons toggles
-            // mainAudioPlayer.play();
-
-            // Toggle play/pause on click
-            if (mainAudioPlayer.paused) {
-                mainAudioPlayer.play();
-            } else {
-                mainAudioPlayer.pause();
-            };
+            mainAudioPlayer.play();
         });
         navigator.mediaSession.setActionHandler("pause", () => {
-            // Since the MediaSession API in chrome has been weird with showing the current status i can't play the currently playing episode unless i make the play and pause buttons toggles
-            // mainAudioPlayer.pause();
-
-            // Toggle play/pause on click
-            if (mainAudioPlayer.paused) {
-                mainAudioPlayer.play();
-            } else {
-                mainAudioPlayer.pause();
-            };
+            mainAudioPlayer.pause();
         });
         navigator.mediaSession.setActionHandler("nexttrack", () => {
-            let episodeIndex;
-            JSON.parse(localStorage.getItem("episodes")).filter((episode, index) => {
-                if (episode.id === episodeID) {
-                    episodeIndex = index;
-                    return episode;
-                }
-            })[0];
-            const nextEpisode = JSON.parse(localStorage.getItem("episodes"))[episodeIndex + 1];
-
-            if (nextEpisode) {
-                playThis(nextEpisode.id);
-            }
+            playNext();
         });
         navigator.mediaSession.setActionHandler("previoustrack", () => {
             // For my use case i'd rather have the previous button go to the latest episode so i can avoid opening the app
-            fetchEpisodes(JSON.parse(localStorage.getItem("liked")));
-            const episode = JSON.parse(localStorage.getItem("episodes"))[0];
-            playThis(episode.id);
-
+            playNewest();
 
             // // This is the default behavior which is sensible and standard but not what I want
-            // let episodeIndex;
-            // JSON.parse(localStorage.getItem("episodes")).filter((episode, index) => {
-            //     if (episode.id === episodeID) {
-            //         episodeIndex = index;
-            //         return episode;
-            //     }
-            // })[0];
-            // const previousEpisode = JSON.parse(localStorage.getItem("episodes"))[episodeIndex - 1];
-
-            // if (previousEpisode) {
-            //     playThis(previousEpisode.id);
-            // }
+            // playPrevious();
         });
     }
 };
 
-// Runs every second to update the progress of the episode
-const updateProgress = setInterval(() => {
-    // LocalStorage:
-    //    currentlyPlaying: The ID of the episode that is currently playing
-    //    [episodeID]: The time where the episode is currently at
+const startUpdates = () => {
+    // Runs every second to update the progress of the episode
+    const updateProgress = setInterval(() => {
 
-    const currentlyPlaying = localStorage.getItem("currentlyPlaying");
+        const currentlyPlaying = localStorage.getItem("currentlyPlaying");
 
-    if (!currentlyPlaying) { return };
+        if (!currentlyPlaying) { return };
 
-    localStorage.setItem(currentlyPlaying, mainAudioPlayer.currentTime);
+        localStorage.setItem(currentlyPlaying, mainAudioPlayer.currentTime);
 
-    // Lists of all of the episodes of the programs you've liked
-    const episodes = JSON.parse(localStorage.getItem("episodes"));
-    // A kinda janky way to get the episode that is currently playing
-    const episode = episodes.filter(episode => episode.id === currentlyPlaying)[0];
+        // Lists of all of the episodes of the programs you've liked
+        const episodes = JSON.parse(localStorage.getItem("episodes"));
+        // Gets the episode object of the currently playing episode 
+        const episode = episodes.filter(episode => episode.id === currentlyPlaying)[0];
 
-    if ("mediaSession" in navigator) {
-        navigator.mediaSession.setPositionState({
-            duration: parseInt(episode.duration),
-            position: parseInt(mainAudioPlayer.currentTime),
-        });
+        if ("mediaSession" in navigator) {
+            // Update the duration and the progress in the media session API
+            navigator.mediaSession.setPositionState({
+                duration: parseInt(episode.duration),
+                position: parseInt(mainAudioPlayer.currentTime),
+            });
 
-        if (mainAudioPlayer.playing) {
-            navigator.mediaSession.playbackState = "playing";
-        } else {
-            navigator.mediaSession.playbackState = "paused";
+            // Update the playback state in the media session API
+            // This might be redundant since the playback state is set later in this file via event listeners
+            if (mainAudioPlayer.playing) {
+                navigator.mediaSession.playbackState = "playing";
+            } else {
+                navigator.mediaSession.playbackState = "paused";
+            };
         };
-    };
 
-    // Sets the progress bar of the episode DOM if you are looking at the new episodes page (liked.html)
-    if (document.getElementById("new-episodes")) {
-        const episodeDOM = document.getElementById(currentlyPlaying);
-        const progressBar = episodeDOM.querySelector(".progress-bar");
-        const duration = progressBar.getAttribute("data-duration");
-        const progress = (mainAudioPlayer.currentTime / duration) * 100 + 3; // Min value of 3 for esthetic reasons
-        progressBar.style.backgroundSize = `${progress}%`;
-    };
+        // Sets the progress bar of the episode DOM if you are looking at the new episodes page (liked.html)
+        if (document.getElementById("new-episodes")) {
+            const episodeDOM = document.getElementById(currentlyPlaying);
+            const progressBar = episodeDOM.querySelector(".progress-bar");
+            const duration = progressBar.getAttribute("data-duration");
+            const progress = (mainAudioPlayer.currentTime / duration) * 100 + 3; // Min value of 3 for esthetic reasons
+            progressBar.style.backgroundSize = `${progress}%`;
+        };
 
-    // Cache the current episode in case of quick switching in between episodes
-    if (!document.querySelector(`link[href="${episode.audioURL}"]`)) {
-        const linkTag = document.createElement("link");
-        linkTag.rel = "prefetch";
-        linkTag.href = episode.audioURL;
-        document.head.appendChild(linkTag);
-    };
+        // Cache the current episode in case of quick switching in between episodes
+        if (!document.querySelector(`link[href="${episode.audioURL}"]`)) {
+            const linkTag = document.createElement("link");
+            linkTag.rel = "prefetch";
+            linkTag.href = episode.audioURL;
+            document.head.appendChild(linkTag);
+        };
 
-    // Cache the next episode so that the transition to the next episode is smoother
-    const nextEpisode = episodes[episodes.indexOf(episode) + 1];
-    if (
-        nextEpisode
-        &&
-        !document.querySelector(`link[href="${nextEpisode.audioURL}"]`)
-    ) {
-        const linkTag = document.createElement("link");
-        linkTag.rel = "prefetch";
-        linkTag.href = nextEpisode.audioURL;
-        document.head.appendChild(linkTag);
-    };
-
-    // If the episode is over, try to play the next episode
-    if (mainAudioPlayer.currentTime >= episode.duration - 1) {
-        localStorage.removeItem("currentlyPlaying");
-        mainAudioPlayer.pause();
-        mainAudioPlayer.src = "";
-
-        // Try next episode
+        // Cache the next episode so that the transition to the next episode is smoother
         const nextEpisode = episodes[episodes.indexOf(episode) + 1];
-        if (nextEpisode) {
-            playThis(nextEpisode.id);
-        } else {
-            // This is mostly a debugging measure
-            alert("You've reached the end of the episode list. If you haven't actually, this is an error.");
+        if (
+            nextEpisode
+            &&
+            !document.querySelector(`link[href="${nextEpisode.audioURL}"]`)
+        ) {
+            const linkTag = document.createElement("link");
+            linkTag.rel = "prefetch";
+            linkTag.href = nextEpisode.audioURL;
+            document.head.appendChild(linkTag);
         };
-    };
-}, 1000);
+
+        // If the episode is over, try to play the next episode
+        if (mainAudioPlayer.currentTime >= episode.duration - 1) {
+            // I removed these to allow the "playNext" function to handle the next episode properly
+            // localStorage.removeItem("currentlyPlaying");
+            // mainAudioPlayer.pause();
+            // mainAudioPlayer.src = "";
+
+            // Try next episode
+            try {
+                playNext();
+                return;
+
+            } catch (error) {
+                // This is mostly a debugging measure
+                console.warn(error);
+                alert("You've reached the end of the episode list. If you haven't actually, this is an error.");
+            };
+        };
+    }, 1000);
+};
 
 // Set playback state when main audio player is changed
 mainAudioPlayer.addEventListener("play", () => {
@@ -188,12 +188,23 @@ mainAudioPlayer.addEventListener("pause", () => {
     }
 });
 
-// Start the playing episode on page load
-if (localStorage.getItem("currentlyPlaying")) {
-    playThis(localStorage.getItem("currentlyPlaying"));
+const audioOnload = () => {
+    const currentlyPlaying = localStorage.getItem("currentlyPlaying");
 
-    mainAudioPlayer.play();
+    if (!currentlyPlaying) {
+        startUpdates();
+        return;
+    };
+
+    const currentProgress = localStorage.getItem(currentlyPlaying);
+    const episodeObj = JSON.parse(localStorage.getItem("episodes")).filter(episode => episode.id === currentlyPlaying)[0];
+
+    mainAudioPlayer.src = episodeObj.audioURL;
+    mainAudioPlayer.currentTime = currentProgress;
+
     mainAudioPlayer.oncanplay = () => {
-        mainAudioPlayer.play();
+        startUpdates();
     };
 };
+
+audioOnload();
