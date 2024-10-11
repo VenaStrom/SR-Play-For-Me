@@ -1,5 +1,8 @@
 # SR Play - But for Me
 
+<img alt="Screenshot" src="screenshots/favorites-page.jpg" width="400">
+<img alt="Screenshot" src="screenshots/programs-page.jpg" width="400">
+
 Deployed via [GitHub Pages](https://viggostrom.github.io/SR-play-for-me/)
 
 ## Reasoning
