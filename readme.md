@@ -10,3 +10,9 @@ I was growing tired of the [SR Play app](https://play.google.com/store/apps/deta
 
 ## Usage
 On the index page you need to favorite some programs by clicking the heart icon on it. Then you can go to the favorites page and listen to your favorite programs. There you'll see the latest episodes of your favorite programs. The episodes automatically play one after another. 
+
+## Technologies
+- HTML
+- CSS
+- JavaScript
+- API
