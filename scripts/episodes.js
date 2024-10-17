@@ -39,7 +39,7 @@ const fetchEpisodes = (programIDs) => {
 
 // Goes through the episodes and set their progress bars according to their progress in local storage
 const reProgressEpisodes = (episodes) => {
-    episodes.forEach(episode => {
+    episodes.forEach((episode, index) => {
         const progressBar = document.getElementById(episode.id).querySelector(".progress-bar");
 
         const duration = progressBar.getAttribute("data-duration");

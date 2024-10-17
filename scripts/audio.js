@@ -125,43 +125,83 @@ const startUpdates = () => {
             };
         };
 
-        // Sets the progress bar of the episode DOM if you are looking at the new episodes page (liked.html)
+        // Sets the progress bar of the episode DOM, if you are looking at the "new episodes" page (liked.html)
         if (document.getElementById("new-episodes")) {
             const episodeDOM = document.getElementById(currentlyPlaying);
+
             const progressBar = episodeDOM.querySelector(".progress-bar");
             const duration = progressBar.getAttribute("data-duration");
             const progress = (mainAudioPlayer.currentTime / duration) * 100 + 3; // Min value of 3 for esthetic reasons
+
             progressBar.style.backgroundSize = `${progress}%`;
         };
 
         // Cache the current episode in case of quick switching in between episodes
         if (!document.querySelector(`link[href="${episode.audioURL}"]`)) {
+
+            // Create a link tag that will prefetch the audio file
             const linkTag = document.createElement("link");
             linkTag.rel = "prefetch";
+            linkTag.as = "audio";
             linkTag.href = episode.audioURL;
+            linkTag.id = "cached" + episode.id;
             document.head.appendChild(linkTag);
+
+            console.log("Cached episode: ", episode);
+
+            const clearCache = (thisTag, thisEpisode) => {
+                // If and hour has passed, remove it from the cache unless it's still playing
+                setTimeout(() => {
+                    // If the episode is still playing, keep it in the cache
+                    if (localStorage.getItem("currentlyPlaying") === thisEpisode.id) { clearCache(thisTag, thisEpisode) }
+
+                    // Else, remove the cached episode
+                    console.log("Removing cached episode: ", thisEpisode);
+
+                    thisTag.remove();
+                },
+                    600000 // 10 minute timeout
+                );
+            };
+
+            clearCache(linkTag, episode);
         };
 
         // Cache the next episode so that the transition to the next episode is smoother
         const nextEpisode = episodes[episodes.indexOf(episode) + 1];
-        if (
-            nextEpisode
-            &&
-            !document.querySelector(`link[href="${nextEpisode.audioURL}"]`)
-        ) {
+        // If there is a next episode and there isn't already a tag for it, cache it
+        if (nextEpisode && !document.querySelector(`link[href="${nextEpisode.audioURL}"]`)) {
+
+            // Create a link tag that will prefetch the audio file
             const linkTag = document.createElement("link");
             linkTag.rel = "prefetch";
+            linkTag.as = "audio";
             linkTag.href = nextEpisode.audioURL;
+            linkTag.id = "cached" + nextEpisode.id;
             document.head.appendChild(linkTag);
+
+            console.log("Cached next episode: ", nextEpisode);
+
+            const clearCache = (thisTag, thisEpisode) => {
+                // If and hour has passed, remove it from the cache unless it's still playing
+                setTimeout(() => {
+                    // if the episode is still playing, keep it
+                    if (localStorage.getItem("currentlyPlaying") === thisEpisode.id) { clearCache(thisTag, thisEpisode) }
+
+                    // Else, remove the cached episode
+                    console.log("Removing cached episode: ", thisEpisode);
+
+                    thisTag.remove();
+                },
+                    600000 // 10 minute timeout
+                );
+            };
+
+            clearCache(linkTag, nextEpisode);
         };
 
         // If the episode is over, try to play the next episode
         if (mainAudioPlayer.currentTime >= episode.duration - 1) {
-            // I removed these to allow the "playNext" function to handle the next episode properly
-            // localStorage.removeItem("currentlyPlaying");
-            // mainAudioPlayer.pause();
-            // mainAudioPlayer.src = "";
-
             // Try next episode
             try {
                 playNext();
