@@ -1,6 +1,6 @@
 # SR Play - But for Me
 
-Deployed via [GitHub Pages](https://viggostrom.github.io/SR-play-for-me/)
+Deployed via [GitHub Pages](https://viggostrom.github.io/SR-Play-For-Me/)
 
 <img alt="Screenshot" src="screenshots/favorites-page.jpg" width="300">
 <img alt="Screenshot" src="screenshots/programs-page.jpg" width="300">
