@@ -41,7 +41,19 @@ body {
     width: 100vw;
     max-width: 100%;
 
+    font-family: sans-serif;
+
+    @media (min-width: 768px) {
+        max-width: 40ch;
+    }
+
     overflow: hidden;
+
+    ::-webkit-scrollbar {
+        width: 1ch;
+
+        scrollbar-color: var(--dark-low-contrast-2) var(--dark-low-contrast);
+    }
 
     &>header {
         width: 100vw;
@@ -75,7 +87,7 @@ body {
             border-radius: 0.6rem;
 
             padding: 0.6rem;
-            width: 50vw;
+            width: 50%;
 
             background: var(--dark-low-contrast);
             color: var(--light);
@@ -155,6 +167,10 @@ body {
 
                 &>p {
                     overflow: scroll;
+
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
                 }
             }
         }
@@ -356,8 +372,8 @@ body {
     border-radius: 0.5rem;
     object-fit: contain;
 
-    
-    &>button {        
+
+    &>button {
         text-align: left;
 
         padding: 0.3rem;
