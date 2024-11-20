@@ -284,18 +284,11 @@ body {
                     user-select: none;
                     cursor: pointer;
 
-                    &>p {
-                        color: var(--background);
-
+                    &>img {
                         text-align: center;
 
-                        height: 2ch;
-                        width: 2ch;
-
-                        padding-left: 10%;
-                        padding-bottom: 14%;
-
-                        font-size: 100%;
+                        height: 2.5ch;
+                        width: 2.5ch;
                     }
                 }
 

@@ -114,8 +114,10 @@ const makeEpisodeDOMS = (episodes) => {
         playButton.classList.add("play-button");
         playButton.setAttribute("data-audio-src", episode.audioURL);
         playButton.setAttribute("onclick", "playThis(this.parentElement.id)");
-        const playIcon = document.createElement("p");
-        playIcon.textContent = "▶";
+        
+        const playIcon = document.createElement("img");
+        playIcon.src = "../assets/icons/play_arrow_24dp_000000_FILL1_wght400_GRAD0_opsz24.png";
+        playIcon.alt = "▶";
         playButton.appendChild(playIcon);
 
         const contextMenu = document.createElement("p");
