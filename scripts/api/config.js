@@ -1,18 +1,19 @@
 
 const api = {
+    fetchCooldown: 1000, // 1 second
     uri: "https://api.sr.se/api/v2/",
     common: {
         arguments: ["format=json", "pagination=false", "audioquality=normal"],
     },
-    allChannels: {
+    channels: {
         suffix: "channels",
         arguments: [],
-        getURI: () => `${api.uri}${api.allChannels.suffix}?${[...api.common.arguments, ...api.allChannels.arguments].join("&")}`,
+        getURI: () => `${api.uri}${api.channels.suffix}?${[...api.common.arguments, ...api.channels.arguments].join("&")}`,
     },
-    allPrograms: {
+    programs: {
         suffix: "programs",
-        arguments: [],
-        getURI: () => `${api.uri}${api.allPrograms.suffix}?${[...api.common.arguments, ...api.allPrograms.arguments].join("&")}`,
+        arguments: ["isarchived=false"],
+        getURI: () => `${api.uri}${api.programs.suffix}?${[...api.common.arguments, ...api.programs.arguments].join("&")}`,
     },
     episodes: {
         suffix: "episodes",
