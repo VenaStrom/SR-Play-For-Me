@@ -19,6 +19,7 @@ body {
   align-items: center;
   height: 100%;
   width: 100%;
+  max-width: 420px;
   background-color: var(--color-bg);
   color: var(--color-fg);
 }
@@ -156,9 +157,14 @@ body > nav > div > a > * {
 }
 
 html {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: start;
+  align-items: center;
   scrollbar-width: thin;
   height: 100dvh;
   width: 100dvw;
+  background-color: var(--color-gray);
 }
 
 h2 {

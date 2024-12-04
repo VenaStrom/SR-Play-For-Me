@@ -9,7 +9,29 @@ class AudioPlayer {
         // Whether the current audio track is playing or not
         this.playing = false;
 
+        this.currentTrack = null;
+        this.nextTrack = null; // For caching
+
         this.playButtonInit();
+    }
+
+    play() {
+        this.currentTrack.play();
+        this.playing = true;
+    }
+
+    pause() {
+        this.currentTrack.pause();
+        this.playing = false;
+    }
+
+    loadTrack(url) {
+        this.currentTrack = new Audio(url);
+    }
+
+    playTrack(url) {
+        this.loadTrack(url);
+        this.play();
     }
 
     playButtonInit() {
