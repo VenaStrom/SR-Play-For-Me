@@ -1,0 +1,234 @@
+// Boilerplate
+:root {
+    --color-bg: #111111;
+    --color-fg: #ffffff;
+    --color-off-white: #e9e7e7;
+    --color-gray: #3a3a3a;
+    --color-highlight: #ff0000;
+}
+
+* {
+    font-family: "Source Sans 3", sans-serif;
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+// Functions
+@mixin row($justify: start, $align: center, $wrap: wrap) {
+    display: flex;
+    flex-flow: row $wrap;
+
+    justify-content: $justify;
+    align-items: $align;
+}
+
+@mixin column($justify: center, $align: start, $wrap: wrap) {
+    display: flex;
+    flex-flow: column $wrap;
+
+    justify-content: $justify;
+    align-items: $align;
+}
+
+// Apply to the icon parent
+@mixin icon($size: medium) {
+    @if $size ==small {
+        height: 2rem;
+        width: 2rem;
+        aspect-ratio: 1/1;
+    }
+
+    @else if $size ==large {
+        height: 4rem;
+        width: 4rem;
+        aspect-ratio: 1/1;
+    }
+
+    // Medium and default case
+    @else {
+        height: 3rem;
+        width: 3rem;
+        aspect-ratio: 1/1;
+    }
+
+    aspect-ratio: 1/1;
+
+    // Make the black, base icon, white
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
+
+    &:hover {
+        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(52%) contrast(104%);
+    }
+
+    &>* {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+@mixin top-bottom-padding($size: medium) {
+    @if $size ==small {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+
+    @else if $size ==large {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    @else if $size ==x-large {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    // Medium and default case
+    @else {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+}
+
+@mixin hairline($position) {
+    border-#{$position}: solid 0.05rem var(--color-gray);
+}
+
+@mixin font-size($size: medium) {
+    @if $size ==small {
+        font-size: 0.75rem;
+    }
+
+    @else if $size ==large {
+        font-size: 1.25rem;
+    }
+
+    @else if $size ==x-large {
+        font-size: 1.5rem;
+    }
+
+    // Medium and default case
+    @else {
+        font-size: 1rem;
+    }
+}
+
+@mixin bold() {
+    font-weight: bold;
+}
+
+@mixin italic() {
+    font-style: italic;
+}
+
+
+// Main Tree
+body {
+    @include column($justify: start, $align: center);
+
+    height: 100%;
+    width: 100%;
+
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+
+    &>* {
+        width: 100%;
+    }
+
+    &>header {
+        @include row($justify: center);
+        @include top-bottom-padding($size: large);
+        @include hairline(bottom);
+
+        &>h3 {
+            @include font-size($size: large);
+        }
+    }
+
+    &>main {
+        @include column($justify: start, $align: center);
+        @include top-bottom-padding($size: medium);
+
+        width: 90%;
+        flex: 1;
+
+        &>.intro-paragraph {
+            @include column($justify: start, $align: center);
+
+            &>p:last-of-type {
+                @include font-size($size: small);
+            }
+        }
+    }
+
+    &>aside#player {
+        @include row($justify: center, $align: center);
+        @include top-bottom-padding();
+
+        background-color: var(--color-gray);
+
+        &>div {
+            @include row($justify: end, $align: center);
+
+            width: 90%;
+        }
+    }
+
+    &>nav {
+        @include row($justify: center);
+        @include top-bottom-padding($size: large);
+        @include hairline(top);
+
+        &>div {
+            @include row($justify: space-between, $align: center);
+
+            width: 70%;
+
+            &>a {
+                @include icon();
+            }
+        }
+    }
+}
+
+
+// Class Styling
+html {
+    scrollbar-width: thin;
+    height: 100dvh;
+    width: 100dvw;
+}
+
+button {
+    @include row($justify: center, $align: center);
+
+    appearance: none;
+    border: none;
+    background-color: transparent;
+    color: var(--color-fg);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--color-off-white);
+    }
+
+    &>img {
+        @include icon($size: small);
+    }
+}
+
+.italic {
+    @include italic();
+}
+
+.bold {
+    @include bold();
+}
+
+a {
+    text-decoration: solid underline var(--color-off-white) 0.03rem;
+    color: var(--color-fg);
+}

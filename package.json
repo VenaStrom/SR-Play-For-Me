@@ -1,0 +1,14 @@
+{
+  "name": "vr-radio-player",
+  "version": "1.0.0",
+  "description": "A website for listening to the radio.",
+  "main": "index.html",
+  "author": "viggoStrom <viggostrom05@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "scss": "sass --watch style/main.scss:style/css/main.css"
+  },
+  "devDependencies": {
+    "sass": "^1.82.0"
+  }
+}

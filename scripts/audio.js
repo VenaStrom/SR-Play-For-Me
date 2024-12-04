@@ -17,7 +17,7 @@ const playNext = () => {
     const episodeIndex = episodes.map((episode, index) => { episode.index = index; return episode; }).filter(episode => episode.id === currentlyPlaying)[0].index;
     const nextEpisode = episodes[episodeIndex + 1];
 
-    console.log("Playing next episode", nextEpisode);
+    // console.log("Playing next episode", nextEpisode);
 
     if (nextEpisode) {
         playThis(nextEpisode.id);
@@ -30,7 +30,7 @@ const playPrevious = () => {
     const episodeIndex = episodes.map((episode, index) => { episode.index = index; return episode; }).filter(episode => episode.id === currentlyPlaying)[0].index;
     const previousEpisode = episodes[episodeIndex - 1];
 
-    console.log("Playing previous episode", previousEpisode);
+    // console.log("Playing previous episode", previousEpisode);
 
     if (previousEpisode) {
         playThis(previousEpisode.id);
@@ -147,7 +147,7 @@ const startUpdates = () => {
             linkTag.id = "cached" + episode.id;
             document.head.appendChild(linkTag);
 
-            console.log("Cached episode: ", episode);
+            // console.log("Cached episode: ", episode);
 
             const clearCache = (thisTag, thisEpisode) => {
                 // If and hour has passed, remove it from the cache unless it's still playing
@@ -156,7 +156,7 @@ const startUpdates = () => {
                     if (localStorage.getItem("currentlyPlaying") === thisEpisode.id) { clearCache(thisTag, thisEpisode) }
 
                     // Else, remove the cached episode
-                    console.log("Removing cached episode: ", thisEpisode);
+                    // console.log("Removing cached episode: ", thisEpisode);
 
                     thisTag.remove();
                 },
@@ -180,7 +180,7 @@ const startUpdates = () => {
             linkTag.id = "cached" + nextEpisode.id;
             document.head.appendChild(linkTag);
 
-            console.log("Cached next episode: ", nextEpisode);
+            // console.log("Cached next episode: ", nextEpisode);
 
             const clearCache = (thisTag, thisEpisode) => {
                 // If and hour has passed, remove it from the cache unless it's still playing
@@ -189,7 +189,7 @@ const startUpdates = () => {
                     if (localStorage.getItem("currentlyPlaying") === thisEpisode.id) { clearCache(thisTag, thisEpisode) }
 
                     // Else, remove the cached episode
-                    console.log("Removing cached episode: ", thisEpisode);
+                    // console.log("Removing cached episode: ", thisEpisode);
 
                     thisTag.remove();
                 },
