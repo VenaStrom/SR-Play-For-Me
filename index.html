@@ -20,14 +20,15 @@
     <link rel="shortcut icon" href="assets/icons/vr-logo-48.png" type="image/x-icon">
 
     <!-- Script -->
-    <!-- <script defer src="scripts/audio.js"></script>
-    <script defer src="scripts/programs.js"></script>
-    <script defer src="scripts/search.js"></script> -->
+    <script defer src="scripts/audio-player.js"></script>
+    <script defer src="scripts/main.js"></script>
 </head>
 
 <body>
     <header>
-        <h3>VR Radiospelare</h3>
+        <div>
+            <h3>VR</h3>
+        </div>
     </header>
 
     <main>
@@ -41,13 +42,69 @@
                 använda deras varumärke i den utsträckningen jag har gjort.
             </p>
         </section>
+
+        <section class="channels">
+            <div class="header">
+                <h2>Radiokanaler</h2>
+
+                <div>
+                    <p>Hämtade från SR</p>
+                    <img src="assets/icons/sr-play-48.png" alt="Logga">
+                </div>
+            </div>
+
+            <ul>
+                <li>
+                    <img src="" alt="Bild">
+                    <p class="name">P4 Uppland</p>
+                    <p class="description">Lokal kanal för Uppland</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="your-programs">
+            <div class="header">
+                <h2>Program du följer</h2>
+
+                <div>
+                    <p>Hämtade från SR</p>
+                    <img src="assets/icons/sr-play-48.png" alt="Logga">
+                </div>
+            </div>
+
+            <ul>
+                <li>
+                    <div class="header">
+                        <p class="name">USApodden</p>
+                        <p class="date">27 Aug.</p>
+                    </div>
+
+                    <img src="" alt="Bild">
+
+                    <p class="description"></p>
+                </li>
+
+                <li>
+                    <div class="header">
+                        <p class="name">USApodden</p>
+                        <p class="date">27 Aug.</p>
+                    </div>
+
+                    <img src="" alt="Bild">
+
+                    <p class="description"></p>
+                </li>
+            </ul>
+        </section>
     </main>
 
     <aside id="player">
         <div>
             <button>
-                <img src="assets/icons/icons8-play-48.png" alt="Spela">
+                <img src="assets/icons/icons8-play-48.png" alt="▶">
             </button>
+
+            <p id="time"></p>
         </div>
     </aside>
 

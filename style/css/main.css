@@ -31,31 +31,67 @@ body > header {
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  border-bottom: solid 0.05rem var(--color-gray);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: solid 0.02rem var(--color-gray);
 }
-body > header > h3 {
-  font-size: 1.25rem;
+body > header > div {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: start;
+  align-items: center;
+  width: 90%;
 }
 body > main {
   display: flex;
   flex-flow: column wrap;
   justify-content: start;
   align-items: center;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  width: 90%;
   flex: 1;
 }
-body > main > .intro-paragraph {
+body > main > section {
   display: flex;
   flex-flow: column wrap;
   justify-content: start;
   align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.75rem;
+  border-bottom: solid 0.02rem var(--color-gray);
+  width: 100%;
 }
-body > main > .intro-paragraph > p:last-of-type {
+body > main > section > .header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+}
+body > main > section > .header > div {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 0.25rem;
   font-size: 0.75rem;
+}
+body > main > section > .header > div > img {
+  height: 1.2rem;
+  width: 1.2rem;
+  aspect-ratio: 1/1;
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
+}
+body > main > section > .header > div > img > * {
+  height: 100%;
+  width: 100%;
+}
+body > main > section.intro-paragraph > p:last-of-type {
+  font-size: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  width: 80%;
+  text-wrap: balance;
+  text-align: center;
 }
 body > aside#player {
   display: flex;
@@ -64,7 +100,7 @@ body > aside#player {
   align-items: center;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  background-color: var(--color-gray);
+  border-top: solid 0.25rem var(--color-gray);
 }
 body > aside#player > div {
   display: flex;
@@ -80,7 +116,7 @@ body > nav {
   align-items: center;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-  border-top: solid 0.05rem var(--color-gray);
+  border-top: solid 0.02rem var(--color-gray);
 }
 body > nav > div {
   display: flex;
@@ -92,7 +128,6 @@ body > nav > div {
 body > nav > div > a {
   height: 3rem;
   width: 3rem;
-  aspect-ratio: 1/1;
   aspect-ratio: 1/1;
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
 }
@@ -110,6 +145,14 @@ html {
   width: 100dvw;
 }
 
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
 button {
   display: flex;
   flex-flow: row wrap;
@@ -121,15 +164,15 @@ button {
   color: var(--color-fg);
   cursor: pointer;
 }
-button:hover {
-  color: var(--color-off-white);
+button:hover > img {
+  opacity: 0.8;
 }
 button > img {
   height: 2rem;
   width: 2rem;
   aspect-ratio: 1/1;
-  aspect-ratio: 1/1;
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
+  font-size: 1.5rem;
 }
 button > img:hover {
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(52%) contrast(104%);
@@ -139,17 +182,24 @@ button > img > * {
   width: 100%;
 }
 
+a {
+  text-decoration: solid underline var(--color-off-white) 0.03rem;
+  color: var(--color-fg);
+}
+a:hover {
+  opacity: 0.8;
+}
+
+ul {
+  list-style-type: none;
+}
+
 .italic {
   font-style: italic;
 }
 
 .bold {
   font-weight: bold;
-}
-
-a {
-  text-decoration: solid underline var(--color-off-white) 0.03rem;
-  color: var(--color-fg);
 }
 
 /*# sourceMappingURL=main.css.map */

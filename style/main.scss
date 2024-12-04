@@ -33,25 +33,91 @@
     align-items: $align;
 }
 
+@mixin gap($direction: all, $size: medium) {
+
+    @if $direction !=all {
+        @if $direction ==row {
+            @if $size ==small {
+                column-gap: 0.25rem;
+            }
+
+            @else if $size ==large {
+                column-gap: 0.75rem;
+            }
+
+            @else if $size ==x-large {
+                column-gap: 1rem;
+            }
+
+            // Medium and default case
+            @else {
+                column-gap: 0.5rem;
+            }
+        }
+
+        @else if $direction ==column {
+            @if $size ==small {
+                row-gap: 0.5ch;
+            }
+
+            @else if $size ==large {
+                row-gap: 2ch;
+            }
+
+            @else if $size ==x-large {
+                row-gap: 3rem;
+            }
+
+            // Medium and default case
+            @else {
+                row-gap: 1ch;
+            }
+        }
+    }
+
+    // Bidirectional gap
+    @else {
+        @if $size ==small {
+            gap: 0.25rem;
+        }
+
+        @else if $size ==large {
+            gap: 0.75rem;
+        }
+
+        @else if $size ==x-large {
+            gap: 1rem;
+        }
+
+        // Medium and default case
+        @else {
+            gap: 0.5rem;
+        }
+    }
+}
+
 // Apply to the icon parent
-@mixin icon($size: medium) {
-    @if $size ==small {
+@mixin icon($size: medium, $hover: false) {
+
+    @if $size ==x-small {
+        height: 1.2rem;
+        width: 1.2rem;
+    }
+
+    @else if $size ==small {
         height: 2rem;
         width: 2rem;
-        aspect-ratio: 1/1;
     }
 
     @else if $size ==large {
         height: 4rem;
         width: 4rem;
-        aspect-ratio: 1/1;
     }
 
     // Medium and default case
     @else {
         height: 3rem;
         width: 3rem;
-        aspect-ratio: 1/1;
     }
 
     aspect-ratio: 1/1;
@@ -59,8 +125,10 @@
     // Make the black, base icon, white
     filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
 
-    &:hover {
-        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(52%) contrast(104%);
+    @if $hover {
+        &:hover {
+            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(52%) contrast(104%);
+        }
     }
 
     &>* {
@@ -92,11 +160,70 @@
     }
 }
 
-@mixin hairline($position) {
-    border-#{$position}: solid 0.05rem var(--color-gray);
+@mixin padding($direction: all, $size: medium) {
+    @if $direction !=all {
+        @if $size ==small {
+            padding-#{$direction}: 0.25rem;
+        }
+
+        @else if $size ==large {
+            padding-#{$direction}: 0.75rem;
+        }
+
+        @else if $size ==x-large {
+            padding-#{$direction}: 1rem;
+        }
+
+        // Medium and default case
+        @else {
+            padding-#{$direction}: 0.5rem;
+        }
+    }
+
+    @else {
+        @if $size ==small {
+            padding: 0.25rem;
+        }
+
+        @else if $size ==large {
+            padding: 0.75rem;
+        }
+
+        @else if $size ==x-large {
+            padding: 1rem;
+        }
+
+        // Medium and default case
+        @else {
+            padding: 0.5rem;
+        }
+    }
 }
 
-@mixin font-size($size: medium) {
+@mixin percent-width($margin: medium) {
+    @if $margin ==small {
+        width: 90%;
+    }
+
+    @else if $margin ==large {
+        width: 70%;
+    }
+
+    @else if $margin ==x-large {
+        width: 60%;
+    }
+
+    // Medium and default case
+    @else {
+        width: 80%;
+    }
+}
+
+@mixin hairline($position) {
+    border-#{$position}: solid 0.02rem var(--color-gray);
+}
+
+@mixin text-size($size: medium) {
     @if $size ==small {
         font-size: 0.75rem;
     }
@@ -123,6 +250,10 @@
     font-style: italic;
 }
 
+@mixin dim() {
+    opacity: 0.8;
+}
+
 
 // Main Tree
 body {
@@ -138,45 +269,80 @@ body {
         width: 100%;
     }
 
+    // Header
     &>header {
-        @include row($justify: center);
-        @include top-bottom-padding($size: large);
+        @include row($justify: center, $align: center);
+        @include top-bottom-padding($size: medium);
         @include hairline(bottom);
 
-        &>h3 {
-            @include font-size($size: large);
+        &>div {
+            @include row($justify: start, $align: center);
+            @include percent-width($margin: small);
         }
     }
 
+    // Main Content
     &>main {
         @include column($justify: start, $align: center);
-        @include top-bottom-padding($size: medium);
 
-        width: 90%;
+        // Fills the remaining space
         flex: 1;
 
-        &>.intro-paragraph {
+        // All Sections
+        &>section {
             @include column($justify: start, $align: center);
+            @include top-bottom-padding($size: medium);
+            @include padding($direction: top, $size: large);
+            @include hairline(bottom);
+
+            width: 100%;
+
+            &>.header {
+                @include row($justify: space-between, $align: center);
+                @include percent-width($margin: small);
+
+                // SR attribute
+                &>div {
+                    @include row($justify: space-between, $align: center);
+                    @include gap(row, small);
+                    @include text-size($size: small);
+
+                    &>img {
+                        @include icon($size: x-small);
+                    }
+                }
+            }
+        }
+
+        // Section Exemptions
+        &>section.intro-paragraph {
 
             &>p:last-of-type {
-                @include font-size($size: small);
+                @include text-size($size: small);
+                @include top-bottom-padding($size: small);
+                @include percent-width($margin: medium);
+
+                text-wrap: balance;
+                text-align: center;
             }
         }
     }
 
+    // Audio Player Controls
     &>aside#player {
         @include row($justify: center, $align: center);
         @include top-bottom-padding();
 
-        background-color: var(--color-gray);
+        // background-color: var(--color-gray);
+        border-top: solid 0.25rem var(--color-gray);
 
         &>div {
             @include row($justify: end, $align: center);
-
-            width: 90%;
+            @include percent-width($margin: small);
         }
     }
 
+    // Links To Other Pages
     &>nav {
         @include row($justify: center);
         @include top-bottom-padding($size: large);
@@ -184,11 +350,10 @@ body {
 
         &>div {
             @include row($justify: space-between, $align: center);
-
-            width: 70%;
+            @include percent-width($margin: large);
 
             &>a {
-                @include icon();
+                @include icon($hover: true);
             }
         }
     }
@@ -198,8 +363,19 @@ body {
 // Class Styling
 html {
     scrollbar-width: thin;
+
     height: 100dvh;
     width: 100dvw;
+}
+
+h1 {}
+
+h2 {
+    @include text-size($size: large);
+}
+
+h3 {
+    @include text-size($size: large);
 }
 
 button {
@@ -212,12 +388,28 @@ button {
     cursor: pointer;
 
     &:hover {
-        color: var(--color-off-white);
+        &>img {
+            @include dim();
+        }
     }
 
     &>img {
-        @include icon($size: small);
+        @include icon($size: small, $hover: true);
+        @include text-size($size: x-large);
     }
+}
+
+a {
+    text-decoration: solid underline var(--color-off-white) 0.03rem;
+    color: var(--color-fg);
+
+    &:hover {
+        @include dim();
+    }
+}
+
+ul {
+    list-style-type: none;
 }
 
 .italic {
@@ -226,9 +418,4 @@ button {
 
 .bold {
     @include bold();
-}
-
-a {
-    text-decoration: solid underline var(--color-off-white) 0.03rem;
-    color: var(--color-fg);
 }
