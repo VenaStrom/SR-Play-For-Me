@@ -3,7 +3,6 @@
   --color-fg: #ffffff;
   --color-off-white: #e9e7e7;
   --color-gray: #3a3a3a;
-  --color-highlight: #ff0000;
 }
 
 * {
@@ -98,15 +97,32 @@ body > aside#player {
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-top: solid 0.25rem var(--color-gray);
 }
-body > aside#player > div {
+body > aside#player > .progress-bar {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+}
+body > aside#player > .progress-bar > .background {
+  background-color: var(--color-gray);
+  width: 100%;
+  height: 0.25rem;
+}
+body > aside#player > .progress-bar > .background > .foreground {
+  background-color: var(--color-off-white);
+  border-radius: 0 0.05rem 0.05rem 0;
+  width: 0%;
+  height: 100%;
+}
+body > aside#player > .body {
   display: flex;
   flex-flow: row wrap;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   width: 90%;
 }
 body > nav {
@@ -126,8 +142,8 @@ body > nav > div {
   width: 70%;
 }
 body > nav > div > a {
-  height: 3rem;
-  width: 3rem;
+  height: 2.7rem;
+  width: 2.7rem;
   aspect-ratio: 1/1;
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
 }

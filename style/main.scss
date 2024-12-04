@@ -4,7 +4,6 @@
     --color-fg: #ffffff;
     --color-off-white: #e9e7e7;
     --color-gray: #3a3a3a;
-    --color-highlight: #ff0000;
 }
 
 * {
@@ -19,7 +18,7 @@
 
 // Main Tree
 body {
-    @include column($justify: start, $align: center);
+    @include column(start, center);
 
     height: 100%;
     width: 100%;
@@ -33,44 +32,44 @@ body {
 
     // Header
     &>header {
-        @include row($justify: center, $align: center);
-        @include top-bottom-padding($size: medium);
+        @include row(center, center);
+        @include top-bottom-padding(medium);
         @include hairline(bottom);
 
         &>div {
-            @include row($justify: start, $align: center);
-            @include percent-width($margin: small);
+            @include row(start, center);
+            @include percent-width(small);
         }
     }
 
     // Main Content
     &>main {
-        @include column($justify: start, $align: center);
+        @include column(start, center);
 
         // Fills the remaining space
         flex: 1;
 
         // All Sections
         &>section {
-            @include column($justify: start, $align: center);
-            @include top-bottom-padding($size: medium);
-            @include padding($direction: top, $size: large);
+            @include column(start, center);
+            @include top-bottom-padding(medium);
+            @include padding(top, large);
             @include hairline(bottom);
 
             width: 100%;
 
             &>.header {
-                @include row($justify: space-between, $align: center);
-                @include percent-width($margin: small);
+                @include row(space-between, center);
+                @include percent-width(small);
 
                 // SR attribute
                 &>div {
-                    @include row($justify: space-between, $align: center);
+                    @include row(space-between, center);
                     @include gap(row, small);
-                    @include text-size($size: small);
+                    @include text-size(small);
 
                     &>img {
-                        @include icon($size: x-small);
+                        @include icon(x-small);
                     }
                 }
             }
@@ -80,9 +79,9 @@ body {
         &>section.intro-paragraph {
 
             &>p:last-of-type {
-                @include text-size($size: small);
-                @include top-bottom-padding($size: small);
-                @include percent-width($margin: medium);
+                @include text-size(small);
+                @include top-bottom-padding(small);
+                @include percent-width(medium);
 
                 text-wrap: balance;
                 text-align: center;
@@ -92,27 +91,44 @@ body {
 
     // Audio Player Controls
     &>aside#player {
-        @include row($justify: center, $align: center);
-        @include top-bottom-padding();
+        @include row(center, center);
 
-        // background-color: var(--color-gray);
-        border-top: solid 0.25rem var(--color-gray);
+        &>.progress-bar {
+            @include column(center, start);
 
-        &>div {
-            @include row($justify: end, $align: center);
-            @include percent-width($margin: small);
+            width: 100%;
+
+            &>.background {
+                background-color: var(--color-gray);
+                width: 100%;
+                height: 0.25rem;
+
+                &>.foreground {
+                    background-color: var(--color-off-white);
+                    border-radius: 0 0.05rem 0.05rem 0;
+
+                    width: 0%;
+                    height: 100%;
+                }
+            }
+        }
+
+        &>.body {
+            @include row(space-between, center);
+            @include top-bottom-padding();
+            @include percent-width(small);
         }
     }
 
     // Links To Other Pages
     &>nav {
-        @include row($justify: center);
-        @include top-bottom-padding($size: large);
+        @include row(center);
+        @include top-bottom-padding(large);
         @include hairline(top);
 
         &>div {
-            @include row($justify: space-between, $align: center);
-            @include percent-width($margin: large);
+            @include row(space-between, center);
+            @include percent-width(large);
 
             &>a {
                 @include icon($hover: true);
@@ -133,15 +149,15 @@ html {
 h1 {}
 
 h2 {
-    @include text-size($size: large);
+    @include text-size(large);
 }
 
 h3 {
-    @include text-size($size: large);
+    @include text-size(large);
 }
 
 button {
-    @include row($justify: center, $align: center);
+    @include row(center, center);
 
     appearance: none;
     border: none;
@@ -156,8 +172,8 @@ button {
     }
 
     &>img {
-        @include icon($size: small, $hover: true);
-        @include text-size($size: x-large);
+        @include icon(small, $hover: true);
+        @include text-size(x-large);
     }
 }
 

@@ -48,8 +48,8 @@
                 <h2>Radiokanaler</h2>
 
                 <div>
-                    <p>Hämtade från SR</p>
-                    <img src="assets/icons/sr-play-48.png" alt="Logga">
+                    <p>Hämtade från</p>
+                    <img src="assets/icons/sr-play-48.png" alt="SR">
                 </div>
             </div>
 
@@ -67,8 +67,8 @@
                 <h2>Program du följer</h2>
 
                 <div>
-                    <p>Hämtade från SR</p>
-                    <img src="assets/icons/sr-play-48.png" alt="Logga">
+                    <p>Hämtade från</p>
+                    <img src="assets/icons/sr-play-48.png" alt="SR">
                 </div>
             </div>
 
@@ -99,12 +99,20 @@
     </main>
 
     <aside id="player">
-        <div>
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="background">
+                <div class="foreground"></div>
+            </div>
+        </div>
+
+        <!-- Media Controls -->
+        <div class="body">
+            <p class="time-display">00:00</p>
+            
             <button>
                 <img src="assets/icons/icons8-play-48.png" alt="▶">
             </button>
-
-            <p id="time"></p>
         </div>
     </aside>
 
