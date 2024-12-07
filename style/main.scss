@@ -215,13 +215,15 @@ body {
                 overflow-x: scroll;
             }
             
-            &>.date {
+            &>.info {
                 @include text-size(small);
                 @include padding(0, small, 0, 0);
                 
                 flex: 1;
                 
                 color: var(--color-light-gray);
+
+                text-align: end;
                 
                 overflow-x: scroll;
                 white-space: nowrap;

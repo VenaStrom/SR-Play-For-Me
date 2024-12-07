@@ -308,7 +308,7 @@ body > nav > div > a > *:active {
   white-space: nowrap;
   overflow-x: scroll;
 }
-.content-dom > .body > .header > .date, .episode-dom > .body > .header > .date, .program-dom > .body > .header > .date, .channel-dom > .body > .header > .date {
+.content-dom > .body > .header > .info, .episode-dom > .body > .header > .info, .program-dom > .body > .header > .info, .channel-dom > .body > .header > .info {
   font-size: 0.75rem;
   --size-0: 0;
   --size-none: 0;
@@ -321,6 +321,7 @@ body > nav > div > a > *:active {
   padding: var(--size-0) var(--size-small) var(--size-0) var(--size-0);
   flex: 1;
   color: var(--color-light-gray);
+  text-align: end;
   overflow-x: scroll;
   white-space: nowrap;
 }
