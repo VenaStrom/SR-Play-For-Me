@@ -5,7 +5,7 @@
 //   ||||    ||  \==/  ||     ||||  ||  ||   ||
 // 
 
-@mixin row($justify: start, $align: center, $wrap: wrap) {
+@mixin row($justify: start, $align: center, $wrap: nowrap) {
     display: flex;
     flex-flow: row $wrap;
 
@@ -13,7 +13,7 @@
     align-items: $align;
 }
 
-@mixin column($justify: center, $align: start, $wrap: wrap) {
+@mixin column($justify: center, $align: start, $wrap: nowrap) {
     display: flex;
     flex-flow: column $wrap;
 

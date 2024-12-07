@@ -97,7 +97,7 @@ body {
 
     // Audio Player Controls
     &>aside#player {
-        @include row(center, center);
+        @include column(center, center);
 
         &>.progress-bar {
             @include column(center, start);
@@ -151,12 +151,30 @@ body {
 //
 // Class Styling
 //
+.italic {
+    @include italic();
+}
+
+.bold {
+    @include bold();
+}
+
+.ellipsis {
+    // For it to work, the element must have a fixed width
+    width: 10ch;
+
+    line-break: anywhere;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .content-dom {
     @include row(start, start);
     @include gap($column: medium);
     @include padding(0, small, 0, 0);
 
-    --element-height: 5.3rem;
+    --element-height: 5.6rem;
 
     width: 100%;
     height: var(--element-height);
@@ -172,11 +190,14 @@ body {
 
     &>.body {
         @include column(start, start);
+        @include gap($row: small);
         @include padding(small, 0, x-small, 0);
+
+        flex: 1;
 
         height: 100%;
 
-        flex: 1;
+        overflow-x: hidden;
 
         &>* {
             width: 100%;
@@ -184,14 +205,26 @@ body {
 
         &>.header {
             @include row(space-between, center);
+            @include gap($column: x-large);
 
-            &>.title {}
+            &>.title {
+                @extend .bold;
 
+                max-width: 60%;
+                white-space: nowrap;
+                overflow-x: scroll;
+            }
+            
             &>.date {
                 @include text-size(small);
                 @include padding(0, small, 0, 0);
-
+                
+                flex: 1;
+                
                 color: var(--color-light-gray);
+                
+                overflow-x: scroll;
+                white-space: nowrap;
             }
         }
 
@@ -208,20 +241,17 @@ body {
             @include gap($column: small);
             @include text-size(small);
 
-            flex-wrap: nowrap;
-
             color: var(--color-light-gray);
 
             &>p {
+                @include padding(0, 0, 0, small);
+                @extend .ellipsis;
+
                 flex: 1;
-                text-align: end;
 
                 height: 1rem;
-                // width: 20ch;
 
-                // line-break: anywhere;
-                text-overflow: clip;
-                // overflow: hidden;
+                text-align: end;
             }
 
             &>button {
@@ -243,6 +273,11 @@ body {
 
 }
 
+.episode-dom {
+    @extend .content-dom;
+
+}
+
 .sr-attribute {
     @include row(start, center);
     @include gap(small);
@@ -251,14 +286,6 @@ body {
     &>div:has(img) {
         @include icon(x-small);
     }
-}
-
-.italic {
-    @include italic();
-}
-
-.bold {
-    @include bold();
 }
 
 
@@ -318,7 +345,6 @@ ul {
     @include column(start, center);
 
     list-style-type: none;
-    width: 100%;
 }
 
 li {

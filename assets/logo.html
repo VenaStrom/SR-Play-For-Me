@@ -21,8 +21,26 @@
     <div></div>
     <div></div> 
     -->
+    <div class="parent">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere provident incidunt, sequi soluta eligendi amet rerum
+            culpa inventore omnis dignissimos velit saepe recusandae labore, excepturi aut numquam nihil architecto quaerat!</p>
+    </div>
 
     <style>
+        .parent {
+            width: 20ch;
+            display: flex;
+        }
+
+        p {
+            flex: 1;
+
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+
+        }
+
         @keyframes skeleton-loading {
             0% {
                 background-color: hsl(0, 0%, 23%);
@@ -33,7 +51,7 @@
             }
         }
 
-        div {
+        div:not(.parent) {
             width: 40rem;
             height: 40rem;
 
@@ -49,7 +67,7 @@
             justify-content: center;
             align-items: center;
 
-            & *{
+            & * {
                 padding: 0;
                 margin: 0;
             }
