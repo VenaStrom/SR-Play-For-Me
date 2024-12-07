@@ -1,5 +1,10 @@
+// Display Types
+//
+//   ||||    ||  /==\  ||==\  ||      ||   ||  ||
+//   ||  ||  ||   \\   ||==/  ||     |==|    ||
+//   ||||    ||  \==/  ||     ||||  ||  ||   ||
+// 
 
-// Functions
 @mixin row($justify: start, $align: center, $wrap: wrap) {
     display: flex;
     flex-flow: row $wrap;
@@ -16,172 +21,147 @@
     align-items: $align;
 }
 
-@mixin gap($direction: all, $size: medium) {
+@mixin grid($columns: 1, $rows: 1) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    grid-template-rows: repeat($rows, 1fr);
+}
 
-    @if $direction !=all {
-        @if $direction ==row {
-            @if $size ==small {
-                column-gap: 0.25rem;
-            }
 
-            @else if $size ==large {
-                column-gap: 0.75rem;
-            }
 
-            @else if $size ==x-large {
-                column-gap: 1rem;
-            }
+// Spacing
+//
+//   /==\  ||==\    ||    /==\  ||  || ||  /==
+//    \\   ||==/   |==|   ||    ||  ||\||  || _
+//   \==/  ||     ||  ||  \==/  ||  || ||  \==/
+//
 
-            // Medium and default case
-            @else {
-                column-gap: 0.5rem;
-            }
-        }
+@mixin gap($first: false, $second: false, $column: false, $row: false) {
+    --size-0: 0;
+    --size-none: 0;
+    --size-small: 0.25rem;
+    --size-medium: 0.5rem;
+    --size-large: 0.75rem;
+    --size-x-large: 1rem;
+    --size-default: var(--size-medium);
 
-        @else if $direction ==column {
-            @if $size ==small {
-                row-gap: 0.5ch;
-            }
-
-            @else if $size ==large {
-                row-gap: 2ch;
-            }
-
-            @else if $size ==x-large {
-                row-gap: 3rem;
-            }
-
-            // Medium and default case
-            @else {
-                row-gap: 1ch;
-            }
-        }
+    // None defined: apply default gap
+    @if not $first and not $second and not $column and not $row {
+        gap: var(--size-default);
     }
 
-    // Bidirectional gap
+    // First defined: set both gaps to first
+    @else if $first and not $second and not $column and not $row {
+        gap: var(--size-#{$first});
+    }
+
+    // First and second defined: set both gaps respectively
+    @else if $first and $second and not $column and not $row {
+        gap: var(--size-#{$first}) var(--size-#{$second});
+    }
+
     @else {
-        @if $size ==small {
-            gap: 0.25rem;
+
+        // If column: set column
+        @if $column {
+            column-gap: var(--size-#{$column});
         }
 
-        @else if $size ==large {
-            gap: 0.75rem;
-        }
-
-        @else if $size ==x-large {
-            gap: 1rem;
-        }
-
-        // Medium and default case
-        @else {
-            gap: 0.5rem;
+        // If row: set row
+        @if $row {
+            row-gap: var(--size-#{$row});
         }
     }
 }
 
-// Apply to the icon parent
-@mixin icon($size: medium, $hover: false) {
+@mixin padding($top: false, $right: false, $bottom: false, $left: false) {
+    --size-0: 0;
+    --size-none: 0;
+    --size-x-small: 0.15rem;
+    --size-small: 0.25rem;
+    --size-medium: 0.5rem;
+    --size-large: 0.75rem;
+    --size-x-large: 1rem;
+    --size-default: var(--size-medium);
 
-    @if $size ==x-small {
-        height: 1.2rem;
-        width: 1.2rem;
+    // None defined: apply default padding
+    @if not $top and not $right and not $bottom and not $left {
+        padding: var(--size-default);
     }
 
-    @else if $size ==small {
-        height: 2rem;
-        width: 2rem;
+    // Four defined: apply to all sides
+    @else if $top and $right and $bottom and $left {
+        padding: var(--size-#{$top}) var(--size-#{$right}) var(--size-#{$bottom}) var(--size-#{$left});
     }
 
-    @else if $size ==large {
-        height: 4rem;
-        width: 4rem;
+    // Three defined: error
+    @else if $top and $right and $bottom and not $left {
+        @error "Three padding values are not supported";
     }
 
-    // Medium and default case
-    @else {
-        height: 2.7rem;
-        width: 2.7rem;
+    // Two defined: apply up down and side
+    @else if $top and $right and not $bottom and not $left {
+        padding: var(--size-#{$top}) var(--size-#{$right});
     }
 
-    aspect-ratio: 1/1;
-
-    // Make the black, base icon, white
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
-
-    @if $hover {
-        &:hover {
-            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(52%) contrast(104%);
-        }
-    }
-
-    &>* {
-        height: 100%;
-        width: 100%;
-    }
-}
-
-@mixin top-bottom-padding($size: medium) {
-    @if $size ==small {
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
-    }
-
-    @else if $size ==large {
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
-    }
-
-    @else if $size ==x-large {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-    }
-
-    // Medium and default case
-    @else {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-}
-
-@mixin padding($direction: all, $size: medium) {
-    @if $direction !=all {
-        @if $size ==small {
-            padding-#{$direction}: 0.25rem;
-        }
-
-        @else if $size ==large {
-            padding-#{$direction}: 0.75rem;
-        }
-
-        @else if $size ==x-large {
-            padding-#{$direction}: 1rem;
-        }
-
-        // Medium and default case
-        @else {
-            padding-#{$direction}: 0.5rem;
-        }
+    // One defined: apply to all sides
+    @else if $top and not $right and not $bottom and not $left {
+        padding: var(--size-#{$top});
     }
 
     @else {
-        @if $size ==small {
-            padding: 0.25rem;
-        }
-
-        @else if $size ==large {
-            padding: 0.75rem;
-        }
-
-        @else if $size ==x-large {
-            padding: 1rem;
-        }
-
-        // Medium and default case
-        @else {
-            padding: 0.5rem;
-        }
+        @error "Invalid padding values. Only use positional arguments";
     }
 }
+
+@mixin margin($top: false, $right: false, $bottom: false, $left: false) {
+    --size-0: 0;
+    --size-none: 0;
+    --size-x-small: 0.15rem;
+    --size-small: 0.25rem;
+    --size-medium: 0.5rem;
+    --size-large: 0.75rem;
+    --size-x-large: 1rem;
+    --size-default: var(--size-medium);
+
+    // None defined: apply default margin
+    @if not $top and not $right and not $bottom and not $left {
+        margin: var(--size-default);
+    }
+
+    // Four defined: apply to all sides
+    @else if $top and $right and $bottom and $left {
+        margin: var(--size-#{$top}) var(--size-#{$right}) var(--size-#{$bottom}) var(--size-#{$left});
+    }
+
+    // Three defined: error
+    @else if $top and $right and $bottom and not $left {
+        @error "Three margin values are not supported";
+    }
+
+    // Two defined: apply up down and side
+    @else if $top and $right and not $bottom and not $left {
+        margin: var(--size-#{$top}) var(--size-#{$right});
+    }
+
+    // One defined: apply to all sides
+    @else if $top and not $right and not $bottom and not $left {
+        margin: var(--size-#{$top});
+    }
+
+    @else {
+        @error "Invalid margin values. Only use positional arguments";
+    }
+}
+
+
+
+// Sizing
+//
+//   /==\  ||  |||||  ||  || ||  /==
+//    \\   ||    /    ||  ||\||  || _
+//   \==/  ||  |||||  ||  || ||  \==/
+//
 
 @mixin percent-width($margin: medium) {
     @if $margin ==small {
@@ -202,9 +182,14 @@
     }
 }
 
-@mixin hairline($position) {
-    border-#{$position}: solid 0.02rem var(--color-gray);
-}
+
+
+// Text
+// 
+//   ||||||  ||==  ||  ||  ||||||
+//     ||    ||==    ||      ||
+//     ||    ||==  ||  ||    ||
+//
 
 @mixin text-size($size: medium) {
     @if $size ==small {
@@ -233,6 +218,63 @@
     font-style: italic;
 }
 
+
+
+// Functions
+//
+//   ||==  || ||  || ||  /==\  ||||||  ||   /==\   || ||  /==\                                                                                                                                                   
+//   ||==  || ||  ||\||  ||      ||    ||  ||  ||  ||\||   \\                                                                                                                                               
+//   ||     |||   || ||  \==/    ||    ||   \==/   || ||  \==/                                                                                                                                         
+//
+
+@mixin icon($size: medium, $hover: false) {
+
+    @if $size ==x-small {
+        height: 1.2rem;
+        width: 1.2rem;
+    }
+
+    @else if $size ==small {
+        height: 2rem;
+        width: 2rem;
+    }
+
+    @else if $size ==large {
+        height: 4rem;
+        width: 4rem;
+    }
+
+    // Medium and default case
+    @else {
+        height: 2.7rem;
+        width: 2.7rem;
+    }
+
+    aspect-ratio: 1/1;
+
+    user-select: none;
+    
+    &>* {
+        height: 100%;
+        width: 100%;
+        
+        user-select: none;
+
+        // Make the black, base icon, white
+        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(290deg) brightness(104%) contrast(104%);
+
+        @if $hover {
+            &:active {
+                @include dim();
+            }
+        }
+    }
+}
+
+@mixin hairline($position, $thickness: 0.02rem) {
+    border-#{$position}: solid $thickness var(--color-gray);
+}
+
 @mixin dim() {
-    opacity: 0.8;
+    opacity: 0.6;
 }

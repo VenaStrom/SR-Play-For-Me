@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div>VR</div>
+    <!-- 
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div> 
+    -->
+
+    <style>
+        @keyframes skeleton-loading {
+            0% {
+                background-color: hsl(0, 0%, 23%);
+            }
+
+            100% {
+                background-color: hsl(0, 0%, 30%);
+            }
+        }
+
+        div {
+            width: 40rem;
+            height: 40rem;
+
+            color: #1d1d1d;
+            background-color: #242424;
+
+            font-family: "Source Sans 3", sans-serif;
+            font-size: 25rem;
+            font-weight: bold;
+            text-align: center;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            & *{
+                padding: 0;
+                margin: 0;
+            }
+
+            /* animation: linear 2s alternate wave-anim both infinite; */
+            /* animation: skeleton-loading 2s linear infinite alternate; */
+        }
+
+        body {
+            display: flex;
+            flex-flow: row wrap;
+        }
+    </style>
+</body>
+
+</html>

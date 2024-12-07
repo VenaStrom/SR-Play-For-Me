@@ -15,7 +15,7 @@ On the index page you need to favorite some programs by clicking the heart icon 
 
 ## Technologies
 - HTML
-- CSS
+- SCSS
 - JavaScript
 - API
 

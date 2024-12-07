@@ -48,61 +48,108 @@
             </p>
         </section>
 
+        <!-- Radio Channels -->
         <section class="channels">
             <div class="header">
                 <h2>Radiokanaler</h2>
 
-                <div>
+                <div class="sr-attribute">
                     <p>Hämtade från</p>
-                    <img src="assets/icons/sr-play-48.png" alt="SR">
+                    <div><img src="assets/icons/sr-play-48.png" alt="SR"></div>
                 </div>
             </div>
 
+            <!-- UL -->
             <ul>
-                <li>
-                    <img src="" alt="Bild">
-                    <p class="name">P4 Uppland</p>
-                    <p class="description">Lokal kanal för Uppland</p>
+                <li class="channel-dom">
+                    <img src="assets/images/image-missing.png" alt="Bild">
+
+                    <div class="body">
+                        <div class="header">
+                            <p class="name">P4 Uppland</p>
+                        </div>
+
+                        <p class="description">
+                            Lokal kanal för Uppland. Här kan du lyssna på lokala nyheter och program.
+                            Lokal kanal för Uppland. Här kan du lyssna på lokala nyheter och program.
+                        </p>
+
+                        <div class="footer">
+                            <p>Lyssna live</p>
+
+                            <button>
+                                <img src="assets/icons/icons8-play-48.png" alt="Spela">
+                            </button>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </section>
 
+        <!-- Programs and Podcasts -->
         <section class="your-programs">
             <div class="header">
                 <h2>Program du följer</h2>
 
-                <div>
+                <div class="sr-attribute">
                     <p>Hämtade från</p>
-                    <img src="assets/icons/sr-play-48.png" alt="SR">
+                    <div><img src="assets/icons/sr-play-48.png" alt="SR"></div>
                 </div>
             </div>
 
+            <!-- UL -->
             <ul>
-                <li>
-                    <div class="header">
-                        <p class="name">USApodden</p>
-                        <p class="date">27 Aug.</p>
+                <li class="program-dom">
+                    <img src="assets/images/image-missing.png" alt="Bild">
+
+                    <div class="body">
+                        <div class="header">
+                            <p class="name">USApodden</p>
+                            <p class="date">27 Aug</p>
+                        </div>
+
+                        <p class="description">
+                            USApodden är en podcast om USA. Varje vecka pratar programledarna om ett nytt ämne som rör USA.
+                            USApodden är en podcast om USA. Varje vecka pratar programledarna om ett nytt ämne som rör USA.
+                        </p>
+
+                        <div class="footer">
+                            <p>Senaste: Hur ska Trump få ihop ett kabinett?</p>
+
+                            <button>
+                                <img src="assets/icons/icons8-play-48.png" alt="Spela">
+                            </button>
+                        </div>
                     </div>
-
-                    <img src="" alt="Bild">
-
-                    <p class="description"></p>
                 </li>
 
-                <li>
-                    <div class="header">
-                        <p class="name">USApodden</p>
-                        <p class="date">27 Aug.</p>
+                <li class="program-dom">
+                    <img src="assets/images/image-missing.png" alt="Bild">
+
+                    <div class="body">
+                        <div class="header">
+                            <p class="name">USApodden</p>
+                            <p class="date">27 Aug</p>
+                        </div>
+
+                        <p class="description">
+                            USApodden är en podcast om USA.
+                        </p>
+
+                        <div class="footer">
+                            <p>Senaste: USApodden</p>
+
+                            <button>
+                                <img src="assets/icons/icons8-play-48.png" alt="Spela">
+                            </button>
+                        </div>
                     </div>
-
-                    <img src="" alt="Bild">
-
-                    <p class="description"></p>
                 </li>
             </ul>
         </section>
     </main>
 
+    <!-- Audio Player -->
     <aside id="player">
         <!-- Progress Bar -->
         <div class="progress-bar">
@@ -121,6 +168,7 @@
         </div>
     </aside>
 
+    <!-- NAV -->
     <nav>
         <div>
             <a href="#">
@@ -136,6 +184,13 @@
             </a>
         </div>
     </nav>
+
+    <script>
+        // Prevent right-click on images to prevent annoying mobile behavior
+        document.querySelectorAll("img").forEach(img => {
+            img.addEventListener("contextmenu", e => e.preventDefault());
+        });
+    </script>
 </body>
 
 </html>

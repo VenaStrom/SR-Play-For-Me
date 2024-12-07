@@ -1,9 +1,14 @@
-// Boilerplate
+@use "mixin.scss" as *;
+
+//
+// Boilerplate & Variables
+//
 :root {
     --color-bg: #111111;
     --color-fg: #ffffff;
     --color-off-white: #e9e7e7;
     --color-gray: #3a3a3a;
+    --color-light-gray: gray;
 }
 
 * {
@@ -11,18 +16,22 @@
 
     margin: 0;
     padding: 0;
+
     box-sizing: border-box;
+
+    // Surely this won't cause any issues in the future (:
+    user-select: none;
 }
 
-@import "mixin.scss";
 
+//
 // Main Tree
+//
 body {
     @include column(start, center);
 
     height: 100%;
     width: 100%;
-    max-width: 420px;
 
     background-color: var(--color-bg);
     color: var(--color-fg);
@@ -31,10 +40,10 @@ body {
         width: 100%;
     }
 
-    // Header
+    // Page Header
     &>header {
         @include row(center, center);
-        @include top-bottom-padding(medium);
+        @include padding(medium, 0);
         @include hairline(bottom);
 
         &>div {
@@ -46,6 +55,8 @@ body {
     // Main Content
     &>main {
         @include column(start, center);
+        flex-wrap: nowrap;
+        overflow-y: scroll;
 
         // Fills the remaining space
         flex: 1;
@@ -53,8 +64,7 @@ body {
         // All Sections
         &>section {
             @include column(start, center);
-            @include top-bottom-padding(medium);
-            @include padding(top, large);
+            @include padding(large, 0, medium, 0);
             @include hairline(bottom);
 
             width: 100%;
@@ -62,26 +72,21 @@ body {
             &>.header {
                 @include row(space-between, center);
                 @include percent-width(small);
+            }
 
-                // SR attribute
-                &>div {
-                    @include row(space-between, center);
-                    @include gap(row, small);
-                    @include text-size(small);
-
-                    &>img {
-                        @include icon(x-small);
-                    }
-                }
+            &>ul {
+                @include percent-width(small);
+                @include gap($row: medium);
+                @include padding(medium, 0);
             }
         }
 
-        // Section Exemptions
+        // Section Exceptions
         &>section.intro-paragraph {
 
             &>p:last-of-type {
                 @include text-size(small);
-                @include top-bottom-padding(small);
+                @include padding(medium, 0);
                 @include percent-width(medium);
 
                 text-wrap: balance;
@@ -116,15 +121,19 @@ body {
 
         &>.body {
             @include row(space-between, center);
-            @include top-bottom-padding();
+            @include padding(medium, 0);
             @include percent-width(small);
+
+            &>button {
+                @include icon(small, $hover: true);
+            }
         }
     }
 
-    // Links To Other Pages
+    // NAV
     &>nav {
         @include row(center);
-        @include top-bottom-padding(large);
+        @include padding(large, 0);
         @include hairline(top);
 
         &>div {
@@ -139,7 +148,123 @@ body {
 }
 
 
+//
 // Class Styling
+//
+.content-dom {
+    @include row(start, start);
+    @include gap($column: medium);
+    @include padding(0, small, 0, 0);
+
+    --element-height: 5.3rem;
+
+    width: 100%;
+    height: var(--element-height);
+
+    border: solid 1px var(--color-gray);
+
+    overflow-y: hidden;
+
+    &>img {
+        width: var(--element-height);
+        aspect-ratio: 1/1;
+    }
+
+    &>.body {
+        @include column(start, start);
+        @include padding(small, 0, x-small, 0);
+
+        height: 100%;
+
+        flex: 1;
+
+        &>* {
+            width: 100%;
+        }
+
+        &>.header {
+            @include row(space-between, center);
+
+            &>.title {}
+
+            &>.date {
+                @include text-size(small);
+                @include padding(0, small, 0, 0);
+
+                color: var(--color-light-gray);
+            }
+        }
+
+        &>.description {
+            @include text-size(small);
+
+            flex: 1;
+
+            overflow-y: scroll;
+        }
+
+        &>.footer {
+            @include row(end, center);
+            @include gap($column: small);
+            @include text-size(small);
+
+            flex-wrap: nowrap;
+
+            color: var(--color-light-gray);
+
+            &>p {
+                flex: 1;
+                text-align: end;
+
+                height: 1rem;
+                // width: 20ch;
+
+                // line-break: anywhere;
+                text-overflow: clip;
+                // overflow: hidden;
+            }
+
+            &>button {
+                @include icon(x-small, $hover: true);
+            }
+        }
+    }
+}
+
+// Children of .content-dom
+.channel-dom {
+    @extend .content-dom;
+
+
+}
+
+.program-dom {
+    @extend .content-dom;
+
+}
+
+.sr-attribute {
+    @include row(start, center);
+    @include gap(small);
+    @include text-size(small);
+
+    &>div:has(img) {
+        @include icon(x-small);
+    }
+}
+
+.italic {
+    @include italic();
+}
+
+.bold {
+    @include bold();
+}
+
+
+//
+// Tag Styling
+//
 html {
     @include column(start, center);
 
@@ -170,35 +295,32 @@ button {
     color: var(--color-fg);
     cursor: pointer;
 
-    &:hover {
-        &>img {
-            @include dim();
-        }
-    }
-
-    &>img {
-        @include icon(small, $hover: true);
-        @include text-size(x-large);
+    &:focus {
+        appearance: none;
+        border: none;
+        background-color: transparent;
     }
 }
 
 a {
     text-decoration: solid underline var(--color-off-white) 0.03rem;
     color: var(--color-fg);
+    cursor: pointer;
 
-    &:hover {
-        @include dim();
+    &:focus {
+        appearance: none;
+        border: none;
+        background-color: transparent;
     }
 }
 
 ul {
+    @include column(start, center);
+
     list-style-type: none;
+    width: 100%;
 }
 
-.italic {
-    @include italic();
-}
-
-.bold {
-    @include bold();
+li {
+    width: 100%;
 }
