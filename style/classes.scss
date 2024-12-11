@@ -1,0 +1,148 @@
+@use "mixin.scss" as *;
+
+.hidden {
+    display: none !important;
+}
+
+.italic {
+    @include italic();
+}
+
+.bold {
+    @include bold();
+}
+
+.underline {
+    text-decoration: solid underline var(--color-off-white) 0.03rem;
+}
+
+.ellipsis {
+    // For it to work, the element must have a fixed width
+    width: 10ch;
+
+    line-break: anywhere;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.content-dom {
+    @include row(start, start);
+    @include gap($column: medium);
+    @include padding(0, small, 0, 0);
+
+    --element-height: 5.6rem;
+
+    width: 100%;
+    height: var(--element-height);
+
+    border: solid 1px var(--color-gray);
+
+    overflow-y: hidden;
+
+    &>img {
+        width: var(--element-height);
+        aspect-ratio: 1/1;
+    }
+
+    &>.body {
+        @include column(start, start);
+        @include gap($row: small);
+        @include padding(small, 0, x-small, 0);
+
+        flex: 1;
+
+        height: 100%;
+
+        overflow-x: hidden;
+
+        &>* {
+            width: 100%;
+        }
+
+        &>.header {
+            @include row(space-between, center);
+            @include gap($column: x-large);
+
+            &>.title {
+                @extend .bold;
+
+                max-width: 60%;
+                white-space: nowrap;
+                overflow-x: scroll;
+            }
+
+            &>.info {
+                @include text-size(small);
+                @include padding(0, small, 0, 0);
+
+                flex: 1;
+
+                color: var(--color-light-gray);
+
+                text-align: end;
+
+                overflow-x: scroll;
+                white-space: nowrap;
+            }
+        }
+
+        &>.description {
+            @include text-size(small);
+
+            flex: 1;
+
+            overflow-y: scroll;
+        }
+
+        &>.footer {
+            @include row(end, center);
+            @include gap($column: small);
+            @include text-size(small);
+
+            color: var(--color-light-gray);
+
+            &>p {
+                @include padding(0, 0, 0, small);
+                @extend .ellipsis;
+
+                flex: 1;
+
+                height: 1rem;
+
+                text-align: end;
+            }
+
+            &>button {
+                @include icon(x-small, $hover: true);
+            }
+        }
+    }
+}
+
+// Children of .content-dom
+.channel-dom {
+    @extend .content-dom;
+
+
+}
+
+.program-dom {
+    @extend .content-dom;
+
+}
+
+.episode-dom {
+    @extend .content-dom;
+
+}
+
+.sr-attribute {
+    @include row(start, center);
+    @include gap(small);
+    @include text-size(small);
+
+    &>div:has(img) {
+        @include icon(x-small);
+    }
+}

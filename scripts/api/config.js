@@ -9,6 +9,11 @@ const api = {
         suffix: "channels",
         arguments: [],
         getURI: () => `${api.uri}${api.channels.suffix}?${[...api.common.arguments, ...api.channels.arguments].join("&")}`,
+        schedule: {
+            suffix: "scheduledepisodes",
+            arguments: ["size=1"], // Only get the next program
+            getURI: (channelId) => `${api.uri}${api.channels.schedule.suffix}?channelid=${channelId}&${[...api.common.arguments, ...api.channels.schedule.arguments].join("&")}`,
+        }
     },
     programs: {
         suffix: "programs",

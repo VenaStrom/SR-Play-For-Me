@@ -12,41 +12,45 @@ class AudioPlayer {
         this.currentTrack = null;
         this.nextTrack = null; // For caching
 
-        this.playButtonInit();
+        this.handlePlayButtonClicking();
     }
 
     play() {
+        if (!this.currentTrack) {
+            console.warn("No track loaded. Trying to play.");
+            return;
+        }
+
         this.currentTrack.play();
         this.playing = true;
+        this.setPlayButtonState();
     }
 
     pause() {
+        if (!this.currentTrack) {
+            console.warn("No track loaded. Trying to pause.");
+            return;
+        }
+
         this.currentTrack.pause();
         this.playing = false;
+        this.setPlayButtonState();
     }
 
     loadTrack(url) {
+        if (this.currentTrack) {
+            this.currentTrack.pause();
+            this.currentTrack = null;
+        }
         this.currentTrack = new Audio(url);
     }
 
-    playTrack(url) {
+    startTrack(url) {
         this.loadTrack(url);
         this.play();
     }
 
-    playButtonInit() {
-        this.playButton.addEventListener("click", () => {
-            if (this.playing === false) {
-                this.playing = true;
-                this.playButton.querySelector("img").src = "assets/icons/icons8-pause-48.png";
-            } else {
-                this.playing = false;
-                this.playButton.querySelector("img").src = "assets/icons/icons8-play-48.png";
-            }
-        });
-    }
-
-    setProgress(fraction) {
+    setProgressBar(fraction) {
         const lowestBound = 0.03; // To prevent the progress bar from being too small
         const highestBound = 1;
 
@@ -55,5 +59,64 @@ class AudioPlayer {
 
         const progressBar = this.progressBarContainer.querySelector(".foreground");
         progressBar.style.width = displayPercent + "%";
+    }
+
+    updateProgressBar() {
+        if (!this.currentTrack) {
+            return;
+        }
+
+        const duration = this.currentTrack.duration;
+        const currentTime = this.currentTrack.currentTime;
+
+        if (duration) {
+            this.setProgressBar(currentTime / duration);
+        }
+    }
+
+    setPlayButtonState() {
+        const playIcon = "assets/icons/icons8-play-48.png";
+        const pauseIcon = "assets/icons/icons8-pause-48.png";
+
+        if (!this.playing) {
+            this.playButton.querySelector("img").src = playIcon;
+        } else {
+            this.playButton.querySelector("img").src = pauseIcon;
+        }
+    }
+
+    handlePlayButtonClicking() {
+        // Main play button in the player controls
+        this.playButton.addEventListener("click", () => {
+
+            if (this.playing) {
+                this.pause();
+            } else {
+                this.play();
+            }
+
+            this.setPlayButtonState();
+        });
+
+        // Start button clicking, i.e. small play buttons linked to content
+        document.body.addEventListener("click", (event) => {
+            if (
+                event.target.tagName === "BUTTON"
+                &&
+                event.target.dataset.id
+            ) {
+                const [type, id] = event.target.dataset.id.split("-");
+
+                if (type === "channel") {
+                    const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
+
+                    if (channel) {
+                        this.startTrack(channel.url);
+                    }
+                }
+
+                document.body.dispatchEvent(new Event("startbuttonclicked"));
+            }
+        });
     }
 }

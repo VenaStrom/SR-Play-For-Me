@@ -2,6 +2,7 @@
 <html lang="sv">
 
 <head>
+    <!-- Avoid bot scraping since this site does not need to be indexed -->
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
 
@@ -21,21 +22,25 @@
 
     <!-- API Callers -->
     <script defer src="scripts/api/config.js"></script>
-    <script defer src="scripts/api/channels.js"></script>
+    <script defer src="scripts/api/fetch-channels.js"></script>
+    <script defer src="scripts/api/fetch-schedule.js"></script>
 
     <!-- Script -->
+    <script defer src="scripts/dom-generators/content-dom.js"></script>
     <script defer src="scripts/audio-player.js"></script>
     <script defer src="scripts/storage-manager.js"></script>
     <script defer src="scripts/main.js"></script>
 </head>
 
 <body>
+    <!-- Page Header -->
     <header>
         <div>
             <h3>VR</h3>
         </div>
     </header>
 
+    <!-- Main Part of the Page -->
     <main>
         <section class="intro-paragraph">
             <p>Välkommen till</p>
@@ -46,6 +51,67 @@
                     target="_blank">Sveriges Radios villkor</a> för att använda deras IP så har jag insett att jag bör sluta
                 använda deras varumärke i den utsträckningen jag har gjort.
             </p>
+        </section>
+
+        <!-- Episodes -->
+        <section class="your-episodes">
+            <div class="header">
+                <h2>Dina senaste avsnitt</h2>
+
+                <div class="sr-attribute">
+                    <p>Hämtade från</p>
+                    <div><img src="assets/icons/sr-play-48.png" alt="SR"></div>
+                </div>
+            </div>
+
+            <!-- UL Episodes -->
+            <ul>
+                <!-- <li class="episode-dom">
+                    <img src="assets/images/image-missing.png" alt="Bild">
+
+                    <div class="body">
+                        <div class="header">
+                            <p class="title">USApodden</p>
+                            <p class="info">27 Aug</p>
+                        </div>
+
+                        <p class="description">
+                            USApodden är en podcast om USA.
+                        </p>
+
+                        <div class="footer">
+                            <p>Lyssna på avsnittet</p>
+
+                            <button>
+                                <img src="assets/icons/icons8-play-48.png" alt="Spela">
+                            </button>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="episode-dom">
+                    <img src="assets/images/image-missing.png" alt="Bild">
+
+                    <div class="body">
+                        <div class="header">
+                            <p class="title">USApodden</p>
+                            <p class="info">27 Aug</p>
+                        </div>
+
+                        <p class="description">
+                            USApodden är en podcast om USA.
+                        </p>
+
+                        <div class="footer">
+                            <p>Lyssna på avsnittet</p>
+
+                            <button>
+                                <img src="assets/icons/icons8-play-48.png" alt="Spela">
+                            </button>
+                        </div>
+                    </div>
+                </li> -->
+            </ul>
         </section>
 
         <!-- Radio Channels -->
@@ -61,7 +127,7 @@
 
             <!-- UL Channels -->
             <ul>
-                <li class="channel-dom">
+                <!-- <li class="channel-dom">
                     <img src="assets/images/image-missing.png" alt="Bild">
 
                     <div class="body">
@@ -82,8 +148,12 @@
                             </button>
                         </div>
                     </div>
-                </li>
+                </li> -->
             </ul>
+
+            <div class="show-all">
+                <button>Visa alla</button>
+            </div>
         </section>
 
         <!-- Programs and Podcasts -->
@@ -149,67 +219,6 @@
                 </li>
             </ul>
         </section>
-
-        <!-- Episodes -->
-        <section class="your-episodes">
-            <div class="header">
-                <h2>Dina senaste avsnitt</h2>
-
-                <div class="sr-attribute">
-                    <p>Hämtade från</p>
-                    <div><img src="assets/icons/sr-play-48.png" alt="SR"></div>
-                </div>
-            </div>
-
-            <!-- UL Episodes -->
-            <ul>
-                <li class="episode-dom">
-                    <img src="assets/images/image-missing.png" alt="Bild">
-
-                    <div class="body">
-                        <div class="header">
-                            <p class="title">USApodden</p>
-                            <p class="info">27 Aug</p>
-                        </div>
-
-                        <p class="description">
-                            USApodden är en podcast om USA.
-                        </p>
-
-                        <div class="footer">
-                            <p>Lyssna på avsnittet</p>
-
-                            <button>
-                                <img src="assets/icons/icons8-play-48.png" alt="Spela">
-                            </button>
-                        </div>
-                    </div>
-                </li>
-
-                <li class="episode-dom">
-                    <img src="assets/images/image-missing.png" alt="Bild">
-
-                    <div class="body">
-                        <div class="header">
-                            <p class="title">USApodden</p>
-                            <p class="info">27 Aug</p>
-                        </div>
-
-                        <p class="description">
-                            USApodden är en podcast om USA.
-                        </p>
-
-                        <div class="footer">
-                            <p>Lyssna på avsnittet</p>
-
-                            <button>
-                                <img src="assets/icons/icons8-play-48.png" alt="Spela">
-                            </button>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </section>
     </main>
 
     <!-- Audio Player -->
@@ -248,10 +257,11 @@
         </div>
     </nav>
 
+    <!-- Disable context menus on icons -->
     <script>
-        // Prevent right-click on images to prevent annoying mobile behavior
-        document.querySelectorAll("img").forEach(img => {
-            img.addEventListener("contextmenu", e => e.preventDefault());
+        // This solution is limited since the icons source path has to contain "icon"
+        document.querySelectorAll("img[src*=icon]").forEach(img => {
+            img.addEventListener("contextmenu", event => event.preventDefault());
         });
     </script>
 </body>
