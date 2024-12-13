@@ -1,7 +1,7 @@
 
-getChannelSchedule = async (channelId) => {
+getChannelSchedule = async (channelID) => {
 
-    const uri = api.channels.schedule.getURI(channelId)
+    const uri = api.channels.schedule.getURI(channelID)
 
     const response = await fetch(uri);
 

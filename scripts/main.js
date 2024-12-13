@@ -3,17 +3,27 @@ const contentStorageManager = new ContentStorageManager();
 
 const audioPlayer = new AudioPlayer();
 
-const init = async () => {
-    const channels = await getAllChannels();
+// TESTING
+const time = { start: new Date().getTime(), channels: null };
 
-    if (channels) {
+const init = async () => {
+
+
+    // Async Channels
+    getAllChannels().then((channels) => {
+        if (!channels) return;
+
+        // Update channels in storage
         contentStorageManager.set("channels", channels);
 
-        const likedChannels = contentStorageManager.get("ids").channels;
+        const likedChannelIDs = contentStorageManager.get("ids").channels;
+        
+        const channelParentDOM = document.querySelector("section.channels>ul");
 
+        // Create content for all liked channels
         channels
-            .filter((channel) => likedChannels.includes(channel.id))
-            .sort((a, b) => likedChannels.indexOf(a.id) - likedChannels.indexOf(b.id))
+            .filter((channel) => likedChannelIDs.includes(channel.id)) // Only liked channels
+            .sort((a, b) => likedChannelIDs.indexOf(a.id) - likedChannelIDs.indexOf(b.id)) // Sort by order of liking  TODO - this won't be a sensible solution in the future
             .slice(0, 3).forEach((channel) => {
                 const data = {
                     id: channel.id,
@@ -29,18 +39,31 @@ const init = async () => {
                     },
                 };
 
-                createContentDOM(document.querySelector("section.channels>ul"), data);
+                createContentDOM(channelParentDOM, data);
             });
 
+        // Async function to get schedule for a channel and update the DOM
         setScheduleOnVisibleChannels();
-
         setInterval(setScheduleOnVisibleChannels, 60000); // Keep the schedule somewhat up-to-date
 
         // Whenever you click a start button, update the schedule
         document.body.addEventListener("startbuttonclicked", () => {
             setScheduleOnVisibleChannels();
         });
-    }
+
+        // TESTING
+        time.channels = new Date().getTime();
+        document.dispatchEvent(new Event("channelsloaded"));
+    });
 };
 
 init();
+
+// TESTING
+document.addEventListener("channelsloaded", () => {
+    const stats = `
+Time:
+ Channels: ${parseInt((time.channels - time.start))} ms`;
+
+    console.log(stats);
+});
