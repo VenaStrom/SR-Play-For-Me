@@ -9,8 +9,8 @@ class AudioPlayer {
         // Whether the current audio track is playing or not
         this.playing = false;
 
-        this.currentTrack = null;
-        this.nextTrack = null; // For caching
+        this.currentTrack = new Audio();
+        this.nextTrack = new Audio(); // For preloading
 
         this.handlePlayButtonClicking();
     }
@@ -50,7 +50,7 @@ class AudioPlayer {
         this.play();
     }
 
-    setProgressBar(fraction) {
+    setProgressBar(fraction, autoUpdate = true) {
         const lowestBound = 0.03; // To prevent the progress bar from being too small
         const highestBound = 1;
 
@@ -59,6 +59,14 @@ class AudioPlayer {
 
         const progressBar = this.progressBarContainer.querySelector(".foreground");
         progressBar.style.width = displayPercent + "%";
+
+        if (autoUpdate) {
+            this.autoProgressUpdater = this.currentTrack.addEventListener("timeupdate", () => {
+                this.updateProgressBar();
+            });
+        } else {
+            this.currentTrack.removeEventListener("timeupdate", this.autoProgressUpdater);
+        }
     }
 
     updateProgressBar() {
@@ -101,6 +109,34 @@ class AudioPlayer {
         // Start button clicking, i.e. small play buttons linked to content
         document.body.addEventListener("click", (event) => {
             if (
+                !event.target
+                ||
+                event.target.tagName !== "BUTTON"
+                ||
+                !event.target.dataset.id
+            ) return;
+
+            const [type, id] = event.target.dataset.id.split("-");
+
+            if (type === "channel") {
+                const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
+
+                if (channel) {
+                    this.setProgressBar(1);
+                    this.startTrack(channel.url);
+                }
+            }
+            else if (type === "episode") {
+                const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
+
+                if (episode) {
+                    this.setProgressBar(0);
+                    this.startTrack(episode.url);
+                }
+            }
+
+
+            if (
                 event.target.tagName === "BUTTON"
                 &&
                 event.target.dataset.id
@@ -111,8 +147,11 @@ class AudioPlayer {
                     const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
 
                     if (channel) {
+                        this.setProgressBar(1);
                         this.startTrack(channel.url);
                     }
+                } else if (type === "episode") {
+
                 }
 
                 document.body.dispatchEvent(new Event("startbuttonclicked"));

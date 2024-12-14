@@ -13,6 +13,7 @@ class ContentStorageManager {
 
         this.data.ids = {
             channels: [218, 164, 132, 701], // Add the preferred channel IDs here, they will be shown first
+            programs: [4923],
         };
     }
 

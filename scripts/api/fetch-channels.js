@@ -1,14 +1,5 @@
-let lastFetchedChannels = new Date(0);
 
-getAllChannels = async () => {
-    // Spam mitigation
-    const now = new Date();
-    if (now - lastFetchedChannels < api.fetchCooldown) {
-        return null;
-    } else {
-        lastFetchedChannels = now;
-    }
-
+const getAllChannels = async () => {
     const response = await fetch(api.channels.getURI());
 
     if (!response.ok) {

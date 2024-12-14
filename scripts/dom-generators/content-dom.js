@@ -1,5 +1,23 @@
 
-const createContentDOM = (parent, data) => {
+const createContentDOM = (parent, data, type = null) => {
+    if (!data) {
+        data = {
+            id: "",
+            type: "content", // This is a fallback just so that it gets styled no matter what
+            header: {
+                title: "Laddar...",
+                info: "",
+            },
+            description: "",
+            footer: {
+                text: "",
+            },
+        }
+    }
+    if (type) {
+        data.type = type;
+    }
+
     const defaultImage = "assets/images/image-missing.png";
 
     const idString = `${data.type}-${data.id}`;
