@@ -151,7 +151,12 @@ class AudioPlayer {
                         this.startTrack(channel.url);
                     }
                 } else if (type === "episode") {
+                    const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
 
+                    if (episode) {
+                        this.setProgressBar(0);
+                        this.startTrack(episode.url);
+                    }
                 }
 
                 document.body.dispatchEvent(new Event("startbuttonclicked"));

@@ -26,7 +26,7 @@ const main = async () => {
         channels
             .filter((channel) => likedChannelIDs.includes(channel.id)) // Only liked channels
             .sort((a, b) => likedChannelIDs.indexOf(a.id) - likedChannelIDs.indexOf(b.id)) // Sort by order of liking  TODO - this won't be a sensible solution in the future
-            .slice(0, 3).forEach((channel) => {
+            .slice(0, visibleChannels).forEach((channel) => {
                 const data = {
                     id: channel.id,
                     type: "channel",
@@ -73,7 +73,7 @@ const main = async () => {
         programs
             .filter((program) => likedProgramIDs.includes(program.id)) // Only liked programs
             .sort((a, b) => likedProgramIDs.indexOf(a.id) - likedProgramIDs.indexOf(b.id)) // Sort by order of liking  TODO - this won't be a sensible solution in the future
-            .slice(0, 3).forEach((program) => {
+            .slice(0, visiblePrograms).forEach((program) => {
                 const data = {
                     id: program.id,
                     type: "program",
