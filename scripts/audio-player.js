@@ -164,3 +164,5 @@ class AudioPlayer {
         });
     }
 }
+
+module.exports = { AudioPlayer };

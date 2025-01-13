@@ -1,16 +1,19 @@
+"use strict";
+
+const { config } = require("./config");
 
 const getAllChannels = async () => {
-    const response = await fetch(api.channels.getURI());
+    const response = await fetch(config.channels.getURI());
 
     if (!response.ok) {
-        console.warn("Didn't get a proper response from the Sveriges Radio API when fetching the channels. URL and response:", api.channels.getURI(), response,);
+        console.warn("Didn't get a proper response from the Sveriges Radio API when fetching the channels. URL and response:", config.channels.getURI(), response,);
         return null;
     }
 
     const rawChannels = (await response.json()).channels;
 
     if (!rawChannels) {
-        console.warn("Didn't get any channels from the Sveriges Radio API when fetching the channels. URL and response:", api.channels.getURI(), response,);
+        console.warn("Didn't get any channels from the Sveriges Radio API when fetching the channels. URL and response:", config.channels.getURI(), response,);
         return null;
     }
 
@@ -29,3 +32,5 @@ const getAllChannels = async () => {
 
     return channels;
 };
+
+module.exports = { getAllChannels };

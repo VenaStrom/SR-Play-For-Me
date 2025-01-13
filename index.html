@@ -13,25 +13,14 @@
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
     <!-- Style -->
-    <link rel="stylesheet" href="style/css/main.css">
     <link rel="shortcut icon" href="assets/icons/vr-logo-48.png" type="image/x-icon">
-
-    <!-- API Callers -->
-    <script defer src="scripts/api/config.js"></script>
-    <script defer src="scripts/api/fetch-channels.js"></script>
-    <script defer src="scripts/api/fetch-programs.js"></script>
-    <script defer src="scripts/api/fetch-schedule.js"></script>
-    <script defer src="scripts/api/fetch-episodes.js"></script>
+    <link rel="stylesheet" href="dist/style/bundle.css">
 
     <!-- Script -->
-    <script defer src="scripts/dom-generators/content-dom.js"></script>
-    <script defer src="scripts/audio-player.js"></script>
-    <script defer src="scripts/storage-manager.js"></script>
-    <script defer src="scripts/main.js"></script>
+    <script defer src="dist/bundle.js"></script>
 </head>
 
 <body>
@@ -49,8 +38,8 @@
             <h1>Viggos Radio - Radiospelare</h1>
             <p>
                 Den här sidan var tidiagre känd som <span class="italic">SR Play for me</span>, men efter att ha läst lite mer om
-                <a href="https://sverigesradio.se/artikel/riktlinjer-for-anvandandet-av-sveriges-radios-varumarken"
-                    target="_blank">Sveriges Radios villkor</a> för att använda deras IP så har jag insett att jag bör sluta
+                <a href="https://sverigesradio.se/artikel/riktlinjer-for-anvandandet-av-sveriges-radios-varumarken" target="_blank">Sveriges Radios villkor</a> för att använda deras IP så har jag
+                insett att jag bör sluta
                 använda deras varumärke i den utsträckningen jag har gjort.
             </p>
         </section>
@@ -68,7 +57,8 @@
 
             <!-- UL Episodes -->
             <ul>
-                <!-- <li class="episode-dom">
+                <!-- 
+                <li class="episode-dom">
                     <img src="assets/images/image-missing.png" alt="Bild">
 
                     <div class="body">

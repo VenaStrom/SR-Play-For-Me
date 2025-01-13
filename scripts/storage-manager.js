@@ -41,3 +41,5 @@ class ContentStorageManager {
         });
     }
 }
+
+module.exports = { ContentStorageManager };

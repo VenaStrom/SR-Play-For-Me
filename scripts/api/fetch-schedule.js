@@ -1,10 +1,13 @@
+"use strict";
+
+const { config } = require("./config");
 
 const getChannelSchedule = async (channelID) => {
     if (!channelID) {
         return null;
     }
 
-    const uri = api.channels.schedule.getURI(channelID)
+    const uri = config.channels.schedule.getURI(channelID)
 
     const response = await fetch(uri);
 
@@ -48,3 +51,5 @@ const setScheduleOnVisibleChannels = async () => {
         }
     });
 }
+
+module.exports = { getChannelSchedule, setScheduleOnVisibleChannels };

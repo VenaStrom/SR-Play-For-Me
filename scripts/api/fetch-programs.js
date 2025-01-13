@@ -1,16 +1,19 @@
+"use strict";
+
+const { config } = require("./config");
 
 const getAllPrograms = async () => {
-    const response = await fetch(api.programs.getURI());
+    const response = await fetch(config.programs.getURI());
 
     if (!response.ok) {
-        console.warn("Didn't get a proper response from the Sveriges Radio API when fetching the programs. URL and response:", api.programs.getURI(), response,);
+        console.warn("Didn't get a proper response from the Sveriges Radio API when fetching the programs. URL and response:", config.programs.getURI(), response,);
         return null;
     }
 
     const rawPrograms = (await response.json()).programs;
 
     if (!rawPrograms) {
-        console.warn("Didn't get any programs from the Sveriges Radio API when fetching the programs. URL and response:", api.programs.getURI(), response,);
+        console.warn("Didn't get any programs from the Sveriges Radio API when fetching the programs. URL and response:", config.programs.getURI(), response,);
         return null;
     }
 
@@ -29,3 +32,5 @@ const getAllPrograms = async () => {
 
     return programs;
 };
+
+module.exports = { getAllPrograms };
