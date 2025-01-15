@@ -1,7 +1,8 @@
 "use strict";
 
+const ImageLoader = require("../image-loader");
+
 const createContentDOM = (parent, data, type = null) => {
-    console.log(data);
     if (!data) {
         data = {
             id: "",
@@ -16,17 +17,13 @@ const createContentDOM = (parent, data, type = null) => {
             },
         }
     }
-    if (type) {
-        data.type = type;
-    }
+    if (type) data.type = type;
 
-    const defaultImage = "assets/images/image-missing.png";
-
-    const idString = `${data.type}-${data.id}`;
+    const defaultImagePath = "assets/images/image-missing.png";
 
     const template = `
-    <li class="${data.type}-dom" id="${idString}">
-        <img src="${defaultImage}" alt="Bild">
+    <li class="${data.type}-dom" id="${data.id}">
+        <img src="${defaultImagePath}" alt="Bild">
 
         <div class="body">
             <div class="header">
@@ -39,7 +36,7 @@ const createContentDOM = (parent, data, type = null) => {
             <div class="footer">
                 <p>${data.footer.text || ""}</p>
 
-                <button data-id="${idString}">
+                <button data-id="${data.id}">
                     <img src="assets/icons/icons8-play-48.png" alt="Spela">
                 </button>
             </div>
@@ -49,20 +46,9 @@ const createContentDOM = (parent, data, type = null) => {
     // Add to parent
     parent.insertAdjacentHTML("beforeend", template);
 
-    //
-    // Loading the image
-    //
-    // Reference to the newly added <img> element
-    const imgElement = parent.lastElementChild.querySelector("img");
-
-    // Preload the image
-    const preloadedImage = new Image();
-    preloadedImage.src = data.image || defaultImage;
-
-    // On load, update the <img> element's src
-    preloadedImage.onload = () => {
-        imgElement.src = preloadedImage.src;
-    };
+    // Async image loading
+    const imgElement = parent.querySelector(`#${data.id} img`);
+    ImageLoader.asyncLoad(imgElement, data.image || defaultImagePath, defaultImagePath);
 };
 
 module.exports = createContentDOM;

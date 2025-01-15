@@ -19,10 +19,10 @@ class ScheduleFetch {
         },
     }
 
-    static badResponseMessage(URL, response, ID = "N/A") {
+    static badResponseMessage(URL, response, id = "N/A") {
         return console.warn(`
             Didn't get a proper response from the Sveriges Radio API when fetching the schedule.
-            ID: ${ID}
+            ID: ${id}
             URL used: ${URL}
             Response: ${response}
             `.trim());
@@ -31,11 +31,11 @@ class ScheduleFetch {
     static async byChannel(channelID) {
         if (!channelID) return console.error("No channelID provided.");
 
-        const response = await fetch(ScheduleFetch.config.byChannel.makeURL(channelID));
-        if (!response.ok) return ScheduleFetch.badResponseMessage(ScheduleFetch.config.byChannel.makeURL(channelID), response, channelID);
+        const response = await fetch(this.config.byChannel.makeURL(channelID));
+        if (!response.ok) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
 
         const schedule = (await response.json()).schedule;
-        if (!schedule) return ScheduleFetch.badResponseMessage(ScheduleFetch.config.byChannel.makeURL(channelID), response, channelID);
+        if (!schedule) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
 
         return schedule;
     }

@@ -46,18 +46,18 @@ class EpisodeFetch {
         },
     }
 
-    static badResponseMessage(URL, response, ID = "N/A") {
+    static badResponseMessage(URL, response, id = "N/A") {
         return console.warn(`
             Didn't get a proper response from the Sveriges Radio API when fetching the episode(s).
-            ID: ${ID}
+            ID: ${id}
             UL used: ${URL}
             Response: ${response}
             `.trim());
     }
-
+    
     static formatAndFilterEpisodeData(episodeData) {
         return {
-            id: episodeData.id,
+            id: `episode-${episodeData.id}`,
             name: episodeData.title,
             description: episodeData.description,
             image: episodeData.imageurl,
@@ -68,13 +68,13 @@ class EpisodeFetch {
     }
 
     static async byID(episodeID) {
-        const response = await fetch(EpisodeFetch.config.byID.makeURL(episodeID));
-        if (!response.ok) return EpisodeFetch.badResponseMessage(episodeID, EpisodeFetch.config.byID.makeURL(episodeID), response, episodeID);
+        const response = await fetch(this.config.byID.makeURL(episodeID));
+        if (!response.ok) return this.badResponseMessage(episodeID, this.config.byID.makeURL(episodeID), response, episodeID);
 
         const episode = (await response.json()).episode;
-        if (!episode) return EpisodeFetch.badResponseMessage(episodeID, EpisodeFetch.config.byID.makeURL(episodeID), response, episodeID);
+        if (!episode) return this.badResponseMessage(episodeID, this.config.byID.makeURL(episodeID), response, episodeID);
 
-        return EpisodeFetch.formatAndFilterEpisodeData(episode);
+        return this.formatAndFilterEpisodeData(episode);
     }
 }
 
@@ -82,23 +82,23 @@ class ByProgram {
     constructor() { }
 
     static async all(programID) {
-        const response = await fetch(EpisodeFetch.config.byProgram.all.makeURL(programID));
-        if (!response.ok) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.all.makeURL(programID), response, programID);
+        const response = await fetch(this.config.byProgram.all.makeURL(programID));
+        if (!response.ok) return this.badResponseMessage(programID, this.config.byProgram.all.makeURL(programID), response, programID);
 
         const episodes = (await response.json()).episodes;
-        if (!episodes) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.all.makeURL(programID), response, programID);
+        if (!episodes) return this.badResponseMessage(programID, this.config.byProgram.all.makeURL(programID), response, programID);
 
-        return episodes.map(EpisodeFetch.formatAndFilterEpisodeData);
+        return episodes.map(this.formatAndFilterEpisodeData);
     }
 
     static async latest(programID) {
-        const response = await fetch(EpisodeFetch.config.byProgram.latest.makeURL(programID));
-        if (!response.ok) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.latest.makeURL(programID), response, programID);
+        const response = await fetch(this.config.byProgram.latest.makeURL(programID));
+        if (!response.ok) return this.badResponseMessage(programID, this.config.byProgram.latest.makeURL(programID), response, programID);
 
         const episode = (await response.json()).episode;
-        if (!episode) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.latest.makeURL(programID), response, programID);
+        if (!episode) return this.badResponseMessage(programID, this.config.byProgram.latest.makeURL(programID), response, programID);
 
-        return EpisodeFetch.formatAndFilterEpisodeData(episode);
+        return this.formatAndFilterEpisodeData(episode);
     }
 }
 
