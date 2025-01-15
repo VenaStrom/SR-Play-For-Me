@@ -5,7 +5,7 @@ const commonConfig = require("./common-config.json");
 class ScheduleFetch {
     constructor() { }
 
-    config = {
+    static config = {
         byChannel: {
             suffix: "scheduledepisodes",
             arguments: [],
@@ -19,7 +19,7 @@ class ScheduleFetch {
         },
     }
 
-    badResponseMessage(URL, response, ID = "N/A") {
+    static badResponseMessage(URL, response, ID = "N/A") {
         return console.warn(`
             Didn't get a proper response from the Sveriges Radio API when fetching the schedule.
             ID: ${ID}
@@ -28,17 +28,17 @@ class ScheduleFetch {
             `.trim());
     }
 
-    async byChannel(channelID) {
+    static async byChannel(channelID) {
         if (!channelID) return console.error("No channelID provided.");
 
-        const response = await fetch(this.config.byChannel.makeURL(channelID));
-        if (!response.ok) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+        const response = await fetch(ScheduleFetch.config.byChannel.makeURL(channelID));
+        if (!response.ok) return ScheduleFetch.badResponseMessage(ScheduleFetch.config.byChannel.makeURL(channelID), response, channelID);
 
         const schedule = (await response.json()).schedule;
-        if (!schedule) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+        if (!schedule) return ScheduleFetch.badResponseMessage(ScheduleFetch.config.byChannel.makeURL(channelID), response, channelID);
 
         return schedule;
     }
 }
 
-module.exports = new ScheduleFetch;
+module.exports = ScheduleFetch;

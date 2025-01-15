@@ -3,7 +3,9 @@
 const commonConfig = require("./common-config.json");
 
 class ChannelFetch {
-    config = {
+    constructor() { }
+
+    static config = {
         all: {
             suffix: "channels",
             arguments: [],
@@ -15,7 +17,7 @@ class ChannelFetch {
         },
     }
 
-    badResponseMessage(URL, response, ID = "N/A") {
+    static badResponseMessage(URL, response, ID = "N/A") {
         return console.warn(`
             Didn't get a proper response from the Sveriges Radio API when fetching the channels.
             ID: ${ID}
@@ -24,7 +26,7 @@ class ChannelFetch {
             `.trim());
     }
 
-    formatAndFilterChannelData(channelData) {
+    static formatAndFilterChannelData(channelData) {
         return {
             id: channelData.id,
             name: channelData.name,
@@ -37,15 +39,15 @@ class ChannelFetch {
         }
     }
 
-    async all() {
-        const response = await fetch(this.config.all.makeURL());
-        if (!response.ok) return this.badResponseMessage(this.config.all.makeURL(), response);
+    static async all() {
+        const response = await fetch(ChannelFetch.config.all.makeURL());
+        if (!response.ok) return ChannelFetch.badResponseMessage(ChannelFetch.config.all.makeURL(), response);
 
         const channels = (await response.json()).channels;
-        if (!channels) return this.badResponseMessage(this.config.all.makeURL(), response);
+        if (!channels) return ChannelFetch.badResponseMessage(ChannelFetch.config.all.makeURL(), response);
 
-        return channels.map(this.formatAndFilterChannelData);
+        return channels.map(ChannelFetch.formatAndFilterChannelData);
     }
 }
 
-module.exports = new ChannelFetch;
+module.exports = ChannelFetch;

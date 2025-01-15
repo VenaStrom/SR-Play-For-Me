@@ -5,7 +5,7 @@ const commonConfig = require("./common-config.json");
 class EpisodeFetch {
     constructor() { }
 
-    config = {
+    static config = {
         byProgram: {
             all: {
                 suffix: "episodes/index",
@@ -46,7 +46,7 @@ class EpisodeFetch {
         },
     }
 
-    badResponseMessage(URL, response, ID = "N/A") {
+    static badResponseMessage(URL, response, ID = "N/A") {
         return console.warn(`
             Didn't get a proper response from the Sveriges Radio API when fetching the episode(s).
             ID: ${ID}
@@ -55,7 +55,7 @@ class EpisodeFetch {
             `.trim());
     }
 
-    formatAndFilterEpisodeData(episodeData) {
+    static formatAndFilterEpisodeData(episodeData) {
         return {
             id: episodeData.id,
             name: episodeData.title,
@@ -67,42 +67,42 @@ class EpisodeFetch {
         };
     }
 
-    async byID(episodeID) {
-        const response = await fetch(this.config.byID.makeURL(episodeID));
-        if (!response.ok) return this.badResponseMessage(episodeID, this.config.byID.makeURL(episodeID), response, episodeID);
+    static async byID(episodeID) {
+        const response = await fetch(EpisodeFetch.config.byID.makeURL(episodeID));
+        if (!response.ok) return EpisodeFetch.badResponseMessage(episodeID, EpisodeFetch.config.byID.makeURL(episodeID), response, episodeID);
 
         const episode = (await response.json()).episode;
-        if (!episode) return this.badResponseMessage(episodeID, this.config.byID.makeURL(episodeID), response, episodeID);
+        if (!episode) return EpisodeFetch.badResponseMessage(episodeID, EpisodeFetch.config.byID.makeURL(episodeID), response, episodeID);
 
-        return this.formatAndFilterEpisodeData(episode);
+        return EpisodeFetch.formatAndFilterEpisodeData(episode);
     }
-
-    byProgram = new ByProgram;
 }
 
 class ByProgram {
     constructor() { }
 
-    async all(programID) {
-        const response = await fetch(this.config.byProgram.all.makeURL(programID));
-        if (!response.ok) return this.badResponseMessage(programID, this.config.byProgram.all.makeURL(programID), response, programID);
+    static async all(programID) {
+        const response = await fetch(EpisodeFetch.config.byProgram.all.makeURL(programID));
+        if (!response.ok) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.all.makeURL(programID), response, programID);
 
         const episodes = (await response.json()).episodes;
-        if (!episodes) return this.badResponseMessage(programID, this.config.byProgram.all.makeURL(programID), response, programID);
+        if (!episodes) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.all.makeURL(programID), response, programID);
 
-        return episodes.map(this.formatAndFilterEpisodeData);
+        return episodes.map(EpisodeFetch.formatAndFilterEpisodeData);
     }
 
-    async latest(programID) {
-        const response = await fetch(this.config.byProgram.latest.makeURL(programID));
-        if (!response.ok) return this.badResponseMessage(programID, this.config.byProgram.latest.makeURL(programID), response, programID);
+    static async latest(programID) {
+        const response = await fetch(EpisodeFetch.config.byProgram.latest.makeURL(programID));
+        if (!response.ok) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.latest.makeURL(programID), response, programID);
 
         const episode = (await response.json()).episode;
-        if (!episode) return this.badResponseMessage(programID, this.config.byProgram.latest.makeURL(programID), response, programID);
+        if (!episode) return EpisodeFetch.badResponseMessage(programID, EpisodeFetch.config.byProgram.latest.makeURL(programID), response, programID);
 
-        return this.formatAndFilterEpisodeData(episode);
+        return EpisodeFetch.formatAndFilterEpisodeData(episode);
     }
 }
 
+EpisodeFetch.byProgram = ByProgram;
 
-module.exports = new EpisodeFetch;
+
+module.exports = EpisodeFetch;

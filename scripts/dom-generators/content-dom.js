@@ -1,5 +1,7 @@
+"use strict";
 
 const createContentDOM = (parent, data, type = null) => {
+    console.log(data);
     if (!data) {
         data = {
             id: "",
@@ -62,3 +64,5 @@ const createContentDOM = (parent, data, type = null) => {
         imgElement.src = preloadedImage.src;
     };
 };
+
+module.exports = createContentDOM;

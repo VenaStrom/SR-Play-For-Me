@@ -5,7 +5,7 @@ const commonConfig = require("./common-config.json");
 class ProgramFetch {
     constructor() { }
 
-    config = {
+    static config = {
         all: {
             suffix: "programs/index",
             arguments: ["isarchived=false",],
@@ -37,7 +37,7 @@ class ProgramFetch {
         }
     }
 
-    badResponseMessage(URL, response, ID = "N/A") {
+    static badResponseMessage(URL, response, ID = "N/A") {
         return console.warn(`
             Didn't get a proper response from the Sveriges Radio API when fetching the programs.
             ID: ${ID}
@@ -46,7 +46,7 @@ class ProgramFetch {
             `.trim());
     }
 
-    formatAndFilterProgramData(programData) {
+    static formatAndFilterProgramData(programData) {
         return {
             ID: programData.id,
             name: programData.name,
@@ -59,39 +59,39 @@ class ProgramFetch {
         };
     }
 
-    async all() {
-        const response = await fetch(this.config.all.makeURL());
-        if (!response.ok) return this.badResponseMessage(this.config.all.makeURL(), response);
+    static async all() {
+        const response = await fetch(ProgramFetch.config.all.makeURL());
+        if (!response.ok) return ProgramFetch.badResponseMessage(ProgramFetch.config.all.makeURL(), response);
 
         const rawPrograms = (await response.json()).programs;
-        if (!rawPrograms) return this.badResponseMessage(this.config.all.makeURL(), response);
+        if (!rawPrograms) return ProgramFetch.badResponseMessage(ProgramFetch.config.all.makeURL(), response);
 
-        return rawPrograms.map(this.formatAndFilterProgramData);
+        return rawPrograms.map(ProgramFetch.formatAndFilterProgramData);
     }
 
-    async byID(programID) {
+    static async byID(programID) {
         if (!programID) return console.error("No programID provided.");
 
-        const response = await fetch(this.config.byID.makeURL(programID));
-        if (!response.ok) return this.badResponseMessage(this.config.byID.makeURL(programID), response, programID);
+        const response = await fetch(ProgramFetch.config.byID.makeURL(programID));
+        if (!response.ok) return ProgramFetch.badResponseMessage(ProgramFetch.config.byID.makeURL(programID), response, programID);
 
         const rawProgram = (await response.json()).program;
-        if (!rawProgram) return this.badResponseMessage(this.config.byID.makeURL(programID), response, programID);
+        if (!rawProgram) return ProgramFetch.badResponseMessage(ProgramFetch.config.byID.makeURL(programID), response, programID);
 
-        return this.formatAndFilterProgramData(rawProgram);
+        return ProgramFetch.formatAndFilterProgramData(rawProgram);
     }
 
-    async byChannel(channelID) {
+    static async byChannel(channelID) {
         if (!channelID) return console.error("No channelID provided.");
 
-        const response = await fetch(this.config.byChannel.makeURL(channelID));
-        if (!response.ok) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+        const response = await fetch(ProgramFetch.config.byChannel.makeURL(channelID));
+        if (!response.ok) return ProgramFetch.badResponseMessage(ProgramFetch.config.byChannel.makeURL(channelID), response, channelID);
 
         const rawPrograms = (await response.json()).programs;
-        if (!rawPrograms) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+        if (!rawPrograms) return ProgramFetch.badResponseMessage(ProgramFetch.config.byChannel.makeURL(channelID), response, channelID);
 
-        return rawPrograms.map(this.formatAndFilterProgramData);
+        return rawPrograms.map(ProgramFetch.formatAndFilterProgramData);
     }
 }
 
-module.exports = new ProgramFetch;
+module.exports = ProgramFetch;
