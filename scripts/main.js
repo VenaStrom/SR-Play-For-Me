@@ -1,37 +1,35 @@
 "use strict";
 
 const api = require("./api/api");
-// const ImageLoader = require("./image-loader");
-const createContentDOM = require("./dom-generators/content-dom");
 const DOMMaker = require("./DOM-makers");
+const AudioPlayer = require("./audio-player");
 
-// TESTING
-const time = { start: new Date().getTime(), channels: null, programs: null };
+console.log(AudioPlayer);
 
 // 
 // TEMP config
 // 
 const config = {
     channels: {
-        limit: 3,
         followed: [218, 164, 132, 701,],
     },
     programs: {
-        limit: 3,
         followed: [4923,],
     },
 };
 
 const main = async () => {
-    //
-    // Preload default images
-    //
-    const _ = new Image();
-    _.src = "assets/images/image-missing.png";
-
     // 
     // Followed Channels
     // 
+    // Skeletons
+    config.channels.followed.forEach((channelID, index) => {
+        const id = `channel-${channelID}`;
+
+        const parent = document.querySelector(".channels ul");
+        parent.appendChild(DOMMaker.skeleton(id));
+    });
+    // Data population
     config.channels.followed.forEach(async (channelID, index) => {
         const channel = await api.channel.byID(channelID);
         if (!channel) return;
@@ -49,37 +47,15 @@ const main = async () => {
             },
         };
 
-        // createContentDOM(document.querySelector(".channels ul"), channelData, "channel");
-        const parent = document.querySelector(".channels ul");
-        parent.appendChild(DOMMaker.skeleton(channelData.id));
+        DOMMaker.populateContentDOM(channelData);
 
-        // // TODO - reconsider this solution for ordering
-        // const channelDOM = document.querySelector(`#${channelData.id}`);
-        // channelDOM.style.order = index;
+        // Play button
+        const playButton = document.querySelector(`#${channelData.id} button`);
 
-        // TESTING
-        if (index === config.channels.followed.length - 1) {
-            time.channels = new Date().getTime();
-            document.dispatchEvent(new Event("channelsloaded"));
-        }
+        const latestEpisodeID = (await api.schedule.latest(channelData.id)).at(0);
+        console.log(latestEpisodeID);
+        // console.log((await api.schedule.config.byChannel.makeURL(channelData.id.split("-")[1])).at(0));
     });
 };
 
 main();
-
-// TESTING
-document.addEventListener("channelsloaded", () => {
-    const timeTaken = time.channels - time.start;
-
-    const stats = `Channels load time: ${parseInt(timeTaken)} ms`;
-
-    console.log(stats);
-});
-
-document.addEventListener("programsloaded", () => {
-    const timeTaken = time.programs - time.start;
-
-    const stats = `Programs load time: ${parseInt(timeTaken)} ms`;
-
-    console.log(stats);
-});

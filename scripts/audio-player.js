@@ -1,168 +1,203 @@
 
 class AudioPlayer {
+    track = new Audio();
+    cache = new Audio();
+
     constructor() {
-        this.DOM = document.querySelector("#player");
-        this.playButton = this.DOM.querySelector("button");
-        this.timeDisplay = this.DOM.querySelector(".time-display");
-        this.progressBarContainer = this.DOM.querySelector(".progress-bar");
-
-        // Whether the current audio track is playing or not
-        this.playing = false;
-
-        this.currentTrack = new Audio();
-        this.nextTrack = new Audio(); // For preloading
-
-        this.handlePlayButtonClicking();
-    }
-
-    play() {
-        if (!this.currentTrack) {
-            console.warn("No track loaded. Trying to play.");
-            return;
-        }
-
-        this.currentTrack.play();
-        this.playing = true;
-        this.setPlayButtonState();
+        this.track.preload = "auto";
+        this.cache.preload = "auto";
     }
 
     pause() {
-        if (!this.currentTrack) {
-            console.warn("No track loaded. Trying to pause.");
-            return;
-        }
+        this.track.pause();
+    }
 
-        this.currentTrack.pause();
-        this.playing = false;
-        this.setPlayButtonState();
+    unpause() {
+        this.track.play();
     }
 
     loadTrack(url) {
-        if (this.currentTrack) {
-            this.currentTrack.pause();
-            this.currentTrack = null;
-        }
-        this.currentTrack = new Audio(url);
+        this.track.src = url;
     }
 
     startTrack(url) {
+        this.track.addEventListener("canplaythrough", () => {
+            this.unpause();
+        });
         this.loadTrack(url);
-        this.play();
     }
 
-    setProgressBar(fraction, autoUpdate = true) {
-        const lowestBound = 0.03; // To prevent the progress bar from being too small
-        const highestBound = 1;
-
-        const cleanedFraction = parseFloat(fraction.toString().replace(/[^0-9.]/g, "")).toFixed(2);
-        const displayPercent = (cleanedFraction * (highestBound - lowestBound) + lowestBound) * 100;
-
-        const progressBar = this.progressBarContainer.querySelector(".foreground");
-        progressBar.style.width = displayPercent + "%";
-
-        if (autoUpdate) {
-            this.autoProgressUpdater = this.currentTrack.addEventListener("timeupdate", () => {
-                this.updateProgressBar();
-            });
-        } else {
-            this.currentTrack.removeEventListener("timeupdate", this.autoProgressUpdater);
-        }
-    }
-
-    updateProgressBar() {
-        if (!this.currentTrack) {
-            return;
-        }
-
-        const duration = this.currentTrack.duration;
-        const currentTime = this.currentTrack.currentTime;
-
-        if (duration) {
-            this.setProgressBar(currentTime / duration);
-        }
-    }
-
-    setPlayButtonState() {
-        const playIcon = "assets/icons/icons8-play-48.png";
-        const pauseIcon = "assets/icons/icons8-pause-48.png";
-
-        if (!this.playing) {
-            this.playButton.querySelector("img").src = playIcon;
-        } else {
-            this.playButton.querySelector("img").src = pauseIcon;
-        }
-    }
-
-    handlePlayButtonClicking() {
-        // Main play button in the player controls
-        this.playButton.addEventListener("click", () => {
-
-            if (this.playing) {
-                this.pause();
-            } else {
-                this.play();
-            }
-
-            this.setPlayButtonState();
-        });
-
-        // Start button clicking, i.e. small play buttons linked to content
-        document.body.addEventListener("click", (event) => {
-            if (
-                !event.target
-                ||
-                event.target.tagName !== "BUTTON"
-                ||
-                !event.target.dataset.id
-            ) return;
-
-            const [type, id] = event.target.dataset.id.split("-");
-
-            if (type === "channel") {
-                const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
-
-                if (channel) {
-                    this.setProgressBar(1);
-                    this.startTrack(channel.url);
-                }
-            }
-            else if (type === "episode") {
-                const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
-
-                if (episode) {
-                    this.setProgressBar(0);
-                    this.startTrack(episode.url);
-                }
-            }
-
-
-            if (
-                event.target.tagName === "BUTTON"
-                &&
-                event.target.dataset.id
-            ) {
-                const [type, id] = event.target.dataset.id.split("-");
-
-                if (type === "channel") {
-                    const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
-
-                    if (channel) {
-                        this.setProgressBar(1);
-                        this.startTrack(channel.url);
-                    }
-                } else if (type === "episode") {
-                    const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
-
-                    if (episode) {
-                        this.setProgressBar(0);
-                        this.startTrack(episode.url);
-                    }
-                }
-
-                document.body.dispatchEvent(new Event("startbuttonclicked"));
-            }
-        });
+    cacheTrack(url) {
+        this.cache.src = url;
     }
 }
 
-module.exports = { AudioPlayer };
+module.exports = new AudioPlayer;
+
+// class AudioPlayer {
+//     constructor() {
+//         this.DOM = document.querySelector("#player");
+//         this.playButton = this.DOM.querySelector("button");
+//         this.timeDisplay = this.DOM.querySelector(".time-display");
+//         this.progressBarContainer = this.DOM.querySelector(".progress-bar");
+
+//         // Whether the current audio track is playing or not
+//         this.playing = false;
+
+//         this.currentTrack = new Audio();
+//         this.nextTrack = new Audio(); // For preloading
+
+//         this.handlePlayButtonClicking();
+//     }
+
+//     play() {
+//         if (!this.currentTrack) {
+//             console.warn("No track loaded. Trying to play.");
+//             return;
+//         }
+
+//         this.currentTrack.play();
+//         this.playing = true;
+//         this.setPlayButtonState();
+//     }
+
+//     pause() {
+//         if (!this.currentTrack) {
+//             console.warn("No track loaded. Trying to pause.");
+//             return;
+//         }
+
+//         this.currentTrack.pause();
+//         this.playing = false;
+//         this.setPlayButtonState();
+//     }
+
+//     loadTrack(url) {
+//         if (this.currentTrack) {
+//             this.currentTrack.pause();
+//             this.currentTrack = null;
+//         }
+//         this.currentTrack = new Audio(url);
+//     }
+
+//     startTrack(url) {
+//         this.loadTrack(url);
+//         this.play();
+//     }
+
+//     setProgressBar(fraction, autoUpdate = true) {
+//         const lowestBound = 0.03; // To prevent the progress bar from being too small
+//         const highestBound = 1;
+
+//         const cleanedFraction = parseFloat(fraction.toString().replace(/[^0-9.]/g, "")).toFixed(2);
+//         const displayPercent = (cleanedFraction * (highestBound - lowestBound) + lowestBound) * 100;
+
+//         const progressBar = this.progressBarContainer.querySelector(".foreground");
+//         progressBar.style.width = displayPercent + "%";
+
+//         if (autoUpdate) {
+//             this.autoProgressUpdater = this.currentTrack.addEventListener("timeupdate", () => {
+//                 this.updateProgressBar();
+//             });
+//         } else {
+//             this.currentTrack.removeEventListener("timeupdate", this.autoProgressUpdater);
+//         }
+//     }
+
+//     updateProgressBar() {
+//         if (!this.currentTrack) {
+//             return;
+//         }
+
+//         const duration = this.currentTrack.duration;
+//         const currentTime = this.currentTrack.currentTime;
+
+//         if (duration) {
+//             this.setProgressBar(currentTime / duration);
+//         }
+//     }
+
+//     setPlayButtonState() {
+//         const playIcon = "assets/icons/icons8-play-48.png";
+//         const pauseIcon = "assets/icons/icons8-pause-48.png";
+
+//         if (!this.playing) {
+//             this.playButton.querySelector("img").src = playIcon;
+//         } else {
+//             this.playButton.querySelector("img").src = pauseIcon;
+//         }
+//     }
+
+//     handlePlayButtonClicking() {
+//         // Main play button in the player controls
+//         this.playButton.addEventListener("click", () => {
+
+//             if (this.playing) {
+//                 this.pause();
+//             } else {
+//                 this.play();
+//             }
+
+//             this.setPlayButtonState();
+//         });
+
+//         // Start button clicking, i.e. small play buttons linked to content
+//         document.body.addEventListener("click", (event) => {
+//             if (
+//                 !event.target
+//                 ||
+//                 event.target.tagName !== "BUTTON"
+//                 ||
+//                 !event.target.dataset.id
+//             ) return;
+
+//             const [type, id] = event.target.dataset.id.split("-");
+
+//             if (type === "channel") {
+//                 const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
+
+//                 if (channel) {
+//                     this.setProgressBar(1);
+//                     this.startTrack(channel.url);
+//                 }
+//             }
+//             else if (type === "episode") {
+//                 const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
+
+//                 if (episode) {
+//                     this.setProgressBar(0);
+//                     this.startTrack(episode.url);
+//                 }
+//             }
+
+
+//             if (
+//                 event.target.tagName === "BUTTON"
+//                 &&
+//                 event.target.dataset.id
+//             ) {
+//                 const [type, id] = event.target.dataset.id.split("-");
+
+//                 if (type === "channel") {
+//                     const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
+
+//                     if (channel) {
+//                         this.setProgressBar(1);
+//                         this.startTrack(channel.url);
+//                     }
+//                 } else if (type === "episode") {
+//                     const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
+
+//                     if (episode) {
+//                         this.setProgressBar(0);
+//                         this.startTrack(episode.url);
+//                     }
+//                 }
+
+//                 document.body.dispatchEvent(new Event("startbuttonclicked"));
+//             }
+//         });
+//     }
+// }
+
+// module.exports = { AudioPlayer };

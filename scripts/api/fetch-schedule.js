@@ -9,10 +9,10 @@ class ScheduleFetch {
         byChannel: {
             suffix: "scheduledepisodes",
             arguments: [],
-            makeURL: (channelID, count = 1) => {
+            makeURL: (channelID) => {
                 if (!channelID) return console.error("No channelID provided.");
-                const sizeArg = `size=${count}`;
-                const query = [sizeArg, ...this.config.byChannel.arguments, ...commonConfig.arguments,];
+                const dateArg = new Date(Date.now() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 10);
+                const query = [`date=${dateArg}`, ...this.config.byChannel.arguments, ...commonConfig.arguments,];
                 const path = `${commonConfig.baseURL}${this.config.byChannel.suffix}`;
                 return `${path}?channelid=${channelID}&${query.join("&")}`;
             },
@@ -28,7 +28,9 @@ class ScheduleFetch {
             `.trim());
     }
 
-    static async byChannel(channelID) {
+    static async latest(channelID) {
+        channelID = channelID.replace(/\D/g, ""); // Sometimes channel-### is passed
+
         if (!channelID) return console.error("No channelID provided.");
 
         const response = await fetch(this.config.byChannel.makeURL(channelID));

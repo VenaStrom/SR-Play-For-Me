@@ -8,7 +8,7 @@ const createContentDOM = (parent, data, type = null) => {
             id: "",
             type: "content", // This is a fallback just so that it gets styled no matter what
             header: {
-                title: "Laddar...",
+                title: "",
                 info: "",
             },
             description: "",
