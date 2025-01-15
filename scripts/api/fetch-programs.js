@@ -94,4 +94,4 @@ class ProgramFetch {
     }
 }
 
-module.exports = ProgramFetch;
+module.exports = new ProgramFetch;

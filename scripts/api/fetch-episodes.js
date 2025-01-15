@@ -77,7 +77,7 @@ class EpisodeFetch {
         return this.formatAndFilterEpisodeData(episode);
     }
 
-    ByProgram = ByProgram;
+    byProgram = new ByProgram;
 }
 
 class ByProgram {
@@ -105,4 +105,4 @@ class ByProgram {
 }
 
 
-module.exports = EpisodeFetch;
+module.exports = new EpisodeFetch;

@@ -41,4 +41,4 @@ class ScheduleFetch {
     }
 }
 
-module.exports = ScheduleFetch;
+module.exports = new ScheduleFetch;

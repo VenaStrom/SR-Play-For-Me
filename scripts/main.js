@@ -6,7 +6,10 @@ const api = require("./api/api");
 const time = { start: new Date().getTime(), channels: null, programs: null };
 
 const main = async () => {
-    
+    console.log(api.channel);
+    console.log(api.program);
+    console.log(api.schedule);
+    console.log(api.episode);
 };
 
 main();
