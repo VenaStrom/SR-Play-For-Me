@@ -1,23 +1,30 @@
 "use strict";
 
-const { config } = require("./config");
+const commonConfig = require("./common-config.json");
 
-const getAllChannels = async () => {
-    const response = await fetch(config.channels.getURI());
-
-    if (!response.ok) {
-        console.warn("Didn't get a proper response from the Sveriges Radio API when fetching the channels. URL and response:", config.channels.getURI(), response,);
-        return null;
+class ChannelFetch {
+    config = {
+        all: {
+            suffix: "channels",
+            arguments: [],
+            makeURL: () => {
+                const query = [...this.config.all.arguments, ...commonConfig.arguments,];
+                const path = `${commonConfig.baseURL}${this.config.all.suffix}`;
+                return `${path}?${query.join("&")}`;
+            },
+        },
     }
 
-    const rawChannels = (await response.json()).channels;
-
-    if (!rawChannels) {
-        console.warn("Didn't get any channels from the Sveriges Radio API when fetching the channels. URL and response:", config.channels.getURI(), response,);
-        return null;
+    badResponseMessage(URL, response, ID = "N/A") {
+        return console.warn(`
+            Didn't get a proper response from the Sveriges Radio API when fetching the channels.
+            ID: ${ID}
+            URL used: ${URL}
+            Response: ${response}
+            `.trim());
     }
 
-    const channels = rawChannels.map((channelData) => {
+    formatAndFilterChannelData(channelData) {
         return {
             id: channelData.id,
             name: channelData.name,
@@ -28,9 +35,17 @@ const getAllChannels = async () => {
             color: channelData.color,
             scheduleUrl: channelData.scheduleurl,
         }
-    });
+    }
 
-    return channels;
-};
+    async all() {
+        const response = await fetch(this.config.all.makeURL());
+        if (!response.ok) return this.badResponseMessage(this.config.all.makeURL(), response);
 
-module.exports = { getAllChannels };
+        const channels = (await response.json()).channels;
+        if (!channels) return this.badResponseMessage(this.config.all.makeURL(), response);
+
+        return channels.map(this.formatAndFilterChannelData);
+    }
+}
+
+module.exports = new ChannelFetch;

@@ -1,0 +1,12 @@
+{
+    "baseURL": "https://api.sr.se/api/v2/",
+    "fetchSpan": {
+        "pastOffset": 7,
+        "futureOffset": 1
+    },
+    "arguments": [
+        "format=json",
+        "pagination=false",
+        "audioquality=normal"
+    ]
+}

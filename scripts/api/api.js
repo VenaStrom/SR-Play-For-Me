@@ -1,8 +1,8 @@
 "use strict";
 
 module.exports = {
-    ...require("./fetch-channels"),
-    ...require("./fetch-episodes"),
-    ...require("./fetch-programs"),
-    ...require("./fetch-schedule"),
+    channel: require("./fetch-channels"),
+    episode: require("./fetch-episodes"),
+    program: require("./fetch-programs"),
+    schedule: require("./fetch-schedule"),
 };

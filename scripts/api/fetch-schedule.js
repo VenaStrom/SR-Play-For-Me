@@ -1,55 +1,44 @@
 "use strict";
 
-const { config } = require("./config");
+const commonConfig = require("./common-config.json");
 
-const getChannelSchedule = async (channelID) => {
-    if (!channelID) {
-        return null;
+class ScheduleFetch {
+    constructor() { }
+
+    config = {
+        byChannel: {
+            suffix: "scheduledepisodes",
+            arguments: [],
+            makeURL: (channelID, count = 1) => {
+                if (!channelID) return console.error("No channelID provided.");
+                const sizeArg = `size=${count}`;
+                const query = [sizeArg, ...this.config.byChannel.arguments, ...commonConfig.arguments,];
+                const path = `${commonConfig.baseURL}${this.config.byChannel.suffix}`;
+                return `${path}?channelid=${channelID}&${query.join("&")}`;
+            },
+        },
     }
 
-    const uri = config.channels.schedule.getURI(channelID)
-
-    const response = await fetch(uri);
-
-    if (!response.ok) {
-        // Might just be missing schedule for the channel
-        return null;
+    badResponseMessage(URL, response, ID = "N/A") {
+        return console.warn(`
+            Didn't get a proper response from the Sveriges Radio API when fetching the schedule.
+            ID: ${ID}
+            URL used: ${URL}
+            Response: ${response}
+            `.trim());
     }
 
-    const rawSchedule = (await response.json()).schedule.at(0);
+    async byChannel(channelID) {
+        if (!channelID) return console.error("No channelID provided.");
 
-    if (!rawSchedule) {
-        // Might be an empty schedule
-        return null;
+        const response = await fetch(this.config.byChannel.makeURL(channelID));
+        if (!response.ok) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+
+        const schedule = (await response.json()).schedule;
+        if (!schedule) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+
+        return schedule;
     }
-
-    const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-
-    return {
-        title: rawSchedule.title,
-        startTime: new Date(parseInt(rawSchedule.starttimeutc.replace(/[^0-9]/g, "")) + timeZoneOffset),
-        endTime: new Date(parseInt(rawSchedule.endtimeutc.replace(/[^0-9]/g, "")) + timeZoneOffset),
-    }
-};
-
-const setScheduleOnVisibleChannels = async () => {
-    const visibleChannels = document.querySelectorAll("section.channels>ul>li");
-
-    const promises = [];
-
-    for (const channel of visibleChannels) {
-        const channelId = channel.id.split("-").at(-1);
-
-        promises.push(getChannelSchedule(channelId));
-    }
-
-    const schedules = await Promise.all(promises);
-
-    schedules.forEach((schedule, index) => {
-        if (schedule) {
-            visibleChannels[index].querySelector(".footer>p").innerHTML = `Just nu:&nbsp ${schedule.title}`;
-        }
-    });
 }
 
-module.exports = { getChannelSchedule, setScheduleOnVisibleChannels };
+module.exports = ScheduleFetch;
