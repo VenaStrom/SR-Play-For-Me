@@ -17,7 +17,7 @@ class ChannelFetch {
         },
         byID: {
             suffix: "channels",
-            arguments: ["id"],
+            arguments: [],
             makeURL: (channelID) => {
                 const query = [...this.config.byID.arguments, ...commonConfig.arguments,];
                 const path = `${commonConfig.baseURL}${this.config.byID.suffix}/${channelID}`;
@@ -60,6 +60,8 @@ class ChannelFetch {
 
     static async byID(channelID) {
         if (!channelID) return console.warn("No channel ID provided to fetch channel by ID.");
+
+        if (typeof channelID === "string") channelID = channelID.replace(/\D/g, ""); // Sometimes channel-### is passed
 
         const response = await fetch(this.config.byID.makeURL(channelID));
         if (!response.ok) return this.badResponseMessage(this.config.byID.makeURL(channelID), response, channelID);

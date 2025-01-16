@@ -124,17 +124,23 @@
 .channel-dom {
     @extend .content-dom;
 
+    &>.body>.description {
+        color: var(--color-light-gray);
+    }
 
+    &>.body>.footer>p {
+        // @include bold();
+        font-weight: 600;
+        color: var(--color-fg);
+    }
 }
 
 .program-dom {
     @extend .content-dom;
-
 }
 
 .episode-dom {
     @extend .content-dom;
-
 }
 
 .sr-attribute {

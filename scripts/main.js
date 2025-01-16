@@ -4,8 +4,6 @@ const api = require("./api/api");
 const DOMMaker = require("./DOM-makers");
 const AudioPlayer = require("./audio-player");
 
-console.log(AudioPlayer);
-
 // 
 // TEMP config
 // 
@@ -37,9 +35,10 @@ const main = async () => {
         const channelData = {
             id: channel.id,
             image: channel.image,
+            type: "channel", // Affects styling
             header: {
                 title: channel.name,
-                info: channel.tagline,
+                info: channel.channelType,
             },
             description: channel.description,
             footer: {
@@ -49,12 +48,14 @@ const main = async () => {
 
         DOMMaker.populateContentDOM(channelData);
 
-        // Play button
+        // Play button data
         const playButton = document.querySelector(`#${channelData.id} button`);
+        const footerText = document.querySelector(`#${channelData.id} .footer>p`);
 
-        const latestEpisodeID = (await api.schedule.latest(channelData.id)).at(0);
-        console.log(latestEpisodeID);
-        // console.log((await api.schedule.config.byChannel.makeURL(channelData.id.split("-")[1])).at(0));
+        const currentlyPlayingEpisode = await api.schedule.currentlyPlaying(channelID);
+
+        playButton.dataset.playId = `episode-${currentlyPlayingEpisode.episodeid}`;
+        footerText.textContent = `${currentlyPlayingEpisode.title}`;
     });
 };
 

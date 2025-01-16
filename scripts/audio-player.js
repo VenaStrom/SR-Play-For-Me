@@ -1,11 +1,16 @@
 
 class AudioPlayer {
     track = new Audio();
-    cache = new Audio();
+    preload = new Audio();
+
+    controlDOM = document.querySelector("#player");
+
+    playIconPath = "assets/icons/icons8-play-48.png";
+    pauseIconPath = "assets/icons/icons8-pause-48.png";
 
     constructor() {
         this.track.preload = "auto";
-        this.cache.preload = "auto";
+        this.preload.preload = "auto";
     }
 
     pause() {
@@ -23,12 +28,13 @@ class AudioPlayer {
     startTrack(url) {
         this.track.addEventListener("canplaythrough", () => {
             this.unpause();
-        });
+        }, { once: true });
+
         this.loadTrack(url);
     }
 
-    cacheTrack(url) {
-        this.cache.src = url;
+    preloadTrack(url) {
+        this.preload.src = url;
     }
 }
 

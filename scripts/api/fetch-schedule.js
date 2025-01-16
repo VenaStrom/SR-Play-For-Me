@@ -11,8 +11,7 @@ class ScheduleFetch {
             arguments: [],
             makeURL: (channelID) => {
                 if (!channelID) return console.error("No channelID provided.");
-                const dateArg = new Date(Date.now() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 10);
-                const query = [`date=${dateArg}`, ...this.config.byChannel.arguments, ...commonConfig.arguments,];
+                const query = [...this.config.byChannel.arguments, ...commonConfig.arguments,];
                 const path = `${commonConfig.baseURL}${this.config.byChannel.suffix}`;
                 return `${path}?channelid=${channelID}&${query.join("&")}`;
             },
@@ -28,10 +27,10 @@ class ScheduleFetch {
             `.trim());
     }
 
-    static async latest(channelID) {
-        channelID = channelID.replace(/\D/g, ""); // Sometimes channel-### is passed
-
+    static async currentlyPlaying(channelID) {
         if (!channelID) return console.error("No channelID provided.");
+        
+        if (typeof channelID === "string") channelID = channelID.replace(/\D/g, ""); // Sometimes channel-### is passed
 
         const response = await fetch(this.config.byChannel.makeURL(channelID));
         if (!response.ok) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
@@ -39,7 +38,15 @@ class ScheduleFetch {
         const schedule = (await response.json()).schedule;
         if (!schedule) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
 
-        return schedule;
+        const scheduledEpisodes = schedule.map(episode => ({
+            title: episode.title,
+            id: `episode-${episode.episodeid}`,
+            startTime: parseInt(episode.starttimeutc.replace(/\D/g, "")),
+            endTime: parseInt(episode.endtimeutc.replace(/\D/g, "")),
+        }));
+        const currentlyPlayingEpisode = scheduledEpisodes.find(episode => episode.startTime < Date.now() && episode.endTime > Date.now());
+
+        return currentlyPlayingEpisode;
     }
 }
 

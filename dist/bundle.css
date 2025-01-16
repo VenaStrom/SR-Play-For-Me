@@ -171,6 +171,14 @@
   opacity: 0.6;
 }
 
+.channel-dom > .body > .description {
+  color: var(--color-light-gray);
+}
+.channel-dom > .body > .footer > p {
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
 .sr-attribute {
   display: flex;
   flex-flow: row nowrap;
