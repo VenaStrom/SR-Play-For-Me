@@ -32,7 +32,7 @@ const main = async () => {
         const channel = await api.channel.byID(channelID);
         if (!channel) return;
 
-        const channelData = {
+        const DOMData = {
             id: channel.id,
             image: channel.image,
             type: "channel", // Affects styling
@@ -42,20 +42,17 @@ const main = async () => {
             },
             description: channel.description,
             footer: {
-                text: channel.category,
+                buttonFunction: `startTrackURL(this)`,
+                buttonData: { playUrl: channel.url, progressOverride: true },
             },
         };
 
-        DOMMaker.populateContentDOM(channelData);
+        DOMMaker.populateContentDOM(DOMData);
 
-        // Play button data
-        const playButton = document.querySelector(`#${channelData.id} button`);
-        const footerText = document.querySelector(`#${channelData.id} .footer>p`);
-
+        // Show currently playing episode name
+        const footerText = document.querySelector(`#${DOMData.id} .footer>p`);
         const currentlyPlayingEpisode = await api.schedule.currentlyPlaying(channelID);
-
-        playButton.dataset.playId = `episode-${currentlyPlayingEpisode.episodeid}`;
-        footerText.textContent = `${currentlyPlayingEpisode.title}`;
+        footerText.textContent = currentlyPlayingEpisode.title;
     });
 };
 

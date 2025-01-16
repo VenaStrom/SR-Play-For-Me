@@ -31,14 +31,23 @@ class DOMMaker {
                 <p class="description">${data.description || ""}</p>
 
                 <div class="footer">
-                    <p>${data.footer.text || ""}</p>
+                    <p>${data?.footer?.text || ""}</p>
 
-                    <button data-play-id="${data.id}">
+                    <button onclick="${data?.footer?.buttonFunction || ""}">
                         <img src="assets/icons/icons8-play-48.png" alt="Spela">
                     </button>
                 </div>
             </div>
         </li>`);
+
+        // Dataset on button
+        if (data?.footer?.buttonData) {
+            const button = replacementDOM.querySelector("button");
+
+            Object.entries(data.footer.buttonData).forEach(([key, value]) => {
+                button.dataset[key] = value;
+            });
+        }
 
         const targetDOM = document.querySelector(`#${data.id}`);
 

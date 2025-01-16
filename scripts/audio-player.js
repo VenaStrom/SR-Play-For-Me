@@ -1,3 +1,4 @@
+const api = require("./api/api");
 
 class AudioPlayer {
     track = new Audio();
@@ -8,17 +9,59 @@ class AudioPlayer {
     playIconPath = "assets/icons/icons8-play-48.png";
     pauseIconPath = "assets/icons/icons8-pause-48.png";
 
+    progressOverride = false;
+
     constructor() {
         this.track.preload = "auto";
         this.preload.preload = "auto";
+
+
+        // ControlDOM play button
+        const playButton = this.controlDOM.querySelector("button");
+        playButton.addEventListener("click", () => {
+            if (this.track.paused) {
+                this.unpause();
+            } else {
+                this.pause();
+            }
+        });
+
+
+        // Play by URL
+        window.startTrackURL = () => document.dispatchEvent(new Event("startTrackURL"));
+        document.addEventListener("startTrackURL", async (event) => {
+            const playButton = event?.target?.activeElement;
+            if (!playButton) return console.error("No play button found.");
+
+            const url = playButton.dataset.playUrl;
+
+            if (playButton.dataset.progressOverride) {
+                this.progressOverride = true;
+            }
+            else {
+                this.progressOverride = false;
+            }
+
+            this.startTrack(url);
+        });
+
+
+        // Progress update 
+        this.track.addEventListener("timeupdate", () => {
+            this.updateDOM();
+        });
     }
 
     pause() {
         this.track.pause();
+        this.controlDOM.querySelector("button img").src = this.playIconPath;
     }
 
     unpause() {
+        if (this.track.src === "") return;
+
         this.track.play();
+        this.controlDOM.querySelector("button img").src = this.pauseIconPath;
     }
 
     loadTrack(url) {
@@ -36,174 +79,33 @@ class AudioPlayer {
     preloadTrack(url) {
         this.preload.src = url;
     }
+
+    setProgressBarDOM(fraction) {
+        const progressBar = this.controlDOM.querySelector(".progress-bar .foreground");
+        progressBar.style.width = (parseInt(fraction) * 100) + "%";
+    }
+
+    setProgressTimeDOM(time) {
+        const timeDisplay = this.controlDOM.querySelector(".time-display");
+        timeDisplay.textContent = time;
+    }
+
+    updateDOM() {
+        const elapsedSeconds = this.track.currentTime;
+        const duration = this.track.duration;
+
+        if (this.progressOverride) {
+            this.setProgressTimeDOM("Live •");
+            this.setProgressBarDOM(1);
+            return;
+        }
+
+        const minutes = `${Math.floor(duration / 60)}`.padStart(2, "0");
+        const seconds = `${Math.floor(duration % 60)}`.padStart(2, "0");
+
+        this.setProgressTimeDOM(`${minutes}:${seconds}`);
+        this.setProgressBarDOM(elapsedSeconds / duration);
+    }
 }
 
 module.exports = new AudioPlayer;
-
-// class AudioPlayer {
-//     constructor() {
-//         this.DOM = document.querySelector("#player");
-//         this.playButton = this.DOM.querySelector("button");
-//         this.timeDisplay = this.DOM.querySelector(".time-display");
-//         this.progressBarContainer = this.DOM.querySelector(".progress-bar");
-
-//         // Whether the current audio track is playing or not
-//         this.playing = false;
-
-//         this.currentTrack = new Audio();
-//         this.nextTrack = new Audio(); // For preloading
-
-//         this.handlePlayButtonClicking();
-//     }
-
-//     play() {
-//         if (!this.currentTrack) {
-//             console.warn("No track loaded. Trying to play.");
-//             return;
-//         }
-
-//         this.currentTrack.play();
-//         this.playing = true;
-//         this.setPlayButtonState();
-//     }
-
-//     pause() {
-//         if (!this.currentTrack) {
-//             console.warn("No track loaded. Trying to pause.");
-//             return;
-//         }
-
-//         this.currentTrack.pause();
-//         this.playing = false;
-//         this.setPlayButtonState();
-//     }
-
-//     loadTrack(url) {
-//         if (this.currentTrack) {
-//             this.currentTrack.pause();
-//             this.currentTrack = null;
-//         }
-//         this.currentTrack = new Audio(url);
-//     }
-
-//     startTrack(url) {
-//         this.loadTrack(url);
-//         this.play();
-//     }
-
-//     setProgressBar(fraction, autoUpdate = true) {
-//         const lowestBound = 0.03; // To prevent the progress bar from being too small
-//         const highestBound = 1;
-
-//         const cleanedFraction = parseFloat(fraction.toString().replace(/[^0-9.]/g, "")).toFixed(2);
-//         const displayPercent = (cleanedFraction * (highestBound - lowestBound) + lowestBound) * 100;
-
-//         const progressBar = this.progressBarContainer.querySelector(".foreground");
-//         progressBar.style.width = displayPercent + "%";
-
-//         if (autoUpdate) {
-//             this.autoProgressUpdater = this.currentTrack.addEventListener("timeupdate", () => {
-//                 this.updateProgressBar();
-//             });
-//         } else {
-//             this.currentTrack.removeEventListener("timeupdate", this.autoProgressUpdater);
-//         }
-//     }
-
-//     updateProgressBar() {
-//         if (!this.currentTrack) {
-//             return;
-//         }
-
-//         const duration = this.currentTrack.duration;
-//         const currentTime = this.currentTrack.currentTime;
-
-//         if (duration) {
-//             this.setProgressBar(currentTime / duration);
-//         }
-//     }
-
-//     setPlayButtonState() {
-//         const playIcon = "assets/icons/icons8-play-48.png";
-//         const pauseIcon = "assets/icons/icons8-pause-48.png";
-
-//         if (!this.playing) {
-//             this.playButton.querySelector("img").src = playIcon;
-//         } else {
-//             this.playButton.querySelector("img").src = pauseIcon;
-//         }
-//     }
-
-//     handlePlayButtonClicking() {
-//         // Main play button in the player controls
-//         this.playButton.addEventListener("click", () => {
-
-//             if (this.playing) {
-//                 this.pause();
-//             } else {
-//                 this.play();
-//             }
-
-//             this.setPlayButtonState();
-//         });
-
-//         // Start button clicking, i.e. small play buttons linked to content
-//         document.body.addEventListener("click", (event) => {
-//             if (
-//                 !event.target
-//                 ||
-//                 event.target.tagName !== "BUTTON"
-//                 ||
-//                 !event.target.dataset.id
-//             ) return;
-
-//             const [type, id] = event.target.dataset.id.split("-");
-
-//             if (type === "channel") {
-//                 const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
-
-//                 if (channel) {
-//                     this.setProgressBar(1);
-//                     this.startTrack(channel.url);
-//                 }
-//             }
-//             else if (type === "episode") {
-//                 const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
-
-//                 if (episode) {
-//                     this.setProgressBar(0);
-//                     this.startTrack(episode.url);
-//                 }
-//             }
-
-
-//             if (
-//                 event.target.tagName === "BUTTON"
-//                 &&
-//                 event.target.dataset.id
-//             ) {
-//                 const [type, id] = event.target.dataset.id.split("-");
-
-//                 if (type === "channel") {
-//                     const channel = contentStorageManager.get("channels").find((channel) => channel.id === parseInt(id));
-
-//                     if (channel) {
-//                         this.setProgressBar(1);
-//                         this.startTrack(channel.url);
-//                     }
-//                 } else if (type === "episode") {
-//                     const episode = contentStorageManager.get("episodes").find((episode) => episode.id === parseInt(id));
-
-//                     if (episode) {
-//                         this.setProgressBar(0);
-//                         this.startTrack(episode.url);
-//                     }
-//                 }
-
-//                 document.body.dispatchEvent(new Event("startbuttonclicked"));
-//             }
-//         });
-//     }
-// }
-
-// module.exports = { AudioPlayer };

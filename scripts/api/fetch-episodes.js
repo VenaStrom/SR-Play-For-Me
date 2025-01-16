@@ -54,7 +54,7 @@ class EpisodeFetch {
             Response: ${response}
             `.trim());
     }
-    
+
     static formatAndFilterEpisodeData(episodeData) {
         return {
             id: `episode-${episodeData.id}`,
@@ -68,6 +68,10 @@ class EpisodeFetch {
     }
 
     static async byID(episodeID) {
+        if (!episodeID) return console.error("No episodeID provided.");
+
+        if (typeof episodeID === "string") episodeID = episodeID.replace(/\D/g, ""); // Sometimes episode-### is passed
+
         const response = await fetch(this.config.byID.makeURL(episodeID));
         if (!response.ok) return this.badResponseMessage(episodeID, this.config.byID.makeURL(episodeID), response, episodeID);
 
