@@ -95,7 +95,7 @@ class AudioPlayer {
         const duration = this.track.duration;
 
         if (this.progressOverride) {
-            this.setProgressTimeDOM("Live •");
+            this.setProgressTimeDOM("•Live");
             this.setProgressBarDOM(1);
             return;
         }
