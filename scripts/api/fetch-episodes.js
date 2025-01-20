@@ -67,7 +67,7 @@ class EpisodeFetch {
         };
     }
 
-    static async byID(episodeID) {
+    static async SingleByID(episodeID) {
         if (!episodeID) return console.error("No episodeID provided.");
 
         if (typeof episodeID === "string") episodeID = episodeID.replace(/\D/g, ""); // Sometimes episode-### is passed
@@ -80,12 +80,8 @@ class EpisodeFetch {
 
         return this.formatAndFilterEpisodeData(episode);
     }
-}
 
-class ByProgram {
-    constructor() { }
-
-    static async all(programID) {
+    static async AllByProgram(programID) {
         const response = await fetch(this.config.byProgram.all.makeURL(programID));
         if (!response.ok) return this.badResponseMessage(programID, this.config.byProgram.all.makeURL(programID), response, programID);
 
@@ -95,18 +91,15 @@ class ByProgram {
         return episodes.map(this.formatAndFilterEpisodeData);
     }
 
-    static async latest(programID) {
+    static async LatestByProgram(programID) {
         const response = await fetch(this.config.byProgram.latest.makeURL(programID));
         if (!response.ok) return this.badResponseMessage(programID, this.config.byProgram.latest.makeURL(programID), response, programID);
-
+    
         const episode = (await response.json()).episode;
         if (!episode) return this.badResponseMessage(programID, this.config.byProgram.latest.makeURL(programID), response, programID);
-
+    
         return this.formatAndFilterEpisodeData(episode);
     }
 }
-
-EpisodeFetch.byProgram = ByProgram;
-
 
 module.exports = EpisodeFetch;

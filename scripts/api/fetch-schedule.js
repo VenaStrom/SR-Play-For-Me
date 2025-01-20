@@ -27,7 +27,7 @@ class ScheduleFetch {
             `.trim());
     }
 
-    static async currentlyPlaying(channelID) {
+    static async CurrentEpisodeByChannel(channelID) {
         if (!channelID) return console.error("No channelID provided.");
         
         if (typeof channelID === "string") channelID = channelID.replace(/\D/g, ""); // Sometimes channel-### is passed

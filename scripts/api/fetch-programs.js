@@ -36,7 +36,7 @@ class ProgramFetch {
             },
         }
     }
-
+    
     static badResponseMessage(URL, response, id = "N/A") {
         return console.warn(`
             Didn't get a proper response from the Sveriges Radio API when fetching the programs.
@@ -59,7 +59,7 @@ class ProgramFetch {
         };
     }
 
-    static async all() {
+    static async All() {
         const response = await fetch(this.config.all.makeURL());
         if (!response.ok) return this.badResponseMessage(this.config.all.makeURL(), response);
 
@@ -69,7 +69,7 @@ class ProgramFetch {
         return rawPrograms.map(this.formatAndFilterProgramData);
     }
 
-    static async byID(programID) {
+    static async SingleByID(programID) {
         if (!programID) return console.error("No programID provided.");
 
         const response = await fetch(this.config.byID.makeURL(programID));
@@ -81,7 +81,7 @@ class ProgramFetch {
         return this.formatAndFilterProgramData(rawProgram);
     }
 
-    static async byChannel(channelID) {
+    static async AllByChannel(channelID) {
         if (!channelID) return console.error("No channelID provided.");
 
         const response = await fetch(this.config.byChannel.makeURL(channelID));

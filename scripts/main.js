@@ -12,11 +12,59 @@ const config = {
         followed: [218, 164, 132, 701,],
     },
     programs: {
-        followed: [4923,],
+        followed: [4923, 178, 2778,],
     },
 };
 
-const main = async () => {
+const main = async () => {    
+    // 
+    // New Episodes
+    // 
+    // Hardcoded skeletons
+    const newEpisodesSkeletons =3;
+    for (let i = 0; i < newEpisodesSkeletons; i++) {
+        const id = `episode-${i}`;
+
+        const parent = document.querySelector(".episodes ul");
+        parent.appendChild(DOMMaker.skeleton(id));
+    }
+
+    // 
+    // Followed programs
+    // 
+    // Skeletons
+    config.programs.followed.forEach((programID, index) => {
+        const id = `program-${programID}`;
+
+        const parent = document.querySelector(".programs ul");
+        parent.appendChild(DOMMaker.skeleton(id));
+    });
+    // Data population
+    config.programs.followed.forEach(async (programID, index) => {
+        const program = await api.program.SingleByID(programID);
+        if (!program) return;
+
+        const latestEpisode = await api.episode.LatestByProgram(programID);
+
+        const DOMData = {
+            id: program.id,
+            image: program.image,
+            type: "program", // Affects styling
+            header: {
+                title: program.name,
+                info: program.channelName,
+            },
+            description: program.description,
+            footer: {
+                buttonFunction: `startTrackURL(this)`,
+                text: latestEpisode.name,
+                buttonData: { playUrl: latestEpisode.url },
+            },
+        };
+
+        DOMMaker.populateContentDOM(DOMData);
+    });
+
     // 
     // Followed Channels
     // 
@@ -29,7 +77,7 @@ const main = async () => {
     });
     // Data population
     config.channels.followed.forEach(async (channelID, index) => {
-        const channel = await api.channel.byID(channelID);
+        const channel = await api.channel.SingleByID(channelID);
         if (!channel) return;
 
         const DOMData = {
@@ -51,7 +99,7 @@ const main = async () => {
 
         // Show currently playing episode name
         const footerText = document.querySelector(`#${DOMData.id} .footer>p`);
-        const currentlyPlayingEpisode = await api.schedule.currentlyPlaying(channelID);
+        const currentlyPlayingEpisode = await api.schedule.CurrentEpisodeByChannel(channelID);
         footerText.textContent = currentlyPlayingEpisode.title;
     });
 };

@@ -48,7 +48,7 @@ class ChannelFetch {
         }
     }
 
-    static async all() {
+    static async All() {
         const response = await fetch(this.config.all.makeURL());
         if (!response.ok) return this.badResponseMessage(this.config.all.makeURL(), response);
 
@@ -58,7 +58,7 @@ class ChannelFetch {
         return channels.map(this.formatAndFilterChannelData);
     }
 
-    static async byID(channelID) {
+    static async SingleByID(channelID) {
         if (!channelID) return console.warn("No channel ID provided to fetch channel by ID.");
 
         if (typeof channelID === "string") channelID = channelID.replace(/\D/g, ""); // Sometimes channel-### is passed
