@@ -82,7 +82,11 @@ class AudioPlayer {
 
     setProgressBarDOM(fraction) {
         const progressBar = this.controlDOM.querySelector(".progress-bar .foreground");
-        progressBar.style.width = (parseInt(fraction) * 100) + "%";
+
+        const margin = 2;
+        const width = margin + parseInt(fraction) * (100 - margin);
+
+        progressBar.style.width = `${width}%`;
     }
 
     setProgressTimeDOM(time) {
@@ -100,8 +104,8 @@ class AudioPlayer {
             return;
         }
 
-        const minutes = `${Math.floor(duration / 60)}`.padStart(2, "0");
-        const seconds = `${Math.floor(duration % 60)}`.padStart(2, "0");
+        const minutes = `${Math.floor(elapsedSeconds / 60)}`.padStart(2, "0");
+        const seconds = `${Math.floor(elapsedSeconds % 60)}`.padStart(2, "0");
 
         this.setProgressTimeDOM(`${minutes}:${seconds}`);
         this.setProgressBarDOM(elapsedSeconds / duration);

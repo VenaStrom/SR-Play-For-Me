@@ -2,7 +2,7 @@
 
 const api = require("./api/api");
 const DOMMaker = require("./DOM-makers");
-const AudioPlayer = require("./audio-player");
+const AudioPlayer = require("./audio-player"); // Used by DOM button elements
 
 // 
 // TEMP config
@@ -16,14 +16,14 @@ const config = {
     },
 };
 
-const main = async () => {    
+const main = async () => {
     // 
     // New Episodes
     // 
     // Hardcoded skeletons
-    const newEpisodesSkeletons =3;
-    for (let i = 0; i < newEpisodesSkeletons; i++) {
-        const id = `episode-${i}`;
+    const newEpisodesSkeletons = 3;
+    for (let index = 0; index < newEpisodesSkeletons; index++) {
+        const id = `skeleton-episode-${index}`;
 
         const parent = document.querySelector(".episodes ul");
         parent.appendChild(DOMMaker.skeleton(id));
