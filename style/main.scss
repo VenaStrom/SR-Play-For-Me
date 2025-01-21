@@ -9,7 +9,7 @@
     --color-fg: #ffffff;
     --color-off-white: #e9e7e7;
     --color-gray: #3a3a3a;
-    --color-light-gray: gray;
+    --color-dark-text: #9b9b9b;
 }
 
 * {
@@ -94,7 +94,9 @@ body {
             }
         }
 
+        //
         // Section Exceptions
+        //
         &>section.intro-paragraph {
             text-align: center;
 
@@ -110,11 +112,14 @@ body {
     }
 
     // Audio Player Controls
-    &>aside#player {
+    &>#player {
         @include column(center, center);
 
         &>.progress-bar {
             @include column(center, start);
+
+            pointer-events: all;
+            cursor: pointer;
 
             width: 100%;
 
@@ -137,6 +142,10 @@ body {
             @include row(space-between, center);
             @include padding(medium, 0);
             @include percent-width(small);
+
+            &>.content-name {
+                @include bold();
+            }
 
             &>button {
                 @include icon(small, $hover: true);

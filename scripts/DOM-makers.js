@@ -31,9 +31,10 @@ class DOMMaker {
                 <p class="description">${data.description || ""}</p>
 
                 <div class="footer">
-                    <p>${data?.footer?.text || ""}</p>
+                    <p class="time">${data?.footer?.time || ""}</p>
+                    <p class="text">${data?.footer?.text || ""}</p>
 
-                    <button onclick="${data?.footer?.buttonFunction || ""}">
+                    <button class="play-button" onclick="${data?.footer?.buttonFunction || ""}">
                         <img src="assets/icons/icons8-play-48.png" alt="Spela">
                     </button>
                 </div>

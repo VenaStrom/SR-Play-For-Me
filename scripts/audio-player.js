@@ -15,7 +15,6 @@ class AudioPlayer {
         this.track.preload = "auto";
         this.preload.preload = "auto";
 
-
         // ControlDOM play button
         const playButton = this.controlDOM.querySelector("button");
         playButton.addEventListener("click", () => {
@@ -26,14 +25,30 @@ class AudioPlayer {
             }
         });
 
+        // ControlDOM progress bar click
+        const progressBar = this.controlDOM.querySelector(".progress-bar");
+        progressBar.addEventListener("click", (event) => {
+            if (this.track.src === "") return;
 
-        // Play by URL
+            const fraction = event.offsetX / progressBar.clientWidth;
+            this.track.currentTime = this.track.duration * fraction;
+            this.track.dispatchEvent(new Event("timeupdate"));
+        });
+
+
+        // Play by URL event
         window.startTrackURL = () => document.dispatchEvent(new Event("startTrackURL"));
         document.addEventListener("startTrackURL", async (event) => {
             const playButton = event?.target?.activeElement;
             if (!playButton) return console.error("No play button found.");
 
             const url = playButton.dataset.playUrl;
+
+            if (playButton.dataset.text) {
+                this.controlDOM.querySelector(".body .content-name").textContent = playButton.dataset.text;
+            } else {
+                this.controlDOM.querySelector(".body .content-name").textContent = "";
+            }
 
             if (playButton.dataset.progressOverride) {
                 this.progressOverride = true;
@@ -84,7 +99,7 @@ class AudioPlayer {
         const progressBar = this.controlDOM.querySelector(".progress-bar .foreground");
 
         const margin = 2;
-        const width = margin + parseInt(fraction) * (100 - margin);
+        const width = margin + fraction * (100 - margin);
 
         progressBar.style.width = `${width}%`;
     }

@@ -1,5 +1,5 @@
 
-class ContentStorageManager {
+class StorageManager {
     constructor() {
         this.storage = window.localStorage;
 
@@ -10,11 +10,6 @@ class ContentStorageManager {
         } else {
             this.saveState();
         }
-
-        this.data.ids = {
-            channels: [218, 164, 132, 701], // Add the preferred channel IDs here, they will be shown first
-            programs: [4923],
-        };
     }
 
     set(key, value) {
@@ -42,4 +37,4 @@ class ContentStorageManager {
     }
 }
 
-module.exports = { ContentStorageManager };
+module.exports = new StorageManager();

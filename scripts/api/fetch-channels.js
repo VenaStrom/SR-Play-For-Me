@@ -15,12 +15,12 @@ class ChannelFetch {
                 return `${path}?${query.join("&")}`;
             },
         },
-        byID: {
+        singleByID: {
             suffix: "channels",
             arguments: [],
             makeURL: (channelID) => {
-                const query = [...this.config.byID.arguments, ...commonConfig.arguments,];
-                const path = `${commonConfig.baseURL}${this.config.byID.suffix}/${channelID}`;
+                const query = [...this.config.singleByID.arguments, ...commonConfig.arguments,];
+                const path = `${commonConfig.baseURL}${this.config.singleByID.suffix}/${channelID}`;
                 return `${path}?${query.join("&")}`;
             },
         },
@@ -63,11 +63,11 @@ class ChannelFetch {
 
         if (typeof channelID === "string") channelID = channelID.replace(/\D/g, ""); // Sometimes channel-### is passed
 
-        const response = await fetch(this.config.byID.makeURL(channelID));
-        if (!response.ok) return this.badResponseMessage(this.config.byID.makeURL(channelID), response, channelID);
+        const response = await fetch(this.config.singleByID.makeURL(channelID));
+        if (!response.ok) return this.badResponseMessage(this.config.singleByID.makeURL(channelID), response, channelID);
 
         const channel = (await response.json()).channel;
-        if (!channel) return this.badResponseMessage(this.config.byID.makeURL(channelID), response, channelID);
+        if (!channel) return this.badResponseMessage(this.config.singleByID.makeURL(channelID), response, channelID);
 
         return this.formatAndFilterChannelData(channel);
     }

@@ -67,7 +67,8 @@
             &>.title {
                 @extend .bold;
 
-                max-width: 60%;
+                flex: 1;
+
                 white-space: nowrap;
                 overflow-x: scroll;
             }
@@ -76,9 +77,7 @@
                 @include text-size(small);
                 @include padding(0, small, 0, 0);
 
-                flex: 1;
-
-                color: var(--color-light-gray);
+                color: var(--color-dark-text);
 
                 text-align: end;
 
@@ -92,7 +91,10 @@
 
             flex: 1;
 
-            overflow-y: scroll;
+            // TODO - fix overflow behaviors
+            overflow-y: hidden;
+            // overflow-x: scroll;
+            // white-space: nowrap;
         }
 
         &>.footer {
@@ -100,9 +102,17 @@
             @include gap($column: small);
             @include text-size(small);
 
-            color: var(--color-light-gray);
+            color: var(--color-dark-text);
 
-            &>p {
+            &>.time {
+                padding-left: 0.5ch;
+                text-align: start;
+                width: 7ch;
+                overflow: hidden;
+                height: 1rem;
+            }
+
+            &>.text {
                 @include padding(0, 0, 0, small);
                 @extend .ellipsis;
 
@@ -113,7 +123,7 @@
                 text-align: end;
             }
 
-            &>button {
+            &>.play-button {
                 @include icon(x-small, $hover: true);
             }
         }
@@ -125,11 +135,10 @@
     @extend .content-dom;
 
     &>.body>.description {
-        color: var(--color-light-gray);
+        color: var(--color-dark-text);
     }
 
     &>.body>.footer>p {
-        // @include bold();
         font-weight: 600;
         color: var(--color-fg);
     }

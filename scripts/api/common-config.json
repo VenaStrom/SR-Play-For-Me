@@ -1,7 +1,7 @@
 {
     "baseURL": "https://api.sr.se/api/v2/",
     "fetchSpan": {
-        "pastOffset": 7,
+        "pastOffset": 14,
         "futureOffset": 1
     },
     "arguments": [

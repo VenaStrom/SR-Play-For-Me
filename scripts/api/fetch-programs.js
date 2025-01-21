@@ -15,23 +15,23 @@ class ProgramFetch {
                 return `${path}?${query.join("&")}`;
             },
         },
-        byID: {
+        singleByID: {
             suffix: "programs/",
             arguments: ["isarchived=false",],
             makeURL: (programID) => {
                 if (!programID) return console.error("No programID provided.");
-                const query = [...this.config.byID.arguments, ...commonConfig.arguments,];
-                const path = `${commonConfig.baseURL}${this.config.byID.suffix}${programID}`;
+                const query = [...this.config.singleByID.arguments, ...commonConfig.arguments,];
+                const path = `${commonConfig.baseURL}${this.config.singleByID.suffix}${programID}`;
                 return `${path}?${query.join("&")}`;
             },
         },
-        byChannel: {
+        allByChannel: {
             suffix: "programs/index",
             arguments: ["isarchived=false",],
             makeURL: (channelID) => {
                 if (!channelID) return console.error("No channelID provided.");
-                const query = [...this.config.byChannel.arguments, ...commonConfig.arguments,];
-                const path = `${commonConfig.baseURL}${this.config.byChannel.suffix}`;
+                const query = [...this.config.allByChannel.arguments, ...commonConfig.arguments,];
+                const path = `${commonConfig.baseURL}${this.config.allByChannel.suffix}`;
                 return `${path}?channelid=${channelID}&${query.join("&")}`;
             },
         }
@@ -72,11 +72,11 @@ class ProgramFetch {
     static async SingleByID(programID) {
         if (!programID) return console.error("No programID provided.");
 
-        const response = await fetch(this.config.byID.makeURL(programID));
-        if (!response.ok) return this.badResponseMessage(this.config.byID.makeURL(programID), response, programID);
+        const response = await fetch(this.config.singleByID.makeURL(programID));
+        if (!response.ok) return this.badResponseMessage(this.config.singleByID.makeURL(programID), response, programID);
 
         const rawProgram = (await response.json()).program;
-        if (!rawProgram) return this.badResponseMessage(this.config.byID.makeURL(programID), response, programID);
+        if (!rawProgram) return this.badResponseMessage(this.config.singleByID.makeURL(programID), response, programID);
 
         return this.formatAndFilterProgramData(rawProgram);
     }
@@ -84,11 +84,11 @@ class ProgramFetch {
     static async AllByChannel(channelID) {
         if (!channelID) return console.error("No channelID provided.");
 
-        const response = await fetch(this.config.byChannel.makeURL(channelID));
-        if (!response.ok) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+        const response = await fetch(this.config.allByChannel.makeURL(channelID));
+        if (!response.ok) return this.badResponseMessage(this.config.allByChannel.makeURL(channelID), response, channelID);
 
         const rawPrograms = (await response.json()).programs;
-        if (!rawPrograms) return this.badResponseMessage(this.config.byChannel.makeURL(channelID), response, channelID);
+        if (!rawPrograms) return this.badResponseMessage(this.config.allByChannel.makeURL(channelID), response, channelID);
 
         return rawPrograms.map(this.formatAndFilterProgramData);
     }
