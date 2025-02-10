@@ -1,5 +1,7 @@
 # SR Play - But for Me
 
+> This project has been preceded by [VR-Radio](https://github.com/viggoStrom/Viggos-Radio)
+
 Deployed via [GitHub Pages](https://viggostrom.github.io/SR-Play-For-Me/)
 
 <div style="display:flex; flex-flow: row wrap;">
